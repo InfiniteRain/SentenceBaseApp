@@ -207,6 +207,9 @@ export const Mining = () => {
   };
 
   useEffect(() => {
+    const regex =
+      /^“([^”]+)”\n\nExcerpt From\n[^\n]+\n[^\n]+\nThis material may be protected by copyright.$/;
+
     const clipboardInterval = setInterval(async () => {
       if (!scanningRef.current) {
         return;
@@ -220,7 +223,9 @@ export const Mining = () => {
       await Clipboard.setString('');
 
       if (clipboardEntry !== '') {
-        await analyzeSentence(clipboardEntry);
+        const filteredSentence = clipboardEntry.match(regex)?.[1];
+
+        await analyzeSentence(filteredSentence || clipboardEntry);
       }
     }, 1000);
 
