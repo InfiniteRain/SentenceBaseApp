@@ -4,6 +4,7 @@ export enum AppState {
   Loading,
   LoginScreen,
   RegisterScreen,
+  UserMenu,
   Mining,
   Batch,
 }

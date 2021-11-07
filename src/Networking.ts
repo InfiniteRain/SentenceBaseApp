@@ -41,12 +41,14 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
 export const setAccessToken = async (accessToken: string): Promise<void> => {
   try {
     await AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    console.log('access token set to', accessToken);
   } catch {}
 };
 
 export const setRefreshToken = async (refreshToken: string): Promise<void> => {
   try {
     await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    console.log('refresh token set to', refreshToken);
   } catch {}
 };
 
@@ -127,11 +129,12 @@ export const sendEnsuredRequest = async <REQ = void, RESP = null>(
     const accessTokenDecodedData = jwtDecode<JWTPayload>(accessToken);
     const refreshTokenDecodedData = jwtDecode<JWTPayload>(refreshToken);
 
-    const aboutToExpire =
-      currentTimestamp + 300 > accessTokenDecodedData.exp ||
+    const accesAboutToExpire =
+      currentTimestamp + 300 > accessTokenDecodedData.exp;
+    const refreshAboutToExpire =
       currentTimestamp + 432000 > refreshTokenDecodedData.exp;
 
-    if (aboutToExpire) {
+    if (accesAboutToExpire || refreshAboutToExpire) {
       const refreshResponse = await sendRequest<
         {refresh_token: string},
         {access_token: string; refresh_token: string}
@@ -141,7 +144,10 @@ export const sendEnsuredRequest = async <REQ = void, RESP = null>(
 
       if (refreshResponse.status === 'success') {
         await setAccessToken(refreshResponse.data.access_token);
-        await setRefreshToken(refreshResponse.data.refresh_token);
+
+        if (refreshAboutToExpire) {
+          await setRefreshToken(refreshResponse.data.refresh_token);
+        }
       }
     }
   }

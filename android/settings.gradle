@@ -1,3 +1,5 @@
 rootProject.name = 'SentenceBaseApp'
+include ':react-native-clipboard-listener'
+project(':react-native-clipboard-listener').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-clipboard-listener/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'

@@ -12,6 +12,13 @@ import {AppState, AppStateContext} from './AppStateContext';
 import {sendEnsuredRequest} from './Networking';
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 0,
+  },
   inputView: {
     backgroundColor: '#EEEEEE',
     borderRadius: 30,
@@ -144,7 +151,7 @@ export const Register = ({
   };
 
   return (
-    <>
+    <View style={styles.mainContainer}>
       {errorMessage !== '' && (
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       )}
@@ -190,7 +197,7 @@ export const Register = ({
           editable={!isLoading}
         />
       </View>
-      <TouchableOpacity onPressOut={onBackButton} disabled={isLoading}>
+      <TouchableOpacity onPress={onBackButton} disabled={isLoading}>
         <Text
           style={[
             styles.miscButtons,
@@ -203,11 +210,11 @@ export const Register = ({
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPressOut={onRegister}
+        onPress={onRegister}
         style={styles.registerButton}
         disabled={isLoading}>
-        <Text>REGISTER</Text>
+        <Text style={{color: colors.lighter}}>REGISTER</Text>
       </TouchableOpacity>
-    </>
+    </View>
   );
 };

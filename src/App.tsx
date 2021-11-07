@@ -1,20 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, useColorScheme} from 'react-native';
 import {Login} from './Login';
 import {checkTokens} from './Networking';
 import {Register} from './Register';
 import {AppState, AppStateContext} from './AppStateContext';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+import {colors} from './Colors';
+import {Mining} from './Mining';
+import {UserMenu} from './UserMenu';
 
 export const App = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
   const [appState, setAppState] = useState<AppState>(AppState.Loading);
   const [registeredEmail, setRegisteredEmail] = useState('');
 
@@ -24,9 +20,9 @@ export const App = () => {
   };
 
   useEffect(() => {
-    checkTokens().then(tokensCheckPassed => {
-      if (tokensCheckPassed) {
-        setAppState(AppState.Mining);
+    checkTokens().then(tokensResult => {
+      if (tokensResult) {
+        setAppState(AppState.UserMenu);
         return;
       }
 
@@ -34,7 +30,11 @@ export const App = () => {
     });
   }, []);
 
-  let currentStateComponent = <Text>Loading</Text>;
+  let currentStateComponent = (
+    <Text style={{color: isDarkMode ? colors.white : colors.black}}>
+      Loading
+    </Text>
+  );
 
   switch (appState) {
     case AppState.LoginScreen:
@@ -43,11 +43,17 @@ export const App = () => {
     case AppState.RegisterScreen:
       currentStateComponent = <Register backToLogin={backToLogin} />;
       break;
+    case AppState.UserMenu:
+      currentStateComponent = <UserMenu />;
+      break;
+    case AppState.Mining:
+      currentStateComponent = <Mining />;
+      break;
   }
 
   return (
     <AppStateContext.Provider value={{appState, setAppState}}>
-      <View style={styles.container}>{currentStateComponent}</View>
+      {currentStateComponent}
     </AppStateContext.Provider>
   );
 };
