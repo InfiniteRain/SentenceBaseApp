@@ -89,7 +89,7 @@ export const checkTokens = async (): Promise<false | [string, string]> => {
 
 const sendRequest = async <REQ = void, RESP = null>(
   endpoint: string,
-  method: 'get' | 'post' = 'get',
+  method: 'get' | 'post' | 'delete' = 'get',
   body: REQ | null = null,
 ): Promise<StandardResponse<RESP>> => {
   const trimmedEndpoint = endpoint.trim().replace(/^\/+|\/+$/g, '');
@@ -120,7 +120,7 @@ const sendRequest = async <REQ = void, RESP = null>(
 
 export const sendEnsuredRequest = async <REQ = void, RESP = null>(
   endpoint: string,
-  method: 'get' | 'post' = 'get',
+  method: 'get' | 'post' | 'delete' = 'get',
   body: REQ | null = null,
 ): Promise<StandardResponse<RESP>> => {
   const tokenResult = await checkTokens();

@@ -152,7 +152,7 @@ export const Mining = () => {
         dictionary_form: string;
         reading: string;
         sentence: string;
-      }>('/analyze', 'post', {
+      }>('/sentences', 'post', {
         dictionary_form: miningData.dictionary_form,
         reading: miningData.reading,
         sentence: miningData.sentence,
@@ -160,9 +160,9 @@ export const Mining = () => {
     } catch {
       Toast.show({
         type: 'error',
-        text1: 'Mined!',
-        text2: 'The sentence was successfully added to the pending list.',
+        text1: 'Network error.',
       });
+      setLoading(false);
       return;
     }
 
@@ -179,6 +179,7 @@ export const Mining = () => {
       return;
     }
 
+    console.log(JSON.stringify(response, null, 2));
     Toast.show({
       type: 'success',
       text1: 'Mined!',

@@ -6,6 +6,7 @@ export enum AppState {
   RegisterScreen,
   UserMenu,
   Mining,
+  PendingSentences,
   Batch,
 }
 

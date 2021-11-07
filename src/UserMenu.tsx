@@ -42,6 +42,10 @@ export const UserMenu = () => {
     setAppState(AppState.Mining);
   };
 
+  const onPending = async () => {
+    setAppState(AppState.PendingSentences);
+  };
+
   const onLogout = async () => {
     setLoading(true);
     await clearTokens();
@@ -55,6 +59,12 @@ export const UserMenu = () => {
         onPress={onMining}
         disabled={isLoading}>
         <Text style={styles.menuButtonText}>MINING</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={onPending}
+        disabled={isLoading}>
+        <Text style={styles.menuButtonText}>PENDING SENTENCES</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.menuButton}

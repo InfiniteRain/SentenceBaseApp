@@ -8,6 +8,7 @@ import {colors} from './Colors';
 import {Mining} from './Mining';
 import {UserMenu} from './UserMenu';
 import Toast from 'react-native-toast-message';
+import {PendingSentences} from './PendingSentences';
 
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -49,6 +50,9 @@ export const App = () => {
       break;
     case AppState.Mining:
       currentStateComponent = <Mining />;
+      break;
+    case AppState.PendingSentences:
+      currentStateComponent = <PendingSentences />;
       break;
   }
 
