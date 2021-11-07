@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {colors} from './Colors';
-import {AppState, AppStateContext} from './AppStateContext';
+import {Page, AppStateContext} from './AppStateContext';
 import {sendEnsuredRequest} from './Networking';
 
 const styles = StyleSheet.create({
@@ -57,7 +57,7 @@ export const Register = ({
   backToLogin: (email: string) => void;
 }) => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {setAppState} = useContext(AppStateContext);
+  const {setCurrentPage} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -81,7 +81,7 @@ export const Register = ({
   };
 
   const onBackButton = () => {
-    setAppState(AppState.LoginScreen);
+    setCurrentPage(Page.LoginScreen);
   };
 
   const onRegister = async () => {

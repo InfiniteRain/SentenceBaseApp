@@ -13,7 +13,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {AppState, AppStateContext} from './AppStateContext';
+import {Page, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {sendEnsuredRequest, StandardResponse} from './Networking';
 import Toast from 'react-native-toast-message';
@@ -113,8 +113,7 @@ const styles = StyleSheet.create({
 
 export const Mining = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
-  const {setAppState} = useContext(AppStateContext);
+  const {setCurrentPage, setBatch} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
   const [currentMorphemes, setCurrentMorphemes] = useState<Morpheme[]>([]);
@@ -134,7 +133,7 @@ export const Mining = () => {
   };
 
   const onBack = () => {
-    setAppState(AppState.UserMenu);
+    setCurrentPage(Page.UserMenu);
   };
 
   const onMine = async () => {
@@ -179,7 +178,6 @@ export const Mining = () => {
       return;
     }
 
-    console.log(JSON.stringify(response, null, 2));
     Toast.show({
       type: 'success',
       text1: 'Mined!',
@@ -187,6 +185,7 @@ export const Mining = () => {
       position: 'bottom',
     });
 
+    setBatch([]);
     setLoading(false);
   };
 

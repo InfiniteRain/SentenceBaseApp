@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {AppState, AppStateContext} from './AppStateContext';
+import {Page, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {clearTokens} from './Networking';
 
@@ -34,22 +34,26 @@ const styles = StyleSheet.create({
 });
 
 export const UserMenu = () => {
-  const {setAppState} = useContext(AppStateContext);
+  const {setCurrentPage} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
 
   const onMining = async () => {
-    setAppState(AppState.Mining);
+    setCurrentPage(Page.Mining);
   };
 
   const onPending = async () => {
-    setAppState(AppState.PendingSentences);
+    setCurrentPage(Page.PendingSentences);
+  };
+
+  const onNewBatch = async () => {
+    setCurrentPage(Page.NewBatch);
   };
 
   const onLogout = async () => {
     setLoading(true);
     await clearTokens();
-    setAppState(AppState.LoginScreen);
+    setCurrentPage(Page.LoginScreen);
   };
 
   return (
@@ -65,6 +69,12 @@ export const UserMenu = () => {
         onPress={onPending}
         disabled={isLoading}>
         <Text style={styles.menuButtonText}>PENDING SENTENCES</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={onNewBatch}
+        disabled={isLoading}>
+        <Text style={styles.menuButtonText}>NEW BATCH</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.menuButton}

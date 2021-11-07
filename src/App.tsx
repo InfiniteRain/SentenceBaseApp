@@ -3,32 +3,35 @@ import {Text, useColorScheme} from 'react-native';
 import {Login} from './Login';
 import {checkTokens} from './Networking';
 import {Register} from './Register';
-import {AppState, AppStateContext} from './AppStateContext';
+import {Page, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {Mining} from './Mining';
 import {UserMenu} from './UserMenu';
 import Toast from 'react-native-toast-message';
 import {PendingSentences} from './PendingSentences';
+import {NewBatch} from './NewBatch';
+import {SentenceEntry} from './Common';
 
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const [appState, setAppState] = useState<AppState>(AppState.Loading);
+  const [currentPage, setCurrentPage] = useState<Page>(Page.Loading);
+  const [batch, setBatch] = useState<SentenceEntry[]>([]);
   const [registeredEmail, setRegisteredEmail] = useState('');
 
   const backToLogin = (email: string) => {
     setRegisteredEmail(email);
-    setAppState(AppState.LoginScreen);
+    setCurrentPage(Page.LoginScreen);
   };
 
   useEffect(() => {
     checkTokens().then(tokensResult => {
       if (tokensResult) {
-        setAppState(AppState.UserMenu);
+        setCurrentPage(Page.UserMenu);
         return;
       }
 
-      setAppState(AppState.LoginScreen);
+      setCurrentPage(Page.LoginScreen);
     });
   }, []);
 
@@ -38,26 +41,34 @@ export const App = () => {
     </Text>
   );
 
-  switch (appState) {
-    case AppState.LoginScreen:
+  switch (currentPage) {
+    case Page.LoginScreen:
       currentStateComponent = <Login registeredEmail={registeredEmail} />;
       break;
-    case AppState.RegisterScreen:
+    case Page.RegisterScreen:
       currentStateComponent = <Register backToLogin={backToLogin} />;
       break;
-    case AppState.UserMenu:
+    case Page.UserMenu:
       currentStateComponent = <UserMenu />;
       break;
-    case AppState.Mining:
+    case Page.Mining:
       currentStateComponent = <Mining />;
       break;
-    case AppState.PendingSentences:
+    case Page.PendingSentences:
       currentStateComponent = <PendingSentences />;
       break;
+    case Page.NewBatch:
+      currentStateComponent = <NewBatch />;
   }
 
   return (
-    <AppStateContext.Provider value={{appState, setAppState}}>
+    <AppStateContext.Provider
+      value={{
+        currentPage: currentPage,
+        setCurrentPage: setCurrentPage,
+        batch,
+        setBatch,
+      }}>
       {currentStateComponent}
       <Toast />
     </AppStateContext.Provider>

@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {colors} from './Colors';
-import {AppState, AppStateContext} from './AppStateContext';
+import {Page, AppStateContext} from './AppStateContext';
 import {
   sendEnsuredRequest,
   setAccessToken,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
 export const Login = ({registeredEmail}: {registeredEmail: string}) => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {setAppState} = useContext(AppStateContext);
+  const {setCurrentPage} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -78,7 +78,7 @@ export const Login = ({registeredEmail}: {registeredEmail: string}) => {
   };
 
   const onRegisterButton = () => {
-    setAppState(AppState.RegisterScreen);
+    setCurrentPage(Page.RegisterScreen);
   };
 
   const onLogin = async () => {
@@ -128,7 +128,7 @@ export const Login = ({registeredEmail}: {registeredEmail: string}) => {
       setErrorMessage('');
       await setAccessToken(response.data.access_token);
       await setRefreshToken(response.data.refresh_token);
-      setAppState(AppState.UserMenu);
+      setCurrentPage(Page.UserMenu);
     } catch (e) {
       setErrorMessage('Network error.');
       setLoading(false);
