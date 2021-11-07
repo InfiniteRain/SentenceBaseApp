@@ -12,7 +12,6 @@ target 'SentenceBaseApp' do
     :hermes_enabled => false
   )
 
-  pod 'react-native-clipboard-listener', :path => '../node_modules/react-native-clipboard-listener'
 
   target 'SentenceBaseAppTests' do
     inherit! :complete

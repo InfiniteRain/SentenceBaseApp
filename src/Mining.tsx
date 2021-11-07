@@ -15,7 +15,8 @@ import {
 } from 'react-native';
 import {AppState, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
-import {sendEnsuredRequest} from './Networking';
+import {sendEnsuredRequest, StandardResponse} from './Networking';
+import Toast from 'react-native-toast-message';
 
 interface Morpheme {
   morpheme: string;
@@ -64,7 +65,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 20,
   },
-  wordInput: {
+  readingInputView: {
+    backgroundColor: '#EEEEEE',
+    borderRadius: 5,
+    width: '80%',
+    height: 45,
+    alignItems: 'center',
+    margin: 20,
+  },
+  input: {
     height: 50,
     flex: 1,
     padding: 10,
@@ -107,16 +116,77 @@ export const Mining = () => {
 
   const {setAppState} = useContext(AppStateContext);
 
+  const [isLoading, setLoading] = useState(false);
   const [currentMorphemes, setCurrentMorphemes] = useState<Morpheme[]>([]);
-  const [currentWord, setCurrentWord] = useState('');
+  const [currentDictionaryForm, setCurrentDictionaryForm] = useState('');
+  const [currentReading, setCurrentReading] = useState('');
   const [isScanningClipboard, setScanningClipboard] = useState(true);
 
   const scanningRef = useRef<boolean>();
+  const miningDataRef =
+    useRef<{dictionary_form: string; reading: string; sentence: string}>();
 
   scanningRef.current = isScanningClipboard;
+  miningDataRef.current = {
+    dictionary_form: currentDictionaryForm,
+    reading: currentReading,
+    sentence: currentMorphemes.map(morpheme => morpheme.morpheme).join(''),
+  };
 
   const onBack = () => {
     setAppState(AppState.UserMenu);
+  };
+
+  const onMine = async () => {
+    let miningData = miningDataRef.current;
+
+    if (!miningData) {
+      return;
+    }
+
+    setLoading(true);
+
+    let response: StandardResponse;
+    try {
+      response = await sendEnsuredRequest<{
+        dictionary_form: string;
+        reading: string;
+        sentence: string;
+      }>('/analyze', 'post', {
+        dictionary_form: miningData.dictionary_form,
+        reading: miningData.reading,
+        sentence: miningData.sentence,
+      });
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'Mined!',
+        text2: 'The sentence was successfully added to the pending list.',
+      });
+      return;
+    }
+
+    setCurrentMorphemes([]);
+    setCurrentDictionaryForm('');
+    setCurrentReading('');
+
+    if (response.status === 'fail' || response.status === 'error') {
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong.',
+        position: 'bottom',
+      });
+      return;
+    }
+
+    Toast.show({
+      type: 'success',
+      text1: 'Mined!',
+      text2: 'The sentence was successfully added to the pending list.',
+      position: 'bottom',
+    });
+
+    setLoading(false);
   };
 
   const analyzeSentence = async (sentence: string) => {
@@ -130,7 +200,8 @@ export const Mining = () => {
     });
 
     if (response.status === 'success') {
-      setCurrentWord('');
+      setCurrentDictionaryForm('');
+      setCurrentReading('');
       setCurrentMorphemes(response.data.morphemes);
     }
   };
@@ -165,6 +236,7 @@ export const Mining = () => {
           value={isScanningClipboard}
           onValueChange={setScanningClipboard}
           style={styles.clipboardCheckbox}
+          disabled={isLoading}
         />
         <Text
           style={[
@@ -177,14 +249,32 @@ export const Mining = () => {
         </Text>
       </View>
       <View style={styles.backButtonContainer}>
-        <TouchableOpacity onPress={onBack}>
+        <TouchableOpacity onPress={onBack} disabled={isLoading}>
           <Text style={styles.backButton}>Back to Menu</Text>
         </TouchableOpacity>
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
           <View style={styles.mainContainer}>
-            <TouchableOpacity style={styles.mineButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.mineButtonContainer,
+                {
+                  backgroundColor:
+                    currentDictionaryForm === '' ||
+                    currentReading === '' ||
+                    currentMorphemes.length === 0
+                      ? colors.grey
+                      : colors.primary,
+                },
+              ]}
+              onPress={onMine}
+              disabled={
+                currentDictionaryForm === '' ||
+                currentReading === '' ||
+                currentMorphemes.length === 0 ||
+                isLoading
+              }>
               <Text
                 style={[
                   styles.mineButton,
@@ -199,10 +289,20 @@ export const Mining = () => {
               <TextInput
                 autoCapitalize="none"
                 placeholderTextColor={colors.dark}
-                value={currentWord}
-                onChangeText={setCurrentWord}
-                editable={currentMorphemes.length > 0}
-                style={styles.wordInput}
+                value={currentDictionaryForm}
+                onChangeText={setCurrentDictionaryForm}
+                editable={currentMorphemes.length > 0 && !isLoading}
+                style={styles.input}
+              />
+            </View>
+            <View style={styles.readingInputView}>
+              <TextInput
+                autoCapitalize="none"
+                placeholderTextColor={colors.dark}
+                value={currentReading}
+                onChangeText={setCurrentReading}
+                editable={currentMorphemes.length > 0 && !isLoading}
+                style={styles.input}
               />
             </View>
             <View style={styles.wordTextView}>
@@ -211,9 +311,11 @@ export const Mining = () => {
                   key={key}
                   style={styles.wordTouchableOpacity}
                   onPress={() => {
-                    setCurrentWord(morpheme.dictionary_form);
+                    setCurrentDictionaryForm(morpheme.dictionary_form);
+                    setCurrentReading(morpheme.reading);
                     Keyboard.dismiss();
-                  }}>
+                  }}
+                  disabled={isLoading}>
                   <Text style={styles.wordText}>{morpheme.morpheme}</Text>
                 </TouchableOpacity>
               ))}

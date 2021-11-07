@@ -31,7 +31,10 @@ interface ErrorResponse extends BaseResponse {
   reasons?: string[];
 }
 
-type StandardResponse<T> = SuccessResponse<T> | FailResponse | ErrorResponse;
+export type StandardResponse<T = null> =
+  | SuccessResponse<T>
+  | FailResponse
+  | ErrorResponse;
 
 export const API_URI = 'https://infiniterain.io';
 

@@ -5345,11 +5345,6 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-clipboard-listener@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/react-native-clipboard-listener/-/react-native-clipboard-listener-1.0.9.tgz#9187768e4a1eca6d49ed6f60e707af8dc65c5a84"
-  integrity sha512-Kcb/kYcV75uyA+X7JwWyiI6nGH1YDEQwFfAD6D1WiFQBghUuEC3zbuC3s4Xy/ltEizuq6H1dIYWGc97rlh4SnQ==
-
 react-native-codegen@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.7.tgz#86651c5c5fec67a8077ef7f4e36f7ed459043e14"
@@ -5358,6 +5353,11 @@ react-native-codegen@^0.0.7:
     flow-parser "^0.121.0"
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
+
+react-native-toast-message@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.0.1.tgz#a3d97194f789d876c4b764323690919d9f56ec0f"
+  integrity sha512-WiZ/SPN3atpVTkXRlfzglC8X4S0ebMowpf4Pc7TwKdYHFCxlUCucm8MXJEIjKJjhueJCfDSkQePYfMIKQYUbrA==
 
 react-native@0.66.2:
   version "0.66.2"

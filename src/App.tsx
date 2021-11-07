@@ -7,6 +7,7 @@ import {AppState, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {Mining} from './Mining';
 import {UserMenu} from './UserMenu';
+import Toast from 'react-native-toast-message';
 
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -54,6 +55,7 @@ export const App = () => {
   return (
     <AppStateContext.Provider value={{appState, setAppState}}>
       {currentStateComponent}
+      <Toast />
     </AppStateContext.Provider>
   );
 };
