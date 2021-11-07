@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   backButton: {
     color: colors.primary,
   },
-  sentenceEntryView: {borderColor: 'white', borderBottomWidth: 1},
+  sentenceEntryView: {borderColor: 'white', borderBottomWidth: 1, padding: 5},
   sentenceEntryText: {
     fontSize: 20,
   },
