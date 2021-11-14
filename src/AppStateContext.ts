@@ -10,6 +10,7 @@ export enum Page {
   PendingSentences,
   NewBatch,
   Batch,
+  Export,
 }
 
 export const AppStateContext = createContext<{

@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message';
 import {PendingSentences} from './PendingSentences';
 import {NewBatch} from './NewBatch';
 import {SentenceEntry} from './Common';
+import {Export} from './Export';
 
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -59,6 +60,10 @@ export const App = () => {
       break;
     case Page.NewBatch:
       currentStateComponent = <NewBatch />;
+      break;
+    case Page.Export:
+      currentStateComponent = <Export />;
+      break;
   }
 
   return (

@@ -1,5 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import AnkiDroid from 'react-native-ankidroid';
 import {Page, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {clearTokens} from './Networking';
@@ -37,6 +38,7 @@ export const UserMenu = () => {
   const {setCurrentPage} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
+  const [isApiAvailable, setApiAvailable] = useState(false);
 
   const onMining = async () => {
     setCurrentPage(Page.Mining);
@@ -55,6 +57,22 @@ export const UserMenu = () => {
     await clearTokens();
     setCurrentPage(Page.LoginScreen);
   };
+
+  const onExport = async () => {
+    const [requestError, requestAnswer] = await AnkiDroid.requestPermission();
+
+    if (requestError !== null || requestAnswer !== 'granted') {
+      return;
+    }
+
+    setCurrentPage(Page.Export);
+  };
+
+  useEffect(() => {
+    AnkiDroid.isApiAvailable().then(apiAvailable => {
+      setApiAvailable(apiAvailable);
+    });
+  }, []);
 
   return (
     <View style={styles.mainContainer}>
@@ -75,6 +93,17 @@ export const UserMenu = () => {
         onPress={onNewBatch}
         disabled={isLoading}>
         <Text style={styles.menuButtonText}>NEW BATCH</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.menuButton,
+          {
+            backgroundColor: isApiAvailable ? colors.primary : colors.grey,
+          },
+        ]}
+        onPress={onExport}
+        disabled={isLoading || !isApiAvailable}>
+        <Text style={styles.menuButtonText}>EXPORT</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.menuButton}
