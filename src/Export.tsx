@@ -142,8 +142,6 @@ export const Export = () => {
     if (!currentSettings) {
       return;
     }
-
-    console.log(currentSettings);
   };
 
   useEffect(() => {

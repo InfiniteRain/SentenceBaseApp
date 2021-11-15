@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnkiDroid from 'react-native-ankidroid';
+import RNFS from 'react-native-fs';
 
 export interface StorageSettings {
   modelExport: string | null;
@@ -9,6 +10,8 @@ export interface StorageSettings {
   audioFieldExport: number | null;
   deckExport: string | null;
 }
+
+const FILE_DIRECTORY_NAME = 'SentenceBase';
 
 const MODEL_EXPORT_KEY = 'modelExport';
 const WORD_FIELD_EXPORT_KEY = 'wordFieldExport';
@@ -157,4 +160,43 @@ export const checkExportSettings = async () => {
       deckExport: deckExport,
     },
   };
+};
+
+export const uploadMedia = async (
+  url: string,
+  mimeType: 'audio' | 'image',
+): Promise<string | null> => {
+  try {
+    await RNFS.mkdir(
+      `${RNFS.ExternalStorageDirectoryPath}/${FILE_DIRECTORY_NAME}`,
+    );
+  } catch {
+    return null;
+  }
+
+  const fileName = url.substring(url.lastIndexOf('/') + 1);
+  const filePath = `${RNFS.ExternalStorageDirectoryPath}/${FILE_DIRECTORY_NAME}/${fileName}`;
+
+  const {promise} = RNFS.downloadFile({
+    fromUrl: url,
+    toFile: filePath,
+  });
+
+  try {
+    await promise;
+  } catch {
+    return null;
+  }
+
+  const [uploadError, formattedString] = await AnkiDroid.uploadMediaFromUri(
+    `file://${filePath}`,
+    fileName.substring(0, fileName.lastIndexOf('.')),
+    mimeType,
+  );
+
+  if (uploadError || typeof formattedString !== 'string') {
+    return null;
+  }
+
+  return formattedString;
 };

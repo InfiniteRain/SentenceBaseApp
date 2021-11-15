@@ -13,6 +13,8 @@ target 'SentenceBaseApp' do
   )
 
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'SentenceBaseAppTests' do
     inherit! :complete
     # Pods for testing
