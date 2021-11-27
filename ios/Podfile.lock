@@ -272,6 +272,8 @@ PODS:
   - React-jsinspector (0.66.2)
   - React-logger (0.66.2):
     - glog
+  - react-native-webview (11.14.4):
+    - React-Core
   - React-perflogger (0.66.2)
   - React-RCTActionSheet (0.66.2):
     - React-Core/RCTActionSheetHeaders (= 0.66.2)
@@ -390,6 +392,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -460,6 +463,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -526,6 +531,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 573adf0d6ce5e05c55872dfde5b1589acb88a96f
   React-jsinspector: b08b2d5e86cef9dc4bb69f0aa0bbe6d210fb7da5
   React-logger: faee236598b0f7e1a5e3b68577016ac451f1f993
+  react-native-webview: a287d7c405756d253d88ed8e4f3c1a5256834d30
   React-perflogger: 5ab487cacfe6ec19bfe3d3f8072bf71eb07d63da
   React-RCTActionSheet: 03f25695e095fb5aa003828620943c74cc281fec
   React-RCTAnimation: eaf82da39f0c36fb0ef2a28df797c5f73a2a98ea
@@ -545,6 +551,6 @@ SPEC CHECKSUMS:
   Yoga: 9a08effa851c1d8cc1647691895540bc168ea65f
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e5004540449699bfe2b7242fbc0a4f7f8a0cdb70
+PODFILE CHECKSUM: 8f7f776685c4bf18872115bc7572bc82683bc19c
 
 COCOAPODS: 1.10.2

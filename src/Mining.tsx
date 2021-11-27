@@ -19,7 +19,7 @@ import {sendEnsuredRequest, StandardResponse} from './Networking';
 import Toast from 'react-native-toast-message';
 
 interface Morpheme {
-  morpheme: string;
+  word: string;
   dictionary_form: string;
   reading: string;
 }
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
 
 export const Mining = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {setCurrentPage, setBatch} = useContext(AppStateContext);
+  const {setCurrentPage, setBatch, mecabQuery} = useContext(AppStateContext);
 
   const [isLoading, setLoading] = useState(false);
   const [currentMorphemes, setCurrentMorphemes] = useState<Morpheme[]>([]);
@@ -129,7 +129,7 @@ export const Mining = () => {
   miningDataRef.current = {
     dictionary_form: currentDictionaryForm,
     reading: currentReading,
-    sentence: currentMorphemes.map(morpheme => morpheme.morpheme).join(''),
+    sentence: currentMorphemes.map(morpheme => morpheme.word).join(''),
   };
 
   const onBack = () => {
@@ -190,20 +190,26 @@ export const Mining = () => {
   };
 
   const analyzeSentence = async (sentence: string) => {
-    let response = await sendEnsuredRequest<
-      {sentence: string},
-      {
-        morphemes: Morpheme[];
-      }
-    >('/analyze', 'post', {
-      sentence,
-    });
+    const mecabResult = await mecabQuery(sentence);
+    const morphemes: Morpheme[] = [];
 
-    if (response.status === 'success') {
-      setCurrentDictionaryForm('');
-      setCurrentReading('');
-      setCurrentMorphemes(response.data.morphemes);
+    for (const entry of mecabResult) {
+      const dictionaryFormReading =
+        entry.dictionary_form !== '*'
+          ? (await mecabQuery(entry.dictionary_form))[0].reading ?? entry.word
+          : entry.word;
+
+      morphemes.push({
+        word: entry.word,
+        dictionary_form:
+          entry.dictionary_form !== '*' ? entry.dictionary_form : entry.word,
+        reading: dictionaryFormReading,
+      });
     }
+
+    setCurrentDictionaryForm('');
+    setCurrentReading('');
+    setCurrentMorphemes(morphemes);
   };
 
   useEffect(() => {
@@ -232,6 +238,7 @@ export const Mining = () => {
     return () => {
       clearInterval(clipboardInterval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -321,7 +328,7 @@ export const Mining = () => {
                     Keyboard.dismiss();
                   }}
                   disabled={isLoading}>
-                  <Text style={styles.wordText}>{morpheme.morpheme}</Text>
+                  <Text style={styles.wordText}>{morpheme.word}</Text>
                 </TouchableOpacity>
               ))}
             </View>

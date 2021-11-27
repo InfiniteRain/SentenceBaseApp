@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnkiDroid from 'react-native-ankidroid';
-import RNFS from 'react-native-fs';
+//import RNFS from 'react-native-fs';
 
 export interface StorageSettings {
   modelExport: string | null;
@@ -11,7 +11,7 @@ export interface StorageSettings {
   deckExport: string | null;
 }
 
-const FILE_DIRECTORY_NAME = 'SentenceBase';
+//const FILE_DIRECTORY_NAME = 'SentenceBase';
 
 const MODEL_EXPORT_KEY = 'modelExport';
 const WORD_FIELD_EXPORT_KEY = 'wordFieldExport';
@@ -162,6 +162,7 @@ export const checkExportSettings = async () => {
   };
 };
 
+/*
 export const uploadMedia = async (
   url: string,
   mimeType: 'audio' | 'image',
@@ -199,4 +200,4 @@ export const uploadMedia = async (
   }
 
   return formattedString;
-};
+};*/
