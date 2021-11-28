@@ -4,6 +4,8 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
+  NativeEventEmitter,
+  NativeModules,
   ScrollView,
   StyleSheet,
   Text,
@@ -189,37 +191,45 @@ export const Mining = () => {
     setLoading(false);
   };
 
-  const analyzeSentence = async (sentence: string) => {
-    const mecabResult = await mecabQuery(sentence);
-    const morphemes: Morpheme[] = [];
-
-    for (const entry of mecabResult) {
-      const dictionaryFormReading =
-        entry.dictionary_form !== '*'
-          ? (await mecabQuery(entry.dictionary_form))[0].reading ?? entry.word
-          : entry.word;
-
-      morphemes.push({
-        word: entry.word,
-        dictionary_form:
-          entry.dictionary_form !== '*' ? entry.dictionary_form : entry.word,
-        reading: dictionaryFormReading,
-      });
-    }
-
-    setCurrentDictionaryForm('');
-    setCurrentReading('');
-    setCurrentMorphemes(morphemes);
-  };
-
   useEffect(() => {
     const regex =
       /^“([^”]+)”\n\nExcerpt From\n[^\n]+\n[^\n]+\nThis material may be protected by copyright.$/;
 
-    const clipboardInterval = setInterval(async () => {
-      if (!scanningRef.current) {
-        return;
+    const analyzeSentence = async (sentence: string) => {
+      const mecabResult = await mecabQuery(sentence);
+      const morphemes: Morpheme[] = [];
+
+      for (const entry of mecabResult) {
+        const dictionaryFormReading =
+          entry.dictionary_form !== '*'
+            ? (await mecabQuery(entry.dictionary_form))[0].reading ?? entry.word
+            : entry.word;
+
+        morphemes.push({
+          word: entry.word,
+          dictionary_form:
+            entry.dictionary_form !== '*' ? entry.dictionary_form : entry.word,
+          reading: dictionaryFormReading,
+        });
       }
+
+      setCurrentDictionaryForm('');
+      setCurrentReading('');
+      setCurrentMorphemes(morphemes);
+    };
+
+    const eventEmitter = new NativeEventEmitter(
+      NativeModules.ClipboardListener,
+    );
+    eventEmitter.addListener(
+      'clipboardUpdate',
+      async (clipboardEntry: string) => {
+        if (clipboardEntry !== '') {
+          const filteredSentence = clipboardEntry.match(regex)?.[1];
+          await analyzeSentence(filteredSentence || clipboardEntry);
+        }
+      },
+    );
 
       if (!Clipboard.hasString()) {
         return;
@@ -236,10 +246,9 @@ export const Mining = () => {
     }, 1000);
 
     return () => {
-      clearInterval(clipboardInterval);
+      eventEmitter.removeAllListeners('clipboardUpdate');
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mecabQuery]);
 
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="padding">

@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* SentenceBaseAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SentenceBaseAppTests.m */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		6172F2D35A4C3AA820D92908 /* libPods-SentenceBaseApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-SentenceBaseApp.a */; };
+		67D6818A2752DCBB0052167F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		67D681972752E6ED0052167F /* ClipboardListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D681962752E6ED0052167F /* ClipboardListener.swift */; };
+		67D681992752ECFA0052167F /* ClipboardListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 67D681982752ECFA0052167F /* ClipboardListener.m */; };
 		7EF68E3733C33B6898317E18 /* libPods-SentenceBaseApp-SentenceBaseAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-SentenceBaseApp-SentenceBaseAppTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -38,6 +40,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SentenceBaseApp/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig"; path = "Target Support Files/Pods-SentenceBaseApp-SentenceBaseAppTests/Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-SentenceBaseApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SentenceBaseApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		67D681912752E1240052167F /* SentenceBaseApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SentenceBaseApp-Bridging-Header.h"; path = "../SentenceBaseApp-Bridging-Header.h"; sourceTree = "<group>"; };
+		67D681962752E6ED0052167F /* ClipboardListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardListener.swift; sourceTree = "<group>"; };
+		67D681982752ECFA0052167F /* ClipboardListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClipboardListener.m; sourceTree = "<group>"; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-SentenceBaseApp-SentenceBaseAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SentenceBaseApp-SentenceBaseAppTests.debug.xcconfig"; path = "Target Support Files/Pods-SentenceBaseApp-SentenceBaseAppTests/Pods-SentenceBaseApp-SentenceBaseAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SentenceBaseApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-SentenceBaseApp-SentenceBaseAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SentenceBaseApp-SentenceBaseAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +97,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				67D681962752E6ED0052167F /* ClipboardListener.swift */,
+				67D681982752ECFA0052167F /* ClipboardListener.m */,
 			);
 			name = SentenceBaseApp;
 			sourceTree = "<group>";
@@ -116,6 +123,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				67D681912752E1240052167F /* SentenceBaseApp-Bridging-Header.h */,
 				13B07FAE1A68108700A75B9A /* SentenceBaseApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SentenceBaseAppTests */,
@@ -207,7 +215,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1310;
 					};
 				};
 			};
@@ -410,8 +418,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				67D681992752ECFA0052167F /* ClipboardListener.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				67D681972752E6ED0052167F /* ClipboardListener.swift in Sources */,
+				67D6818A2752DCBB0052167F /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +440,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6C97AB639B58BBB4B15BBE30 /* Pods-SentenceBaseApp-SentenceBaseAppTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = LSLXCHNSC8;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -458,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1D0AE47A65C8663E3B452821 /* Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = LSLXCHNSC8;
@@ -500,6 +512,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SentenceBaseApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "SentenceBaseApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -527,6 +540,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = SentenceBaseApp;
+				SWIFT_OBJC_BRIDGING_HEADER = "SentenceBaseApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
