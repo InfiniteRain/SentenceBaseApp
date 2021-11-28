@@ -32,7 +32,10 @@ export const getStorageItem = async (key: string): Promise<string | null> => {
   return value;
 };
 
-const setStorageItem = async (key: string, value: string): Promise<void> => {
+export const setStorageItem = async (
+  key: string,
+  value: string,
+): Promise<void> => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch {}

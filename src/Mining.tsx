@@ -19,12 +19,15 @@ import {Page, AppStateContext} from './AppStateContext';
 import {colors} from './Colors';
 import {sendEnsuredRequest, StandardResponse} from './Networking';
 import Toast from 'react-native-toast-message';
+import {getStorageItem, setStorageItem} from './Storage';
 
 interface Morpheme {
   word: string;
   dictionary_form: string;
   reading: string;
 }
+
+const TAGS_KEY = 'tags';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -40,7 +43,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 50,
   },
-
   clipboardCheckbox: {
     alignSelf: 'center',
   },
@@ -58,28 +60,25 @@ const styles = StyleSheet.create({
   backButton: {
     color: colors.primary,
   },
-  wordInputView: {
+  inputView: {
     backgroundColor: '#EEEEEE',
     borderRadius: 5,
     width: '80%',
     height: 45,
-    marginTop: 40,
     alignItems: 'center',
-    margin: 20,
+    marginTop: 10,
   },
-  readingInputView: {
-    backgroundColor: '#EEEEEE',
-    borderRadius: 5,
-    width: '80%',
-    height: 45,
-    alignItems: 'center',
-    margin: 20,
+  tagsInputView: {
+    marginBottom: 30,
   },
   input: {
     height: 50,
     flex: 1,
     padding: 10,
     fontSize: 30,
+  },
+  tagsInput: {
+    fontSize: 15,
   },
   wordTouchableOpacity: {
     marginLeft: 5,
@@ -122,10 +121,12 @@ export const Mining = () => {
   const [currentDictionaryForm, setCurrentDictionaryForm] = useState('');
   const [currentReading, setCurrentReading] = useState('');
   const [isScanningClipboard, setScanningClipboard] = useState(true);
+  const [tags, setTags] = useState('');
 
   const scanningRef = useRef<boolean>();
   const miningDataRef =
     useRef<{dictionary_form: string; reading: string; sentence: string}>();
+  const tagsRef = useRef<string>(tags);
 
   scanningRef.current = isScanningClipboard;
   miningDataRef.current = {
@@ -133,6 +134,7 @@ export const Mining = () => {
     reading: currentReading,
     sentence: currentMorphemes.map(morpheme => morpheme.word).join(''),
   };
+  tagsRef.current = tags;
 
   const onBack = () => {
     setCurrentPage(Page.UserMenu);
@@ -191,6 +193,13 @@ export const Mining = () => {
     setLoading(false);
   };
 
+  const saveTags = async () => {
+    const currentTags = tagsRef.current.trim().split(/\s+/).join(' ');
+
+    await setStorageItem(TAGS_KEY, currentTags);
+    setTags(currentTags);
+  };
+
   useEffect(() => {
     const regex =
       /^“([^”]+)”\n\nExcerpt From\n[^\n]+\n[^\n]+\nThis material may be protected by copyright.$/;
@@ -231,19 +240,13 @@ export const Mining = () => {
       },
     );
 
-      if (!Clipboard.hasString()) {
+    getStorageItem(TAGS_KEY).then(value => {
+      if (typeof value !== 'string') {
         return;
       }
 
-      const clipboardEntry = await Clipboard.getString();
-      await Clipboard.setString('');
-
-      if (clipboardEntry !== '') {
-        const filteredSentence = clipboardEntry.match(regex)?.[1];
-
-        await analyzeSentence(filteredSentence || clipboardEntry);
-      }
-    }, 1000);
+      setTags(value);
+    });
 
     return () => {
       eventEmitter.removeAllListeners('clipboardUpdate');
@@ -306,7 +309,18 @@ export const Mining = () => {
                 Mine Current Sentence
               </Text>
             </TouchableOpacity>
-            <View style={styles.wordInputView}>
+            <View style={[styles.inputView, styles.tagsInputView]}>
+              <TextInput
+                autoCapitalize="none"
+                placeholderTextColor={colors.dark}
+                value={tags}
+                onChangeText={setTags}
+                onEndEditing={saveTags}
+                editable={!isLoading}
+                style={[styles.input, styles.tagsInput]}
+              />
+            </View>
+            <View style={styles.inputView}>
               <TextInput
                 autoCapitalize="none"
                 placeholderTextColor={colors.dark}
@@ -316,7 +330,7 @@ export const Mining = () => {
                 style={styles.input}
               />
             </View>
-            <View style={styles.readingInputView}>
+            <View style={styles.inputView}>
               <TextInput
                 autoCapitalize="none"
                 placeholderTextColor={colors.dark}
