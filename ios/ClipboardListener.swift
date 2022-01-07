@@ -1,10 +1,3 @@
-//
-//  ClipboardListener.swift
-//  SentenceBaseApp
-//
-//  Created by David Lõssenko on 11/28/21.
-//
-
 import Foundation
 import React
 import UIKit
@@ -14,34 +7,36 @@ class ClipboardListener: RCTEventEmitter {
   var timer: Timer!
   let pasteboard: UIPasteboard = .general
   var lastChangeCount: Int = 0
-  var hasListener: Bool = false;
-  
+  var hasListener: Bool = false
+
   override init() {
     super.init()
-    
-    timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { (t) in
-      if self.lastChangeCount == self.pasteboard.changeCount || !self.hasListener {
-        return
-      }
-      
-      let diff = self.pasteboard.changeCount - self.lastChangeCount
-      self.lastChangeCount = self.pasteboard.changeCount
 
-      if diff != 1 {
-        return
-      }
-
-      self.sendEvent(
-        withName: "clipboardUpdate",
-        body: UIPasteboard.general.string ?? ""
-      )
+    timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] (t) in
+      guard let self = self else { return }
+      self.run()
     }
   }
-  
+
+  func run() {
+    if lastChangeCount == pasteboard.changeCount || !hasListener {
+      return
+    }
+
+    let diff = pasteboard.changeCount - lastChangeCount
+    lastChangeCount = pasteboard.changeCount
+
+    if diff != 1 {
+      return
+    }
+
+    sendEvent(withName: "clipboardUpdate", body: UIPasteboard.general.string ?? "")
+  }
+
   deinit {
     timer.invalidate()
   }
-  
+
   override func startObserving() {
     hasListener = true
   }
@@ -49,17 +44,17 @@ class ClipboardListener: RCTEventEmitter {
   override func stopObserving() {
     hasListener = false
   }
-  
+
   static override func moduleName() -> String! {
-    return "ClipboardListener";
+    "ClipboardListener"
   }
-  
+
   static override func requiresMainQueueSetup() -> Bool {
-    return true;
+    true
   }
-  
+
   @objc
   override func supportedEvents() -> [String]! {
-    return ["clipboardUpdate"];
+    ["clipboardUpdate"]
   }
 }
