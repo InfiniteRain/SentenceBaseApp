@@ -1,3 +1,12 @@
+export type SentenceEntry = {
+  sentenceId: string;
+  sentence: string;
+  dictionaryForm: string;
+  reading: string;
+  frequency: number;
+  dictionaryFrequency: number;
+};
+
 export const colors = {
   primary: '#1292B4',
   white: '#FFF',
