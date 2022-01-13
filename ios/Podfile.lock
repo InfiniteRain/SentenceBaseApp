@@ -385,6 +385,9 @@ PODS:
   - Firebase/Firestore (8.10.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.10.0)
+  - Firebase/Functions (8.10.0):
+    - Firebase/CoreOnly
+    - FirebaseFunctions (~> 8.10.0)
   - FirebaseAnonymousAuthUI (12.0.0):
     - FirebaseAuth (~> 8.0)
     - FirebaseAuthUI
@@ -437,6 +440,9 @@ PODS:
     - nanopb (~> 2.30908.0)
   - FirebaseFirestoreUI (12.0.0):
     - FirebaseFirestore (~> 8.0)
+  - FirebaseFunctions (8.10.0):
+    - FirebaseCore (~> 8.0)
+    - GTMSessionFetcher/Core (~> 1.5)
   - FirebaseGoogleAuthUI (12.0.0):
     - FirebaseAuth
     - FirebaseAuthUI
@@ -895,6 +901,10 @@ PODS:
     - Firebase/Firestore (= 8.10.0)
     - React-Core
     - RNFBApp
+  - RNFBFunctions (14.2.2):
+    - Firebase/Functions (= 8.10.0)
+    - React-Core
+    - RNFBApp
   - RNGoogleSignin (7.0.4):
     - GoogleSignIn (~> 6.0.0)
     - React-Core
@@ -969,6 +979,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -994,6 +1005,7 @@ SPEC REPOS:
     - FirebaseFacebookAuthUI
     - FirebaseFirestore
     - FirebaseFirestoreUI
+    - FirebaseFunctions
     - FirebaseGoogleAuthUI
     - FirebaseOAuthUI
     - FirebasePhoneAuthUI
@@ -1102,6 +1114,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNFBFunctions:
+    :path: "../node_modules/@react-native-firebase/functions"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   Yoga:
@@ -1132,6 +1146,7 @@ SPEC CHECKSUMS:
   FirebaseFacebookAuthUI: a478313687c2001b53470d7cc265a48a2c504ab8
   FirebaseFirestore: 0e7321a508cc9de54316ec45400caba6b5719beb
   FirebaseFirestoreUI: ec98193d249eaa30ed615857b1daf475fbc75248
+  FirebaseFunctions: 9c406f9b2deb72719437565c106ca4a439d2a661
   FirebaseGoogleAuthUI: 6981c0c3c054367f9ccd730fbcf483504deb0a68
   FirebaseOAuthUI: 8dc3d0270781133b10b2666d1163cd298501f453
   FirebasePhoneAuthUI: d84be4a096ddc19f9aace4a6ebcf80fe334f466b
@@ -1194,6 +1209,7 @@ SPEC CHECKSUMS:
   RNFBApp: 78d0446e8b28dc30616c134a9e4d8d4b01f9f966
   RNFBAuth: ac807e2ed1c08f1157bd866ede64faa706eab303
   RNFBFirestore: 0b11664ee7aef061378ad3a3acc48d0bc31d821a
+  RNFBFunctions: 781443dff0fba04ffe2c33b69a93c3c7d0ea665a
   RNGoogleSignin: c4381751eefd73c552b923ba347a9bfc6f18771c
   SDWebImage: 240e5c12b592fb1268c1d03b8c90d90e8c2ffe82
   Yoga: 9a08effa851c1d8cc1647691895540bc168ea65f
