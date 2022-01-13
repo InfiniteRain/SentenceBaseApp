@@ -5,6 +5,7 @@ export enum Page {
   MainMenu,
   PendingSentences,
   Mining,
+  NewBatch,
 }
 
 export type MecabMorpheme = {

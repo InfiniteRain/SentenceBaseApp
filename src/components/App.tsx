@@ -15,6 +15,7 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {Mining} from './mining';
 import frequencyListArray from '../frequency-lists/jp.json';
+import {NewBatch} from './new-batch';
 
 let frequencyList: Map<string, number> | null = null;
 
@@ -191,6 +192,9 @@ export const App = () => {
         break;
       case Page.Mining:
         currentStateComponent = <Mining />;
+        break;
+      case Page.NewBatch:
+        currentStateComponent = <NewBatch />;
         break;
     }
   }

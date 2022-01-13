@@ -48,7 +48,7 @@ export const MainMenu = () => {
   };
 
   const onNewBatch = async () => {
-    // setCurrentPage(Page.NewBatch);
+    setCurrentPage(Page.NewBatch);
   };
 
   const onLogout = async () => {

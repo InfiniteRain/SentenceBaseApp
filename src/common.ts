@@ -5,6 +5,7 @@ export type SentenceEntry = {
   dictionaryForm: string;
   reading: string;
   frequency: number;
+  dictionaryFrequency?: number;
 };
 
 export const colors = {
