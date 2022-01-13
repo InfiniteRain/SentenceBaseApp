@@ -41,6 +41,7 @@ export const AppStateContext = createContext<{
   batch: SentenceEntry[];
   setBatch: (batch: SentenceEntry[]) => void;
   mecabQuery: (query: string) => Promise<MecabMorpheme[]>;
+  frequencyQuery: (dictionaryForm: string, reading: string) => Promise<number>;
 }>({
   isLoading: false,
   setLoading: (_isLoading: boolean) => {},
@@ -49,4 +50,5 @@ export const AppStateContext = createContext<{
   batch: [],
   setBatch: (_batch: SentenceEntry[]) => {},
   mecabQuery: async (_query: string) => [],
+  frequencyQuery: async (_dictionaryForm: string, _reading: string) => 0,
 });
