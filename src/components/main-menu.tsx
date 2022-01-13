@@ -40,7 +40,7 @@ export const MainMenu = () => {
   const [isApiAvailable, setApiAvailable] = useState(false);
 
   const onMining = async () => {
-    // setCurrentPage(Page.Mining);
+    setCurrentPage(Page.Mining);
   };
 
   const onPending = async () => {
@@ -52,9 +52,6 @@ export const MainMenu = () => {
   };
 
   const onLogout = async () => {
-    // setLoading(true);
-    // await clearTokens();
-    // setCurrentPage(Page.LoginScreen);
     await auth().signOut();
   };
 

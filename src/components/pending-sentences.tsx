@@ -12,15 +12,13 @@ import {
 import Toast from 'react-native-toast-message';
 import {Page, AppStateContext} from '../app-state-context';
 import {SentenceEntry, colors} from '../common';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import functions from '@react-native-firebase/functions';
 
-const authInstance = auth();
-const firestoreInstance = firestore();
-const sentencesCollection = firestoreInstance.collection('sentences');
-const wordsCollection = firestoreInstance.collection('words');
-const deleteSentence = functions().httpsCallable('deleteSentence');
+const functionsInstance = functions();
+const deleteSentence = functionsInstance.httpsCallable('deleteSentence');
+const getPendingSentences = functionsInstance.httpsCallable(
+  'getPendingSentences',
+);
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -80,9 +78,9 @@ const styles = StyleSheet.create({
 
 export const PendingSentences = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {setCurrentPage, batch, setBatch} = useContext(AppStateContext);
+  const {isLoading, setLoading, setCurrentPage, batch, setBatch} =
+    useContext(AppStateContext);
 
-  const [isLoading, setLoading] = useState(false);
   const [sentences, setSentences] = useState<SentenceEntry[]>([]);
   const [sentenceToDelete, setSentenceToDelete] =
     useState<SentenceEntry | null>(null);
@@ -92,40 +90,7 @@ export const PendingSentences = () => {
     setLoading(true);
 
     try {
-      const sentenceEntries: SentenceEntry[] = [];
-      const userUid = authInstance.currentUser?.uid;
-
-      const sentencesSnap = await sentencesCollection
-        .where('userUid', '==', userUid)
-        .where('isPending', '==', true)
-        .orderBy('createdAt', 'desc')
-        .get();
-
-      for (const sentenceDocSnap of sentencesSnap.docs) {
-        const sentenceData = sentenceDocSnap.data();
-
-        console.log(sentenceData);
-        console.log(userUid);
-
-        const wordsDocSnap = await wordsCollection
-          .where(firestore.FieldPath.documentId(), '==', sentenceData.wordId)
-          .where('userUid', '==', userUid)
-          .get();
-
-        const wordData = wordsDocSnap.docs[0].data();
-        console.log(wordData);
-
-        sentenceEntries.push({
-          sentenceId: sentenceDocSnap.id,
-          sentence: sentenceData.sentence,
-          dictionaryForm: wordData.dictionaryForm,
-          reading: wordData.reading,
-          frequency: wordData.frequency,
-          dictionaryFrequency: 0,
-        });
-      }
-
-      setSentences(sentenceEntries);
+      setSentences((await getPendingSentences()).data);
     } catch {
       Toast.show({
         type: 'error',
@@ -156,6 +121,12 @@ export const PendingSentences = () => {
 
     try {
       await deleteSentence({sentenceId: sentenceToDelete.sentenceId});
+
+      const filter = (sentence: SentenceEntry) =>
+        sentence.sentenceId !== sentenceToDelete.sentenceId;
+
+      setSentences(sentences.filter(filter));
+      setBatch(batch.filter(filter));
     } catch {
       Toast.show({
         type: 'error',
@@ -164,11 +135,6 @@ export const PendingSentences = () => {
       });
     }
 
-    const filter = (sentence: SentenceEntry) =>
-      sentence.sentenceId !== sentenceToDelete.sentenceId;
-
-    setSentences(sentences.filter(filter));
-    setBatch(batch.filter(filter));
     setLoading(false);
   };
 
