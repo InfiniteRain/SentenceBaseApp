@@ -1,33 +1,59 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
-import Auth from 'react-native-firebaseui-auth';
+import {Text, useColorScheme} from 'react-native';
+import AuthUI from 'react-native-firebaseui-auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {AppStateContext, Page} from '../app-state-context';
+import {colors} from '../colors';
+import Toast from 'react-native-toast-message';
+import {MainMenu} from './main-menu';
 
 export const App = () => {
-  const [user, setUser] = useState<Auth.User | null>();
+  const isDarkMode = useColorScheme() === 'dark';
 
-  useEffect(() => {
-    const initAuth = async () => {
-      let currentUser = await Auth.getCurrentUser();
-      setUser(currentUser);
+  const [currentUser, setCurrentUser] =
+    useState<FirebaseAuthTypes.User | null>();
+  const [currentPage, setCurrentPage] = useState<Page>(Page.MainMenu);
 
-      while (!currentUser) {
-        try {
-          currentUser = await Auth.signIn({
-            providers: ['email'],
-            allowNewEmailAccounts: true,
-            requireDisplayName: false,
-          });
-          setUser(currentUser);
-        } catch {}
-      }
-    };
+  useEffect(
+    () =>
+      auth().onAuthStateChanged(async user => {
+        setCurrentUser(user);
 
-    initAuth();
-  }, []);
+        let isLoggedIn = user !== null;
 
-  if (!user) {
-    return <></>;
+        while (!isLoggedIn) {
+          try {
+            await AuthUI.signIn({
+              providers: ['email'],
+              allowNewEmailAccounts: true,
+              requireDisplayName: false,
+            });
+            isLoggedIn = true;
+          } catch {}
+        }
+      }),
+    [],
+  );
+
+  let currentStateComponent = <></>;
+
+  if (currentUser) {
+    switch (currentPage) {
+      case Page.MainMenu:
+        currentStateComponent = <MainMenu />;
+        break;
+    }
   }
 
-  return <Text style={{paddingTop: 40}}>Welcome, {user.email}</Text>;
+  return (
+    <AppStateContext.Provider
+      value={{
+        currentPage,
+        setCurrentPage,
+      }}>
+      {currentStateComponent}
+
+      <Toast />
+    </AppStateContext.Provider>
+  );
 };
