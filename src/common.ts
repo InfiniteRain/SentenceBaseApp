@@ -1,10 +1,10 @@
 export type SentenceEntry = {
+  wordId: string;
   sentenceId: string;
   sentence: string;
   dictionaryForm: string;
   reading: string;
   frequency: number;
-  dictionaryFrequency: number;
 };
 
 export const colors = {

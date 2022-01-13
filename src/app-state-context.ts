@@ -4,6 +4,7 @@ import {SentenceEntry} from './common';
 export enum Page {
   MainMenu,
   PendingSentences,
+  Mining,
 }
 
 export type MecabMorpheme = {
@@ -33,12 +34,16 @@ export type MecabMessage =
     };
 
 export const AppStateContext = createContext<{
+  isLoading: boolean;
+  setLoading: (isLoading: boolean) => void;
   currentPage: Page;
   setCurrentPage: (page: Page) => void;
   batch: SentenceEntry[];
   setBatch: (batch: SentenceEntry[]) => void;
   mecabQuery: (query: string) => Promise<MecabMorpheme[]>;
 }>({
+  isLoading: false,
+  setLoading: (_isLoading: boolean) => {},
   currentPage: Page.MainMenu,
   setCurrentPage: (_page: Page) => {},
   batch: [],

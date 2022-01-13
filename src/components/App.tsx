@@ -11,8 +11,9 @@ import Toast from 'react-native-toast-message';
 import {MainMenu} from './main-menu';
 import {SentenceEntry} from '../common';
 import {PendingSentences} from './pending-sentences';
-import {StyleSheet, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
+import {Mining} from './mining';
 
 const styles = StyleSheet.create({
   mecabWebViewContainer: {
@@ -22,6 +23,16 @@ const styles = StyleSheet.create({
     width: 0,
     height: 0,
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(128, 128, 128, 0.5)',
+  },
 });
 
 export const App = () => {
@@ -30,6 +41,7 @@ export const App = () => {
     initPromiseResolve = resolve;
   });
 
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [currentUser, setCurrentUser] =
     useState<FirebaseAuthTypes.User | null>();
   const [currentPage, setCurrentPage] = useState<Page>(Page.MainMenu);
@@ -155,12 +167,17 @@ export const App = () => {
       case Page.PendingSentences:
         currentStateComponent = <PendingSentences />;
         break;
+      case Page.Mining:
+        currentStateComponent = <Mining />;
+        break;
     }
   }
 
   return (
     <AppStateContext.Provider
       value={{
+        isLoading,
+        setLoading,
         currentPage,
         setCurrentPage,
         batch,
@@ -170,6 +187,11 @@ export const App = () => {
       {currentStateComponent}
       <View style={styles.mecabWebViewContainer}>{mecabWebViewComponent}</View>
       <Toast />
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
     </AppStateContext.Provider>
   );
 };
