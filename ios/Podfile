@@ -13,6 +13,7 @@ target 'SentenceBaseApp' do
   )
 
   pod 'GoogleSignIn', '~> 6.0.2'
+  pod 'FirebaseUI'
 
   target 'SentenceBaseAppTests' do
     inherit! :complete
