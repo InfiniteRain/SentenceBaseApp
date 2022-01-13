@@ -14,6 +14,22 @@ import {PendingSentences} from './pending-sentences';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {Mining} from './mining';
+import frequencyListArray from '../frequency-lists/jp.json';
+
+let frequencyList: Map<string, number> | null = null;
+
+const getFrequencyList = async (): Promise<Map<string, number>> => {
+  if (!frequencyList) {
+    frequencyList = new Map(
+      frequencyListArray.map(([dictionaryForm, reading], index) => [
+        `${dictionaryForm}|${reading}`,
+        index,
+      ]),
+    );
+  }
+
+  return frequencyList;
+};
 
 const styles = StyleSheet.create({
   mecabWebViewContainer: {
@@ -146,6 +162,12 @@ export const App = () => {
     return await promise;
   };
 
+  const frequencyQuery = async (
+    dictionaryForm: string,
+    reading: string,
+  ): Promise<number> =>
+    (await getFrequencyList()).get(`${dictionaryForm}|${reading}`) ?? 999999;
+
   let currentStateComponent = <></>;
 
   const mecabWebViewComponent = (
@@ -183,6 +205,7 @@ export const App = () => {
         batch,
         setBatch,
         mecabQuery,
+        frequencyQuery,
       }}>
       {currentStateComponent}
       <View style={styles.mecabWebViewContainer}>{mecabWebViewComponent}</View>
