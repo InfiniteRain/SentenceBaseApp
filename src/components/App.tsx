@@ -14,13 +14,18 @@ import {PendingSentences} from './pending-sentences';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {Mining} from './mining';
-import frequencyListArray from '../frequency-lists/jp.json';
+import jp1 from '../frequency-lists/jp_1.json';
+import jp2 from '../frequency-lists/jp_2.json';
+import jp3 from '../frequency-lists/jp_3.json';
+import jp4 from '../frequency-lists/jp_4.json';
 import {NewBatch} from './new-batch';
 
 let frequencyList: Map<string, number> | null = null;
 
 const getFrequencyList = async (): Promise<Map<string, number>> => {
   if (!frequencyList) {
+    const frequencyListArray = [...jp1, ...jp2, ...jp3, ...jp4];
+
     frequencyList = new Map(
       frequencyListArray.map(([dictionaryForm, reading], index) => [
         `${dictionaryForm}|${reading}`,

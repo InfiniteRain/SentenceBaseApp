@@ -234,8 +234,7 @@ export const NewBatch = () => {
                 {color: isDarkMode ? colors.white : colors.black},
               ]}>
               <Text style={{color: colors.primary}}>
-                {entry.item.dictionaryForm}（{entry.item.reading}）|{' '}
-                {entry.item.frequency} | {entry.item.dictionaryFrequency}
+                {entry.item.dictionaryForm}（{entry.item.reading}）
               </Text>
               {entry.item.sentence}
             </Text>
