@@ -115,6 +115,8 @@ export const App = () => {
             providers: ['email'],
             allowNewEmailAccounts: true,
             requireDisplayName: false,
+            tosUrl: '',
+            privacyPolicyUrl: '',
           });
           isLoggedIn = true;
         } catch {}
