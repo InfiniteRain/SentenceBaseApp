@@ -9,32 +9,30 @@ import {
 } from '../app-state-context';
 import Toast from 'react-native-toast-message';
 import {MainMenu} from './main-menu';
-import {SentenceEntry} from '../common';
+import {DictionaryEntry, SentenceEntry} from '../common';
 import {PendingSentences} from './pending-sentences';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {Mining} from './mining';
-import jp1 from '../frequency-lists/jp_1.json';
-import jp2 from '../frequency-lists/jp_2.json';
-import jp3 from '../frequency-lists/jp_3.json';
-import jp4 from '../frequency-lists/jp_4.json';
 import {NewBatch} from './new-batch';
+import {katakanaToHiragana} from '../format-generator';
 
-let frequencyList: Map<string, number> | null = null;
+let dictionary: Record<string, [number, number[][], string[][]]> | null = null;
 
-const getFrequencyList = async (): Promise<Map<string, number>> => {
-  if (!frequencyList) {
-    const frequencyListArray = [...jp1, ...jp2, ...jp3, ...jp4];
-
-    frequencyList = new Map(
-      frequencyListArray.map(([dictionaryForm, reading], index) => [
-        `${dictionaryForm}|${reading}`,
-        index,
-      ]),
-    );
+const getDictionary = async (): Promise<
+  Record<string, [number, number[][], string[][]]>
+> => {
+  if (!dictionary) {
+    dictionary = {
+      ...require('../dictionaries/jp-dict-1.json'),
+      ...require('../dictionaries/jp-dict-2.json'),
+      ...require('../dictionaries/jp-dict-3.json'),
+      ...require('../dictionaries/jp-dict-4.json'),
+      ...require('../dictionaries/jp-dict-5.json'),
+    };
   }
 
-  return frequencyList;
+  return dictionary ?? {};
 };
 
 const styles = StyleSheet.create({
@@ -170,11 +168,21 @@ export const App = () => {
     return await promise;
   };
 
-  const frequencyQuery = async (
+  const dictionaryQuery = async (
     dictionaryForm: string,
     reading: string,
-  ): Promise<number> =>
-    (await getFrequencyList()).get(`${dictionaryForm}|${reading}`) ?? 999999;
+  ): Promise<DictionaryEntry> => {
+    const hiraganaReading = katakanaToHiragana(reading);
+    const dictionaryData = (await getDictionary())[
+      `${dictionaryForm}|${hiraganaReading}`
+    ] ?? [999999, [], []];
+
+    return {
+      frequency: dictionaryData[0],
+      pitchNums: dictionaryData[1],
+      pitchNames: dictionaryData[2],
+    };
+  };
 
   let currentStateComponent = <></>;
 
@@ -216,7 +224,7 @@ export const App = () => {
         batch,
         setBatch,
         mecabQuery,
-        frequencyQuery,
+        dictionaryQuery,
       }}>
       {currentStateComponent}
       <View style={styles.mecabWebViewContainer}>{mecabWebViewComponent}</View>

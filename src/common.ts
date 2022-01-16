@@ -8,6 +8,12 @@ export type SentenceEntry = {
   dictionaryFrequency?: number;
 };
 
+export type DictionaryEntry = {
+  frequency: number;
+  pitchNums: number[][];
+  pitchNames: string[][];
+};
+
 export const colors = {
   primary: '#1292B4',
   white: '#FFF',
