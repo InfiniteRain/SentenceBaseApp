@@ -1,5 +1,5 @@
 import {createContext} from 'react';
-import {SentenceEntry} from './common';
+import {DictionaryEntry, SentenceEntry} from './common';
 
 export enum Page {
   MainMenu,
@@ -42,7 +42,10 @@ export const AppStateContext = createContext<{
   batch: SentenceEntry[];
   setBatch: (batch: SentenceEntry[]) => void;
   mecabQuery: (query: string) => Promise<MecabMorpheme[]>;
-  frequencyQuery: (dictionaryForm: string, reading: string) => Promise<number>;
+  dictionaryQuery: (
+    dictionaryForm: string,
+    reading: string,
+  ) => Promise<DictionaryEntry>;
 }>({
   isLoading: false,
   setLoading: (_isLoading: boolean) => {},
@@ -51,5 +54,9 @@ export const AppStateContext = createContext<{
   batch: [],
   setBatch: (_batch: SentenceEntry[]) => {},
   mecabQuery: async (_query: string) => [],
-  frequencyQuery: async (_dictionaryForm: string, _reading: string) => 0,
+  dictionaryQuery: async (_dictionaryForm: string, _reading: string) => ({
+    frequency: 999999,
+    pitchNums: [],
+    pitchNames: [],
+  }),
 });

@@ -101,7 +101,7 @@ export const NewBatch = () => {
     setCurrentPage,
     setBatch,
     batch,
-    frequencyQuery,
+    dictionaryQuery,
     isLoading,
     setLoading,
   } = useContext(AppStateContext);
@@ -119,10 +119,9 @@ export const NewBatch = () => {
       const sentences = (await getPendingSentences()).data;
 
       for (const sentence of sentences) {
-        sentence.dictionaryFrequency = await frequencyQuery(
-          sentence.dictionaryForm,
-          sentence.reading,
-        );
+        sentence.dictionaryFrequency = (
+          await dictionaryQuery(sentence.dictionaryForm, sentence.reading)
+        ).frequency;
       }
 
       setBatch(
