@@ -9,6 +9,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {LogBox} from 'react-native';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
+LogBox.ignoreLogs(['ANKIDROID ANDROID_USE_ONLY']);
 
 GoogleSignin.configure({
   webClientId:
