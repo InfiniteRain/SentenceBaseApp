@@ -20,6 +20,9 @@ import {Export} from './export';
 
 let dictionary: Record<string, [number, number[][], string[][]]> | null = null;
 
+// todo: this doesn't need to be accessed thru components nor does it need to
+// be async
+
 const getDictionary = async (): Promise<
   Record<string, [number, number[][], string[][]]>
 > => {

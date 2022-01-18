@@ -1,4 +1,3 @@
-import CheckBox from '@react-native-community/checkbox';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   Keyboard,
@@ -11,7 +10,6 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  useColorScheme,
   View,
 } from 'react-native';
 import {Page, AppStateContext} from '../app-state-context';
@@ -19,6 +17,7 @@ import {colors} from '../common';
 import Toast from 'react-native-toast-message';
 import functions from '@react-native-firebase/functions';
 import {getStorageItem, setStorageItem} from '../storage';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 interface Morpheme {
   word: string;
@@ -29,6 +28,9 @@ interface Morpheme {
 const TAGS_KEY = 'tags';
 
 const addSentence = functions().httpsCallable('addSentence');
+
+const filterRegex =
+  /^“([^”]+)”\n\nExcerpt From\n[^\n]+\n[^\n]+\nThis material may be protected by copyright.$/;
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {
@@ -41,24 +43,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 0,
   },
-  clipboardCheckboxContainer: {
+  pasteFromClipboardButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 50,
+    padding: 5,
+    margin: 7,
+    marginTop: 10,
+    borderRadius: 5,
+    backgroundColor: colors.primary,
   },
-  clipboardCheckbox: {
-    alignSelf: 'center',
-  },
-  clipboardCheckboxLabel: {
-    margin: 8,
-    fontSize: 16,
+  pasteFromClipboardButton: {
+    color: colors.white,
   },
   backButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 10,
+    paddingTop: 50,
     marginBottom: 50,
   },
   backButton: {
@@ -118,14 +120,12 @@ const styles = StyleSheet.create({
 });
 
 export const Mining = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const {isLoading, setLoading, setCurrentPage, setBatch, mecabQuery} =
     useContext(AppStateContext);
 
   const [currentMorphemes, setCurrentMorphemes] = useState<Morpheme[]>([]);
   const [currentDictionaryForm, setCurrentDictionaryForm] = useState('');
   const [currentReading, setCurrentReading] = useState('');
-  const [isScanningClipboard, setScanningClipboard] = useState(true);
   const [tags, setTags] = useState('');
 
   const isLoadingRef = useRef<boolean>(false);
@@ -152,6 +152,7 @@ export const Mining = () => {
         dictionaryForm: currentDictionaryForm,
         reading: currentReading,
         sentence: currentSentence,
+        tags: tags.split(/\s+/),
       });
 
       setCurrentMorphemes([]);
@@ -176,6 +177,11 @@ export const Mining = () => {
     setLoading(false);
   };
 
+  const onPaste = async () => {
+    const text = await Clipboard.getString();
+    await analyzeSentence(text);
+  };
+
   const saveTags = async () => {
     const currentTags = tags.trim().split(/\s+/).join(' ');
 
@@ -183,33 +189,31 @@ export const Mining = () => {
     setTags(currentTags);
   };
 
+  const analyzeSentence = async (sentence: string) => {
+    const filteredSentence = sentence.match(filterRegex)?.[1];
+    const mecabResult = await mecabQuery(filteredSentence || sentence);
+    const morphemes: Morpheme[] = [];
+
+    for (const entry of mecabResult) {
+      const dictionaryFormReading =
+        entry.dictionary_form !== '*'
+          ? (await mecabQuery(entry.dictionary_form))[0].reading ?? entry.word
+          : entry.word;
+
+      morphemes.push({
+        word: entry.word,
+        dictionary_form:
+          entry.dictionary_form !== '*' ? entry.dictionary_form : entry.word,
+        reading: dictionaryFormReading,
+      });
+    }
+
+    setCurrentDictionaryForm('');
+    setCurrentReading('');
+    setCurrentMorphemes(morphemes);
+  };
+
   useEffect(() => {
-    const regex =
-      /^“([^”]+)”\n\nExcerpt From\n[^\n]+\n[^\n]+\nThis material may be protected by copyright.$/;
-
-    const analyzeSentence = async (sentence: string) => {
-      const mecabResult = await mecabQuery(sentence);
-      const morphemes: Morpheme[] = [];
-
-      for (const entry of mecabResult) {
-        const dictionaryFormReading =
-          entry.dictionary_form !== '*'
-            ? (await mecabQuery(entry.dictionary_form))[0].reading ?? entry.word
-            : entry.word;
-
-        morphemes.push({
-          word: entry.word,
-          dictionary_form:
-            entry.dictionary_form !== '*' ? entry.dictionary_form : entry.word,
-          reading: dictionaryFormReading,
-        });
-      }
-
-      setCurrentDictionaryForm('');
-      setCurrentReading('');
-      setCurrentMorphemes(morphemes);
-    };
-
     const eventEmitter = new NativeEventEmitter(
       NativeModules.ClipboardListener,
     );
@@ -221,8 +225,7 @@ export const Mining = () => {
         }
 
         if (clipboardEntry !== '') {
-          const filteredSentence = clipboardEntry.match(regex)?.[1];
-          await analyzeSentence(filteredSentence || clipboardEntry);
+          await analyzeSentence(clipboardEntry);
         }
       },
     );
@@ -238,6 +241,7 @@ export const Mining = () => {
     return () => {
       eventEmitter.removeAllListeners('clipboardUpdate');
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mecabQuery]);
 
   return (
@@ -245,23 +249,6 @@ export const Mining = () => {
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior="padding">
-        <View style={styles.clipboardCheckboxContainer}>
-          <CheckBox
-            value={isScanningClipboard}
-            onValueChange={setScanningClipboard}
-            style={styles.clipboardCheckbox}
-            disabled={isLoading}
-          />
-          <Text
-            style={[
-              styles.clipboardCheckboxLabel,
-              {
-                color: isDarkMode ? colors.white : colors.black,
-              },
-            ]}>
-            Scan Clipboard for Sentences
-          </Text>
-        </View>
         <View style={styles.backButtonContainer}>
           <TouchableOpacity onPress={onBack} disabled={isLoading}>
             <Text style={styles.backButton}>Back to Menu</Text>
@@ -329,6 +316,13 @@ export const Mining = () => {
                   editable={currentMorphemes.length > 0 && !isLoading}
                   style={styles.input}
                 />
+              </View>
+              <View style={styles.pasteFromClipboardButtonContainer}>
+                <TouchableOpacity disabled={isLoading} onPress={onPaste}>
+                  <Text style={styles.pasteFromClipboardButton}>
+                    Paste From Clipboard
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.wordTextView}>
                 {[...currentMorphemes.entries()].map(([key, morpheme]) => (

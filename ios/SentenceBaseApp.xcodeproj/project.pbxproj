@@ -41,7 +41,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SentenceBaseApp/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig"; path = "Target Support Files/Pods-SentenceBaseApp-SentenceBaseAppTests/Pods-SentenceBaseApp-SentenceBaseAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-SentenceBaseApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SentenceBaseApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6747F6AA278894A60052ADEE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6747F6AA278894A60052ADEE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "./GoogleService-Info.plist"; sourceTree = "<group>"; };
 		67D681912752E1240052167F /* SentenceBaseApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "SentenceBaseApp-Bridging-Header.h"; path = "../SentenceBaseApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		67D681962752E6ED0052167F /* ClipboardListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardListener.swift; sourceTree = "<group>"; };
 		67D681982752ECFA0052167F /* ClipboardListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClipboardListener.m; sourceTree = "<group>"; };
@@ -700,7 +700,7 @@
 				00E356F71AD99517003FC87E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SentenceBaseApp" */ = {
 			isa = XCConfigurationList;
@@ -709,7 +709,7 @@
 				13B07F951A680F5B00A75B9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "SentenceBaseApp" */ = {
 			isa = XCConfigurationList;
@@ -718,7 +718,7 @@
 				83CBBA211A601CBA00E9B192 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
