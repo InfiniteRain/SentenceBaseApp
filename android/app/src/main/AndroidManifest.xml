@@ -14,16 +14,25 @@
       android:theme="@style/AppTheme"
       tools:replace="android:allowBackup"
       android:requestLegacyExternalStorage="true">
-      <activity
-        android:name=".MainActivity"
-        android:label="@string/app_name"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
-        android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <activity
+          android:name=".MainActivity"
+          android:label="@string/app_name"
+          android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+          android:launchMode="singleTask"
+          android:windowSoftInputMode="adjustResize">
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
       </activity>
+      <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.sentencebaseapp.fileProvider"
+        android:grantUriPermissions="true"
+        android:exported="false">
+          <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+      </provider>
     </application>
 </manifest>

@@ -62,7 +62,7 @@ export const MainMenu = () => {
       return;
     }
 
-    // setCurrentPage(Page.Export);
+    setCurrentPage(Page.Export);
   };
 
   useEffect(() => {

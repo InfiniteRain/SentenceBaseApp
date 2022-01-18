@@ -6,6 +6,9 @@ import {AppRegistry} from 'react-native';
 import {App} from './src/components/app';
 import {name as appName} from './app.json';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 GoogleSignin.configure({
   webClientId:

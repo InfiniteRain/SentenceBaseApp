@@ -14,6 +14,16 @@ export type DictionaryEntry = {
   pitchNames: string[][];
 };
 
+export type Batch = {
+  sentences: {
+    sentenceId: string;
+    sentence: string;
+    wordDictionaryForm: string;
+    wordReading: string;
+    tags: string[];
+  }[];
+};
+
 export const colors = {
   primary: '#1292B4',
   white: '#FFF',
