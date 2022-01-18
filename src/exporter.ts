@@ -26,11 +26,11 @@ type JishoResponse = {
 const jishoApi = 'https://jisho.org/api/v1/search/words';
 const forvoUri = 'https://forvo.com/word';
 const frequencyRanges = [
-  [0, 1_500],
-  [1_500, 5_000],
-  [5_000, 15_000],
-  [15_000, 30_000],
-  [30_000, 60_000],
+  [0, 1500],
+  [1500, 5000],
+  [5000, 15000],
+  [15000, 30000],
+  [30000, 60000],
 ];
 const starChar = '★';
 
