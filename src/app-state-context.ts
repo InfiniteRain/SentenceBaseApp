@@ -6,6 +6,7 @@ export enum Page {
   PendingSentences,
   Mining,
   NewBatch,
+  Export,
 }
 
 export type MecabMorpheme = {

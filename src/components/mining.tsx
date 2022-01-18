@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontSize: 30,
+    color: '#000000',
   },
   tagsInput: {
     fontSize: 15,

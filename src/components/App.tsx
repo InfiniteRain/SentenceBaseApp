@@ -16,6 +16,7 @@ import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {Mining} from './mining';
 import {NewBatch} from './new-batch';
 import {katakanaToHiragana} from '../format-generator';
+import {Export} from './export';
 
 let dictionary: Record<string, [number, number[][], string[][]]> | null = null;
 
@@ -210,6 +211,9 @@ export const App = () => {
         break;
       case Page.NewBatch:
         currentStateComponent = <NewBatch />;
+        break;
+      case Page.Export:
+        currentStateComponent = <Export />;
         break;
     }
   }

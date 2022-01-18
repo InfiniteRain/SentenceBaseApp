@@ -230,7 +230,6 @@ const caclulateBracketPosition = (
     }
   }
 
-  console.log('returning', morpheme.word, '2');
   return {
     bracketPosition: morpheme.word.length,
     furigana: '',
@@ -270,13 +269,14 @@ const getPitchAccentString = (
     .join(',');
 
 export const generateExtendedFormat = async (
-  morphemes: MecabMorpheme[],
+  text: string,
   mecabQuery: (query: string) => Promise<MecabMorpheme[]>,
   dictionaryQuery: (
     dictionaryForm: string,
     reading: string,
   ) => Promise<DictionaryEntry>,
 ) => {
+  const morphemes = await mecabQuery(text);
   const analyzedMorphemes = combineVerbs(morphemes);
   const formattedSegments: string[] = [];
 
