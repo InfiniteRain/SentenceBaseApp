@@ -99,11 +99,9 @@ const styles = StyleSheet.create({
     alignContent: 'space-between',
   },
   wordText: {
-    color: colors.primary,
     fontSize: 24,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: colors.primary,
     padding: 4,
     marginBottom: 10,
   },
@@ -123,7 +121,9 @@ export const Mining = () => {
   const {isLoading, setLoading, setCurrentPage, setBatch, mecabQuery} =
     useContext(AppStateContext);
 
-  const [currentMorphemes, setCurrentMorphemes] = useState<Morpheme[]>([]);
+  const [currentMorphemes, setCurrentMorphemes] = useState<
+    (Morpheme & {ignored: boolean})[]
+  >([]);
   const [currentDictionaryForm, setCurrentDictionaryForm] = useState('');
   const [currentReading, setCurrentReading] = useState('');
   const [tags, setTags] = useState('');
@@ -138,6 +138,7 @@ export const Mining = () => {
 
   const onMine = async () => {
     const currentSentence = currentMorphemes
+      .filter(morpheme => !morpheme.ignored)
       .map(morpheme => morpheme.word)
       .join('');
 
@@ -152,7 +153,7 @@ export const Mining = () => {
         dictionaryForm: currentDictionaryForm,
         reading: currentReading,
         sentence: currentSentence,
-        tags: tags.split(/\s+/),
+        tags: tags ? tags.split(/\s+/) : [],
       });
 
       setCurrentMorphemes([]);
@@ -175,6 +176,25 @@ export const Mining = () => {
     }
 
     setLoading(false);
+  };
+
+  const onSelectWord = (key: number) => {
+    const morpheme = currentMorphemes[key];
+
+    if (morpheme.ignored) {
+      onToggleIgnored(key);
+      return;
+    }
+
+    setCurrentDictionaryForm(morpheme.dictionary_form);
+    setCurrentReading(morpheme.reading);
+    Keyboard.dismiss();
+  };
+
+  const onToggleIgnored = (key: number) => {
+    const clonedMorphemes = JSON.parse(JSON.stringify(currentMorphemes));
+    clonedMorphemes[key].ignored = !clonedMorphemes[key].ignored;
+    setCurrentMorphemes(clonedMorphemes);
   };
 
   const onPaste = async () => {
@@ -210,7 +230,9 @@ export const Mining = () => {
 
     setCurrentDictionaryForm('');
     setCurrentReading('');
-    setCurrentMorphemes(morphemes);
+    setCurrentMorphemes(
+      morphemes.map(morpheme => ({...morpheme, ignored: false})),
+    );
   };
 
   useEffect(() => {
@@ -329,13 +351,21 @@ export const Mining = () => {
                   <TouchableOpacity
                     key={key}
                     style={styles.wordTouchableOpacity}
-                    onPress={() => {
-                      setCurrentDictionaryForm(morpheme.dictionary_form);
-                      setCurrentReading(morpheme.reading);
-                      Keyboard.dismiss();
-                    }}
+                    onPress={() => onSelectWord(key)}
+                    onLongPress={() => onToggleIgnored(key)}
                     disabled={isLoading}>
-                    <Text style={styles.wordText}>{morpheme.word}</Text>
+                    <Text
+                      style={[
+                        styles.wordText,
+                        morpheme.ignored
+                          ? {color: colors.grey, borderColor: colors.grey}
+                          : {
+                              color: colors.primary,
+                              borderColor: colors.primary,
+                            },
+                      ]}>
+                      {morpheme.word}
+                    </Text>
                   </TouchableOpacity>
                 ))}
               </View>
