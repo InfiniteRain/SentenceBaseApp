@@ -358,7 +358,11 @@ export const Mining = () => {
                       style={[
                         styles.wordText,
                         morpheme.ignored
-                          ? {color: colors.grey, borderColor: colors.grey}
+                          ? {
+                              color: colors.grey,
+                              opacity: 0.3,
+                              borderColor: colors.grey,
+                            }
                           : {
                               color: colors.primary,
                               borderColor: colors.primary,
