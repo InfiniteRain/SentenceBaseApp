@@ -139,9 +139,9 @@ const getDefinitionString = async (
       }】 ${reading} ${frequencyStars}`;
 
       for (const sense of entry.senses ?? []) {
-        finalDefinition += `<br>${count++}. [${sense.parts_of_speech?.join(
-          ', ',
-        )}]<br>${sense.english_definitions?.join('; ')}`;
+        finalDefinition += `<br>${count++}. ${sense.english_definitions?.join(
+          '; ',
+        )}`;
       }
     }
   }
