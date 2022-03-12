@@ -1,14 +1,21 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {AppStateContext, Page} from './AppStateContext';
-import {colors} from './Colors';
+import {AppStateContext, Page} from '../app-state-context';
+import {Batch, colors} from '../common';
 import {
   checkExportSettings,
   StorageSettings,
   updateExportSettings,
-} from './Storage';
+} from '../storage';
 import {Picker} from '@react-native-picker/picker';
 import AnkiDroid from 'react-native-ankidroid';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
+import {exportBatch} from '../exporter';
+
+const authInstance = auth();
+const batchesCollection = firestore().collection('batches');
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -51,9 +58,9 @@ const styles = StyleSheet.create({
 });
 
 export const Export = () => {
-  const {setCurrentPage} = useContext(AppStateContext);
+  const {setCurrentPage, isLoading, setLoading, mecabQuery, dictionaryQuery} =
+    useContext(AppStateContext);
 
-  const [isLoading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedWordField, setSelectedWordField] = useState<number | null>(
     null,
@@ -94,7 +101,7 @@ export const Export = () => {
   };
 
   const onBack = () => {
-    setCurrentPage(Page.UserMenu);
+    setCurrentPage(Page.MainMenu);
   };
 
   const onModelSelect = async (value: string | null) => {
@@ -131,17 +138,60 @@ export const Export = () => {
       return;
     }
 
-    setLoading(true);
     await updateExportSettings(currentSettings);
-    setLoading(false);
   };
 
-  const onExport = () => {
+  const onExport = async () => {
     const currentSettings = currentSettingsRef.current;
 
     if (!currentSettings) {
       return;
     }
+
+    setLoading(true);
+
+    let batch: Batch | undefined;
+
+    try {
+      const batchDocSnap = await batchesCollection
+        .where('userUid', '==', authInstance.currentUser?.uid)
+        .orderBy('createdAt', 'desc')
+        .limit(1)
+        .get();
+
+      if (batchDocSnap.docs.length !== 0) {
+        batch = batchDocSnap.docs[0].data() as Batch;
+      }
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'Unable to get batch data.',
+        position: 'bottom',
+      });
+    }
+
+    if (!batch) {
+      Toast.show({
+        type: 'error',
+        text1: 'No batches are available to export yet.',
+        position: 'bottom',
+      });
+
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await exportBatch(batch, currentSettings, mecabQuery, dictionaryQuery);
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'Unable to export.',
+        position: 'bottom',
+      });
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {

@@ -1,17 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnkiDroid from 'react-native-ankidroid';
-//import RNFS from 'react-native-fs';
+import RNFS from 'react-native-fs';
+import uuid from 'react-native-uuid';
 
-export interface StorageSettings {
+export type StorageSettings = {
   modelExport: string | null;
   wordFieldExport: number | null;
   sentenceFieldExport: number | null;
   definitionFieldExport: number | null;
   audioFieldExport: number | null;
   deckExport: string | null;
-}
+};
 
-//const FILE_DIRECTORY_NAME = 'SentenceBase';
+export type ExportSettings = {
+  modelFields: string[];
+  settingsValues: StorageSettings;
+};
+
+const FILE_DIRECTORY_NAME = 'media';
 
 const MODEL_EXPORT_KEY = 'modelExport';
 const WORD_FIELD_EXPORT_KEY = 'wordFieldExport';
@@ -80,7 +86,9 @@ const resetExportSettings = async () => {
   } catch {}
 };
 
-export const checkExportSettings = async () => {
+export const checkExportSettings = async (): Promise<
+  ExportSettings | undefined
+> => {
   const [modelsError, modelsArray] = await AnkiDroid.getModelList();
   const [decksError, decksArray] = await AnkiDroid.getDeckList();
 
@@ -145,10 +153,6 @@ export const checkExportSettings = async () => {
   }
 
   return {
-    instance: new AnkiDroid({
-      modelId: selectedModel.id,
-      deckId: selectedDeck.id,
-    }),
     modelFields: fieldsArray,
     settingsValues: {
       modelExport: modelExport,
@@ -165,21 +169,21 @@ export const checkExportSettings = async () => {
   };
 };
 
-/*
 export const uploadMedia = async (
   url: string,
   mimeType: 'audio' | 'image',
 ): Promise<string | null> => {
+  await cleanMediaFolder();
+
   try {
-    await RNFS.mkdir(
-      `${RNFS.ExternalStorageDirectoryPath}/${FILE_DIRECTORY_NAME}`,
-    );
+    await RNFS.mkdir(`${RNFS.ExternalDirectoryPath}/${FILE_DIRECTORY_NAME}`);
   } catch {
     return null;
   }
 
-  const fileName = url.substring(url.lastIndexOf('/') + 1);
-  const filePath = `${RNFS.ExternalStorageDirectoryPath}/${FILE_DIRECTORY_NAME}/${fileName}`;
+  const extension = /(?:\.([^.]+))?$/.exec(url)?.[1];
+  const fileName = `${uuid.v4().toString()}${extension ? '.' + extension : ''}`;
+  const filePath = `${RNFS.ExternalDirectoryPath}/${FILE_DIRECTORY_NAME}/${fileName}`;
 
   const {promise} = RNFS.downloadFile({
     fromUrl: url,
@@ -203,4 +207,16 @@ export const uploadMedia = async (
   }
 
   return formattedString;
-};*/
+};
+
+const cleanMediaFolder = async () => {
+  try {
+    const files = await RNFS.readDir(
+      `${RNFS.ExternalDirectoryPath}/${FILE_DIRECTORY_NAME}`,
+    );
+
+    for (const file of files) {
+      RNFS.unlink(file.path);
+    }
+  } catch {}
+};

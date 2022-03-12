@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import AnkiDroid from 'react-native-ankidroid';
-import {Page, AppStateContext} from './AppStateContext';
-import {colors} from './Colors';
-import {clearTokens} from './Networking';
+import {Page, AppStateContext} from '../app-state-context';
+import {colors} from '../common';
+import auth from '@react-native-firebase/auth';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -34,10 +34,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export const UserMenu = () => {
+export const MainMenu = () => {
   const {setCurrentPage} = useContext(AppStateContext);
 
-  const [isLoading, setLoading] = useState(false);
   const [isApiAvailable, setApiAvailable] = useState(false);
 
   const onMining = async () => {
@@ -53,9 +52,7 @@ export const UserMenu = () => {
   };
 
   const onLogout = async () => {
-    setLoading(true);
-    await clearTokens();
-    setCurrentPage(Page.LoginScreen);
+    await auth().signOut();
   };
 
   const onExport = async () => {
@@ -76,22 +73,13 @@ export const UserMenu = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity
-        style={styles.firstMenuButton}
-        onPress={onMining}
-        disabled={isLoading}>
+      <TouchableOpacity style={styles.firstMenuButton} onPress={onMining}>
         <Text style={styles.menuButtonText}>MINING</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={onPending}
-        disabled={isLoading}>
+      <TouchableOpacity style={styles.menuButton} onPress={onPending}>
         <Text style={styles.menuButtonText}>PENDING SENTENCES</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={onNewBatch}
-        disabled={isLoading}>
+      <TouchableOpacity style={styles.menuButton} onPress={onNewBatch}>
         <Text style={styles.menuButtonText}>NEW BATCH</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -102,13 +90,10 @@ export const UserMenu = () => {
           },
         ]}
         onPress={onExport}
-        disabled={isLoading || !isApiAvailable}>
+        disabled={!isApiAvailable}>
         <Text style={styles.menuButtonText}>EXPORT</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={onLogout}
-        disabled={isLoading}>
+      <TouchableOpacity style={styles.menuButton} onPress={onLogout}>
         <Text style={styles.menuButtonText}>LOGOUT</Text>
       </TouchableOpacity>
     </View>
