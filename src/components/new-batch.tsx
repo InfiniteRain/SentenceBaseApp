@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   FlatList,
   Modal,
@@ -10,10 +10,17 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import {Page, AppStateContext} from './AppStateContext';
-import {colors} from './Colors';
-import {SentenceEntry} from './Common';
-import {sendEnsuredRequest, StandardResponse} from './Networking';
+import {Page, AppStateContext} from '../app-state-context';
+import {SentenceEntry, colors} from '../common';
+import functions from '@react-native-firebase/functions';
+
+const MINING_AMOUNT = 10;
+
+const functionsInstance = functions();
+const getPendingSentences = functionsInstance.httpsCallable(
+  'getPendingSentences',
+);
+const newBatch = functionsInstance.httpsCallable('newBatch');
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -33,6 +40,23 @@ const styles = StyleSheet.create({
   sentenceEntryView: {borderColor: 'white', borderBottomWidth: 1, padding: 5},
   sentenceEntryText: {
     fontSize: 20,
+  },
+  confirmButton: {
+    margin: 15,
+  },
+  confirmButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+    borderRadius: 5,
+    backgroundColor: colors.primary,
+  },
+  confirmButtonOuterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   centeredView: {
     flex: 1,
@@ -71,108 +95,100 @@ const styles = StyleSheet.create({
   },
 });
 
-export const PendingSentences = () => {
+export const NewBatch = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {setCurrentPage, batch, setBatch} = useContext(AppStateContext);
+  const {
+    setCurrentPage,
+    setBatch,
+    batch,
+    dictionaryQuery,
+    isLoading,
+    setLoading,
+  } = useContext(AppStateContext);
 
-  const [isLoading, setLoading] = useState(false);
-  const [sentences, setSentences] = useState<SentenceEntry[]>([]);
-  const [sentenceToDelete, setSentenceToDelete] =
-    useState<SentenceEntry | null>(null);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  const sentenceToDeleteRef = useRef<SentenceEntry | null>();
-  const batchRef = useRef<SentenceEntry[]>([]);
-
-  sentenceToDeleteRef.current = sentenceToDelete;
-  batchRef.current = batch;
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const refreshList = async () => {
+    if (batch.length > 0) {
+      return;
+    }
+
     setLoading(true);
+
     try {
-      const response = await sendEnsuredRequest<
-        void,
-        {
-          sentences: SentenceEntry[];
-        }
-      >('/sentences');
+      const sentences = (await getPendingSentences()).data;
 
-      setLoading(false);
-
-      if (response.status === 'success') {
-        setSentences(
-          response.data.sentences.sort((a, b) =>
-            a.sentence_id < b.sentence_id ? 1 : -1,
-          ),
-        );
+      for (const sentence of sentences) {
+        sentence.dictionaryFrequency = (
+          await dictionaryQuery(sentence.dictionaryForm, sentence.reading)
+        ).frequency;
       }
-    } catch {
-      setLoading(false);
 
-      Toast.show({
-        type: 'error',
-        text1: 'Network error.',
-        position: 'bottom',
-      });
-    }
-  };
-
-  const onBack = () => {
-    setCurrentPage(Page.UserMenu);
-  };
-
-  const onDelete = (sentenceEntry: SentenceEntry) => {
-    setSentenceToDelete(sentenceEntry);
-    setDeleteModalVisible(true);
-  };
-
-  const onDeleteConfirm = async () => {
-    const sentenceToDeleteData = sentenceToDeleteRef.current;
-
-    if (!sentenceToDeleteData) {
-      return;
-    }
-
-    setLoading(true);
-    setDeleteModalVisible(false);
-
-    let response: StandardResponse;
-
-    try {
-      response = await sendEnsuredRequest(
-        `/sentences/${sentenceToDeleteData.sentence_id}`,
-        'delete',
+      setBatch(
+        sentences.sort(
+          (a: SentenceEntry, b: SentenceEntry) =>
+            b.frequency - a.frequency ||
+            (a.dictionaryFrequency ?? 0) - (b.dictionaryFrequency ?? 0),
+        ),
       );
-      setLoading(false);
     } catch {
-      Toast.show({
-        type: 'error',
-        text1: 'Network error.',
-        position: 'bottom',
-      });
-      setLoading(false);
-      return;
-    }
-
-    if (response.status === 'fail' || response.status === 'error') {
       Toast.show({
         type: 'error',
         text1: 'Something went wrong.',
         position: 'bottom',
       });
+    }
+
+    setLoading(false);
+  };
+
+  const onBack = () => {
+    setCurrentPage(Page.MainMenu);
+  };
+
+  const onPushOut = (index: number) => {
+    let entry = batch[index];
+
+    if (!entry) {
       return;
     }
 
-    setBatch(
-      batchRef.current.filter(
-        sentence => sentence.sentence_id !== sentenceToDeleteData.sentence_id,
-      ),
-    );
-    await refreshList();
+    let newBatch = [...batch];
+    newBatch.splice(index, 1);
+    newBatch.push(entry);
+    setBatch(newBatch);
+  };
+
+  const onConfirmBatch = () => {
+    setConfirmModalVisible(true);
+  };
+
+  const onDoublyConfirm = async () => {
+    const selectedBatchData = batch.slice(0, MINING_AMOUNT);
+
+    setLoading(true);
+    setConfirmModalVisible(false);
+
+    try {
+      await newBatch({
+        sentenceIds: selectedBatchData.map(sentence => sentence.sentenceId),
+      });
+
+      setBatch([]);
+    } catch {
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong.',
+        position: 'bottom',
+      });
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     refreshList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -182,8 +198,24 @@ export const PendingSentences = () => {
           <Text style={styles.backButton}>Back to Menu</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.confirmButtonOuterContainer}>
+        <TouchableOpacity
+          style={[styles.confirmButtonContainer]}
+          onPress={onConfirmBatch}
+          disabled={isLoading}>
+          <Text
+            style={[
+              styles.confirmButton,
+              {
+                color: colors.white,
+              },
+            ]}>
+            Confirm Batch
+          </Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
-        data={sentences}
+        data={batch.slice(0, MINING_AMOUNT)}
         renderItem={entry => (
           <TouchableOpacity
             style={[
@@ -193,7 +225,7 @@ export const PendingSentences = () => {
                 borderColor: isDarkMode ? colors.white : colors.black,
               },
             ]}
-            onPress={() => onDelete(entry.item)}
+            onPress={() => onPushOut(entry.index)}
             disabled={isLoading}>
             <Text
               style={[
@@ -201,7 +233,7 @@ export const PendingSentences = () => {
                 {color: isDarkMode ? colors.white : colors.black},
               ]}>
               <Text style={{color: colors.primary}}>
-                {entry.item.dictionary_form}（{entry.item.reading}）
+                {entry.item.dictionaryForm}（{entry.item.reading}）
               </Text>
               {entry.item.sentence}
             </Text>
@@ -211,8 +243,8 @@ export const PendingSentences = () => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={deleteModalVisible}>
-        <TouchableWithoutFeedback onPress={() => setDeleteModalVisible(false)}>
+        visible={confirmModalVisible}>
+        <TouchableWithoutFeedback onPress={() => setConfirmModalVisible(false)}>
           <View style={styles.centeredView}>
             <View
               style={[
@@ -222,28 +254,19 @@ export const PendingSentences = () => {
                 },
               ]}>
               <Text style={styles.modalWarningLabel}>
-                Delete the following sentence?
-              </Text>
-              <Text
-                style={[
-                  styles.sentenceEntryText,
-                  {color: isDarkMode ? colors.white : colors.black},
-                ]}>
-                <Text style={{color: colors.primary}}>
-                  {sentenceToDelete?.dictionary_form}（
-                  {sentenceToDelete?.reading}）
-                </Text>
-                {sentenceToDelete?.sentence}
+                Confirm current batch?
               </Text>
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity
                   style={[styles.button, styles.buttonWarning]}
-                  onPress={onDeleteConfirm}>
+                  onPress={onDoublyConfirm}
+                  disabled={isLoading}>
                   <Text style={{color: colors.white}}>Yes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => setDeleteModalVisible(false)}>
+                  onPress={() => setConfirmModalVisible(false)}
+                  disabled={isLoading}>
                   <Text style={{color: colors.white}}>No</Text>
                 </TouchableOpacity>
               </View>

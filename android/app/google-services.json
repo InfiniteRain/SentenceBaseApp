@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "890176304594",
+    "project_id": "sentence-base",
+    "storage_bucket": "sentence-base.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890176304594:android:550f5a714490fce2cfc40b",
+        "android_client_info": {
+          "package_name": "com.sentencebaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890176304594-ibeba03tai3lvsrtin1t8iae7hfg4ga0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO6v0ClvJwI83U4O3k8YzF7SjtY9CGcJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890176304594-ibeba03tai3lvsrtin1t8iae7hfg4ga0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

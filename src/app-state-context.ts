@@ -1,15 +1,11 @@
 import {createContext} from 'react';
-import {SentenceEntry} from './Common';
+import {DictionaryEntry, SentenceEntry} from './common';
 
 export enum Page {
-  Loading,
-  LoginScreen,
-  RegisterScreen,
-  UserMenu,
-  Mining,
+  MainMenu,
   PendingSentences,
+  Mining,
   NewBatch,
-  Batch,
   Export,
 }
 
@@ -40,15 +36,28 @@ export type MecabMessage =
     };
 
 export const AppStateContext = createContext<{
+  isLoading: boolean;
+  setLoading: (isLoading: boolean) => void;
   currentPage: Page;
-  setCurrentPage: (appState: Page) => void;
+  setCurrentPage: (page: Page) => void;
   batch: SentenceEntry[];
   setBatch: (batch: SentenceEntry[]) => void;
   mecabQuery: (query: string) => Promise<MecabMorpheme[]>;
+  dictionaryQuery: (
+    dictionaryForm: string,
+    reading: string,
+  ) => Promise<DictionaryEntry>;
 }>({
-  currentPage: Page.Loading,
-  setCurrentPage: (_appState: Page) => {},
+  isLoading: false,
+  setLoading: (_isLoading: boolean) => {},
+  currentPage: Page.MainMenu,
+  setCurrentPage: (_page: Page) => {},
   batch: [],
   setBatch: (_batch: SentenceEntry[]) => {},
   mecabQuery: async (_query: string) => [],
+  dictionaryQuery: async (_dictionaryForm: string, _reading: string) => ({
+    frequency: 999999,
+    pitchNums: [],
+    pitchNames: [],
+  }),
 });
