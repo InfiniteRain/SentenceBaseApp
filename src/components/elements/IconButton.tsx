@@ -9,7 +9,7 @@ export const IconButton = (props: {
   color: string;
   size: number;
   disabled?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
 }) => {
   const {theme} = useContext(ThemeContext);
 
@@ -29,6 +29,6 @@ export const IconButton = (props: {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    margin: 10,
   },
 });
