@@ -146,11 +146,17 @@ export const TagsBottomSheet = forwardRef<
       onDismiss={resetInput}>
       <View style={styles.tagInputView}>
         <BottomSheetTextInput
-          style={styles.tagInput}
+          style={{
+            ...styles.tagInput,
+            ...{
+              color: theme.colors.onSurface,
+            },
+          }}
           onChangeText={text => setTag(text.trim())}
           autoCapitalize="none"
           ref={tagInputRef}
           placeholder="Tag Name"
+          autoCorrect={false}
         />
         <Button
           mode="contained"
