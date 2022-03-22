@@ -69,7 +69,7 @@ export const TagsBottomSheet = forwardRef<
   const selectTag = useCallback(
     (selectedTag: string) => {
       // Spaces are treated as tag separators.
-      const tagsToAdd = selectedTag.split(/\s+/);
+      const tagsToAdd = selectedTag.trim().split(/\s+/);
 
       // Updating current tags.
       updateTags(currentTags => [
@@ -111,6 +111,10 @@ export const TagsBottomSheet = forwardRef<
     [updateTagHistory],
   );
 
+  const resetInput = useCallback(() => {
+    setTag('');
+  }, []);
+
   return (
     <BottomSheetModal
       ref={ref}
@@ -138,11 +142,12 @@ export const TagsBottomSheet = forwardRef<
           disappearsOnIndex={-1}
         />
       )}
-      onChange={setBottomSheetIndex}>
+      onChange={setBottomSheetIndex}
+      onDismiss={resetInput}>
       <View style={styles.tagInputView}>
         <BottomSheetTextInput
           style={styles.tagInput}
-          onChangeText={setTag}
+          onChangeText={text => setTag(text.trim())}
           autoCapitalize="none"
           ref={tagInputRef}
           placeholder="Tag Name"
