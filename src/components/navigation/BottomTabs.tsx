@@ -1,26 +1,26 @@
 import React from 'react';
-import {Mining} from '../screens/Mining';
+import {Mining} from '../screens/mining/Mining';
 import {PendingSentences} from '../screens/PendingSentences';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {ThemeContext} from '../../contexts/theme';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const TabNavigation = createMaterialBottomTabNavigator();
+const TabNavigation = createBottomTabNavigator();
 
 export const BottomTabs = () => {
-  const {theme} = React.useContext(ThemeContext);
-
   return (
     <TabNavigation.Navigator
-      shifting={true}
-      sceneAnimationEnabled={true}
-      barStyle={{backgroundColor: theme.colors.card}}
-      activeColor={theme.colors.primary}>
+      initialRouteName="Mining"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <TabNavigation.Screen
         name="Mining"
         component={Mining}
         options={{
           tabBarLabel: 'Mining',
-          tabBarIcon: 'pickaxe',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcon name="pickaxe" color={color} size={24} />
+          ),
         }}
       />
       <TabNavigation.Screen
@@ -28,7 +28,9 @@ export const BottomTabs = () => {
         component={PendingSentences}
         options={{
           tabBarLabel: 'Sentences',
-          tabBarIcon: 'view-list',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcon name="view-list" color={color} size={24} />
+          ),
         }}
       />
     </TabNavigation.Navigator>

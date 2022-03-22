@@ -14,3 +14,9 @@ export type RootNavigatorProps = NativeStackScreenProps<
   RootNavigatorParamList,
   'Drawer'
 >;
+
+export type Morpheme = {
+  surface: string;
+  dictionaryForm: string;
+  reading: string;
+};

@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
 import {Caption, Paragraph, Drawer} from 'react-native-paper';
@@ -6,26 +6,28 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {ThemeContext} from '../../contexts/theme';
 import {RootNavigatorProps} from '../../types';
+import auth from '@react-native-firebase/auth';
 
 export function DrawerContent({navigation}: RootNavigatorProps) {
   const {theme} = useContext(ThemeContext);
 
-  const iconStyle = useMemo<
-    typeof styles['icon'] & {
-      color: string;
-    }
-  >(
-    () => ({
-      ...styles.icon,
-      color: theme.colors.onSurface,
-    }),
-    [theme],
-  );
+  const logout = useCallback(async () => {
+    await auth().signOut();
+  }, []);
 
   return (
     <DrawerContentScrollView>
       <View style={styles.iconView}>
-        <FontAwesomeIcon name="user-circle-o" size={64} style={iconStyle} />
+        <FontAwesomeIcon
+          name="user-circle-o"
+          size={64}
+          style={{
+            ...styles.icon,
+            ...{
+              color: theme.colors.onSurface,
+            },
+          }}
+        />
         <Caption style={styles.caption}>test@example.com</Caption>
       </View>
       <View style={styles.userInfoSection}>
@@ -59,7 +61,7 @@ export function DrawerContent({navigation}: RootNavigatorProps) {
         />
       </Drawer.Section>
       <Drawer.Section>
-        <DrawerItem label="Logout" onPress={() => {}} />
+        <DrawerItem label="Logout" onPress={logout} />
       </Drawer.Section>
     </DrawerContentScrollView>
   );

@@ -11,6 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "^1.15.11",
     "@react-native-clipboard/clipboard": "^1.8.5",
     "@react-native-community/checkbox": "^0.5.9",
@@ -20,8 +21,8 @@
     "@react-native-firebase/functions": "^14.2.2",
     "@react-native-google-signin/google-signin": "^7.0.4",
     "@react-native-picker/picker": "^2.2.0",
+    "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/drawer": "^6.3.1",
-    "@react-navigation/material-bottom-tabs": "^6.1.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "buffer": "^6.0.3",
@@ -40,7 +41,8 @@
     "react-native-toast-message": "^2.0.1",
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^9.1.0",
-    "react-native-webview": "^11.14.4"
+    "react-native-webview": "^11.14.4",
+    "react-query": "^3.34.16"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
