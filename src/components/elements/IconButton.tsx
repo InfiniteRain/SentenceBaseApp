@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ThemeContext} from '../../contexts/theme';
@@ -10,13 +10,14 @@ export const IconButton = (props: {
   size: number;
   disabled?: boolean;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }) => {
   const {theme} = useContext(ThemeContext);
 
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={styles.container}
+      style={{...styles.container, ...(props.style as object)}}
       disabled={props.disabled}>
       <MaterialCommunityIcon
         name={props.icon}

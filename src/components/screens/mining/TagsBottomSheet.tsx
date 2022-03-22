@@ -17,6 +17,7 @@ import {BackHandler, FlatList, StyleSheet, View} from 'react-native';
 import {Button, Divider, Text} from 'react-native-paper';
 import {ThemeContext} from '../../../contexts/theme';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
+import {IconButton} from '../../elements/IconButton';
 
 type TagsBottomSheetProps = {
   updateTags: (mutator: (currentValue: string[]) => string[]) => void;
@@ -101,6 +102,15 @@ export const TagsBottomSheet = forwardRef<
     [updateTags, castedRef, updateTagHistory],
   );
 
+  const removeTagFromHistory = useCallback(
+    (selectedTag: string) => {
+      updateTagHistory(currentHistory =>
+        currentHistory.filter(entry => entry !== selectedTag),
+      );
+    },
+    [updateTagHistory],
+  );
+
   return (
     <BottomSheetModal
       ref={ref}
@@ -128,9 +138,7 @@ export const TagsBottomSheet = forwardRef<
           disappearsOnIndex={-1}
         />
       )}
-      onChange={setBottomSheetIndex}
-      //
-    >
+      onChange={setBottomSheetIndex}>
       <View style={styles.tagInputView}>
         <BottomSheetTextInput
           style={styles.tagInput}
@@ -152,19 +160,28 @@ export const TagsBottomSheet = forwardRef<
           <FlatList
             ItemSeparatorComponent={Divider}
             renderItem={({item}: {item: string}) => (
-              <TouchableOpacity
-                style={styles.historyItemContainer}
-                onPress={() => selectTag(item)}>
-                <Text
-                  style={{
-                    ...styles.historyItemText,
-                    ...{
-                      color: theme.colors.primary,
-                    },
-                  }}>
-                  {item}
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.historyItemContainer}>
+                <TouchableOpacity
+                  style={styles.historyItemTextContainer}
+                  onPress={() => selectTag(item)}>
+                  <Text
+                    style={{
+                      ...styles.historyItemText,
+                      ...{
+                        color: theme.colors.primary,
+                      },
+                    }}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+                <IconButton
+                  icon="close"
+                  size={24}
+                  color={theme.colors.notification}
+                  onPress={() => removeTagFromHistory(item)}
+                  style={styles.historyItemIcon}
+                />
+              </View>
             )}
             data={filteredTagHistory}
           />
@@ -176,7 +193,9 @@ export const TagsBottomSheet = forwardRef<
                 color: theme.colors.disabled,
               },
             }}>
-            Tag history is empty.
+            {tagHistory.length > 0
+              ? `Tag containing "${tag}" wasn't found in the history.`
+              : 'Tag history is empty.'}
           </Text>
         )}
       </View>
@@ -214,11 +233,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   historyItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  historyItemTextContainer: {
+    flexGrow: 1,
     alignItems: 'center',
   },
   historyItemText: {
     fontSize: 24,
     paddingVertical: 5,
+  },
+  historyItemIcon: {
+    marginRight: 15,
   },
   emptyHistoryText: {alignSelf: 'center'},
   closeLineContainer: {
