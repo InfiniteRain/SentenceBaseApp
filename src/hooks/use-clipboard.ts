@@ -6,10 +6,14 @@ const clipboardEventEmitter = new NativeEventEmitter(
   NativeModules.ClipboardListener,
 );
 
-export const useClipboard = () => {
+export const useClipboard = (options?: {enabled?: boolean}) => {
   const [clipboardEntry, setClipboardEntry] = useState<string>('');
 
   useEffect(() => {
+    if (options?.enabled === false) {
+      return;
+    }
+
     if (Platform.OS === 'ios') {
       clipboardEventEmitter.addListener('clipboardUpdate', (entry: string) => {
         setClipboardEntry(entry);
@@ -29,12 +33,12 @@ export const useClipboard = () => {
       }
 
       lastEntry = entry !== '' ? entry : lastEntry;
-    }, 1000);
+    }, 100);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [options?.enabled]);
 
   return clipboardEntry;
 };

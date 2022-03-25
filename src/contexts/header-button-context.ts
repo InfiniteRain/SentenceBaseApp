@@ -7,10 +7,14 @@ type HeaderButtonContext = {
   setOnClear: (handler: (() => void) | undefined) => void;
   onPaste: (() => void) | undefined;
   setOnPaste: (handler: (() => void) | undefined) => void;
+  onEdit: (() => void) | undefined;
+  setOnEdit: (handler: (() => void) | undefined) => void;
   isClearDisabled: boolean;
   setClearDisabled: (disabled: boolean) => void;
   isPasteDisabled: boolean;
   setPasteDisabled: (disabled: boolean) => void;
+  isEditDisabled: boolean;
+  setEditDisabled: (disabled: boolean) => void;
 };
 
 export const HeaderButtonContext = createContext<HeaderButtonContext>(

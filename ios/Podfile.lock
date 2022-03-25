@@ -887,6 +887,8 @@ PODS:
     - React-Core
   - RNCPicker (2.2.1):
     - React-Core
+  - RNDeviceInfo (8.5.1):
+    - React-Core
   - RNFBApp (14.3.2):
     - Firebase/CoreOnly (= 8.12.1)
     - React-Core
@@ -1011,6 +1013,7 @@ DEPENDENCIES:
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
@@ -1150,6 +1153,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -1259,6 +1264,7 @@ SPEC CHECKSUMS:
   RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
   RNCClipboard: cc054ad1e8a33d2a74cd13e565588b4ca928d8fd
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
+  RNDeviceInfo: 8d4177859b062334835962799460528869a487fb
   RNFBApp: 096fb7586e167f3ba3dc7a4bf5811a19aec58735
   RNFBAuth: 586d2548d4c5dfef663d6b0ee02b6434309b8e88
   RNFBFirestore: cd240246412393409e80f5d6a701e43b8a52452c

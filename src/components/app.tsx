@@ -13,10 +13,11 @@ import {
 import {RootNavigator} from './navigation/RootNavigator';
 import {ThemeContext} from '../contexts/theme';
 import {CombinedTheme} from '../types';
-import {StyleSheet, useColorScheme, View} from 'react-native';
+import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import AuthUI from 'react-native-firebaseui-auth';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 const DefaultTheme: CombinedTheme = {
   ...PaperDefaultTheme,
@@ -47,6 +48,11 @@ export const App = () => {
 
   useEffect(() => {
     setTheme(isDarkMode ? DarkTheme : DefaultTheme);
+    changeNavigationBarColor(
+      isDarkMode ? DarkTheme.colors.surface : DefaultTheme.colors.surface,
+      !isDarkMode,
+      false,
+    );
   }, [isDarkMode]);
 
   useEffect(
@@ -72,24 +78,28 @@ export const App = () => {
     [],
   );
 
-  if (!currentUser) {
-    return (
-      <View style={styles.loggedOutView}>
-        <ActivityIndicator animating={true} size={64} />
-      </View>
-    );
-  }
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeContext.Provider value={{theme, setTheme}}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer theme={theme}>
-            <RootNavigator />
-          </NavigationContainer>
-        </PaperProvider>
-      </ThemeContext.Provider>
-    </QueryClientProvider>
+    <>
+      <StatusBar
+        backgroundColor={theme.colors.surface}
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
+      <QueryClientProvider client={queryClient}>
+        <ThemeContext.Provider value={{theme, setTheme}}>
+          <PaperProvider theme={theme}>
+            {!currentUser ? (
+              <View style={styles.loggedOutView}>
+                <ActivityIndicator animating={true} size={64} />
+              </View>
+            ) : (
+              <NavigationContainer theme={theme}>
+                <RootNavigator />
+              </NavigationContainer>
+            )}
+          </PaperProvider>
+        </ThemeContext.Provider>
+      </QueryClientProvider>
+    </>
   );
 };
 

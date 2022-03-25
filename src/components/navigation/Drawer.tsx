@@ -12,8 +12,15 @@ const DrawerNavigation = createDrawerNavigator();
 
 export const Drawer = (props: RootNavigatorProps) => {
   const {theme} = useContext(ThemeContext);
-  const {bottomTabsRoute, onClear, onPaste, isClearDisabled, isPasteDisabled} =
-    React.useContext(HeaderButtonContext);
+  const {
+    bottomTabsRoute,
+    onClear,
+    onPaste,
+    onEdit,
+    isClearDisabled,
+    isPasteDisabled,
+    isEditDisabled,
+  } = React.useContext(HeaderButtonContext);
 
   return (
     <DrawerNavigation.Navigator
@@ -27,6 +34,7 @@ export const Drawer = (props: RootNavigatorProps) => {
         component={BottomTabs}
         options={{
           title: 'Sentence Base',
+          headerTitleAlign: 'left',
           headerRight: () => (
             <View style={styles.rightHeaderView}>
               {['Mining', null].includes(bottomTabsRoute) && (
@@ -37,6 +45,13 @@ export const Drawer = (props: RootNavigatorProps) => {
                     color={theme.colors.notification}
                     onPress={onClear}
                     disabled={isClearDisabled}
+                  />
+                  <IconButton
+                    icon="pencil"
+                    size={24}
+                    color={theme.colors.primary}
+                    onPress={onEdit}
+                    disabled={isEditDisabled}
                   />
                   <IconButton
                     icon="content-paste"

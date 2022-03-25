@@ -16,24 +16,38 @@ import {Morpheme} from '../../../types';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
-import {TagsBottomSheet} from './TagsBottomSheet';
+import {TagsSheet} from './TagsSheet';
 import {HeaderButtonContext} from '../../../contexts/header-button-context';
 import {useClipboard} from '../../../hooks/use-clipboard';
+import DeviceInfo from 'react-native-device-info';
+import {SentenceSheet} from './SentenceSheet';
+
+const isTablet = DeviceInfo.isTablet();
 
 export const Mining = () => {
   const {theme} = useContext(ThemeContext);
-  const {setOnClear, setOnPaste, setClearDisabled, setPasteDisabled} =
-    useContext(HeaderButtonContext);
+  const {
+    setOnClear,
+    setOnPaste,
+    setOnEdit,
+    setClearDisabled,
+    setPasteDisabled,
+    setEditDisabled,
+  } = useContext(HeaderButtonContext);
 
   const [morphemes, setMorphemes] = useState<Morpheme[]>([]);
   const [selectedMorpheme, setSelectedMorpheme] = useState<Morpheme | null>(
     null,
   );
+  const [isMorphemeEdited, setMorphemeEdited] = useState<boolean>(false);
   const [kotuString, setKotuString] = useState('');
+  const [clipboardEnabled, setClipboardEnabled] = useState(true);
+  const [tagsSheetIndex, setTagsSheetIndex] = useState(-1);
+  const [sentenceSheetIndex, setSentenceSheetIndex] = useState(-1);
 
   const [tags, updateTags] = useAsyncStorage<string[]>('tags', []);
 
-  const clipboardEntry = useClipboard();
+  const clipboardEntry = useClipboard({enabled: clipboardEnabled});
 
   const {data: morphemeQueryData, status: morphemeQueryStatus} = useQuery(
     ['kotu', kotuString],
@@ -41,51 +55,61 @@ export const Mining = () => {
     {enabled: kotuString !== ''},
   );
 
-  const tagsBottomSheetRef = useRef<BottomSheetModal>(null);
+  const tagsSheetRef = useRef<BottomSheetModal>(null);
+  const sentenceSheetRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
-    setKotuString(clipboardEntry);
+    setMorphemeEdited(false);
+    setKotuString(clipboardEntry.trim());
   }, [clipboardEntry]);
-
   useEffect(() => {
     setOnClear(() => () => {
+      setKotuString('');
       setMorphemes([]);
       setSelectedMorpheme(null);
+      setMorphemeEdited(false);
     });
-
     setOnPaste(() => async () => {
       setKotuString('');
-      setKotuString(await Clipboard.getString());
+      setKotuString((await Clipboard.getString()).trim());
       setSelectedMorpheme(null);
+      setMorphemeEdited(false);
     });
-  }, [setOnClear, setOnPaste]);
-
+    setOnEdit(() => () => {
+      sentenceSheetRef.current?.present?.();
+    });
+  }, [setOnClear, setOnPaste, setOnEdit]);
   useEffect(() => {
     setMorphemes(previousData => morphemeQueryData ?? previousData);
-    setSelectedMorpheme(null);
-  }, [morphemeQueryData]);
-
+    if (!isMorphemeEdited) {
+      setSelectedMorpheme(null);
+    }
+  }, [morphemeQueryData, isMorphemeEdited]);
   useEffect(() => {
     setClearDisabled(morphemes.length === 0);
-  }, [morphemes, setClearDisabled]);
-
+    setEditDisabled(morphemes.length === 0);
+  }, [morphemes, setClearDisabled, setEditDisabled]);
   useEffect(() => {
     setPasteDisabled(morphemeQueryStatus === 'loading');
   }, [morphemeQueryStatus, setPasteDisabled]);
+  useEffect(() => {
+    setClipboardEnabled(tagsSheetIndex === -1 && sentenceSheetIndex === -1);
+  }, [tagsSheetIndex, sentenceSheetIndex]);
 
   const morphemeStyle = useMemo(
     () => ({
       color:
         selectedMorpheme === null
           ? theme.colors.disabled
-          : theme.colors.primary,
+          : theme.colors.onSurface,
     }),
     [selectedMorpheme, theme],
   );
   const guideSteps = useMemo(
     () => [
-      'If on a tablet, use split screen',
+      ...(isTablet ? ['Use split screen'] : []),
       'Copy some text outside the app',
+      ...(!isTablet ? ['Paste it here'] : []),
       'Select a word',
       'Mine the sentence',
     ],
@@ -93,38 +117,65 @@ export const Mining = () => {
   );
 
   const onAddTagButtonPressed = useCallback(() => {
-    tagsBottomSheetRef.current?.present();
+    tagsSheetRef.current?.present();
   }, []);
-
   const onDeleteTagButtonPressed = useCallback(
     (key: number) => {
-      updateTags(currentTag => currentTag.filter((_, index) => index !== key));
+      updateTags(currentTags =>
+        currentTags.filter((_, index) => index !== key),
+      );
     },
     [updateTags],
+  );
+  const onAddTag = useCallback(
+    (tagsToAdd: string[]) => {
+      updateTags(currentTags => [
+        ...currentTags.filter(entry => !tagsToAdd.includes(entry)),
+        ...tagsToAdd,
+      ]);
+    },
+    [updateTags],
+  );
+  const onEditSentence = useCallback(
+    (sentence: string, dictionaryForm: string, reading: string) => {
+      setSelectedMorpheme(
+        dictionaryForm !== '' && reading !== ''
+          ? {
+              surface: '',
+              dictionaryForm,
+              reading,
+            }
+          : null,
+      );
+
+      if (sentence !== kotuString) {
+        setMorphemeEdited(true);
+        setKotuString(sentence);
+      }
+    },
+    [kotuString],
   );
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.mainView}>
-        <TouchableOpacity disabled={selectedMorpheme === null}>
-          <View style={styles.selectedMorphemeView}>
-            <Text
-              style={{
-                ...styles.selectedMorphemeDictionaryForm,
-                ...morphemeStyle,
-              }}
-              numberOfLines={1}
-              adjustsFontSizeToFit>
-              「{selectedMorpheme?.dictionaryForm ?? 'Word'}」
-            </Text>
-            <Text
-              style={{...styles.selectedMorphemeReading, ...morphemeStyle}}
-              numberOfLines={1}
-              adjustsFontSizeToFit>
-              「{selectedMorpheme?.reading ?? 'Reading'}」
-            </Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.selectedMorphemeView}>
+          <Text
+            style={{
+              ...styles.selectedMorphemeDictionaryForm,
+              ...morphemeStyle,
+            }}
+            numberOfLines={1}
+            adjustsFontSizeToFit>
+            「{selectedMorpheme?.dictionaryForm ?? 'Word'}」
+          </Text>
+          <Text
+            style={{...styles.selectedMorphemeReading, ...morphemeStyle}}
+            numberOfLines={1}
+            adjustsFontSizeToFit>
+            「{selectedMorpheme?.reading ?? 'Reading'}」
+          </Text>
+        </View>
         <Divider style={styles.divider} />
         {morphemes.length > 0 ? (
           <View style={styles.wordView}>
@@ -135,7 +186,7 @@ export const Mining = () => {
                   ...styles.wordTouchableOpacity,
                   ...{backgroundColor: theme.colors.surface},
                 }}
-                onPress={() => setSelectedMorpheme(morpheme)}>
+                onPress={() => setSelectedMorpheme({...morpheme})}>
                 <Text style={styles.wordText}>{morpheme.surface}</Text>
               </TouchableOpacity>
             ))}
@@ -175,14 +226,26 @@ export const Mining = () => {
         disabled={selectedMorpheme === null}>
         Mine Sentence
       </Button>
-      <TagsBottomSheet ref={tagsBottomSheetRef} updateTags={updateTags} />
+      <TagsSheet
+        ref={tagsSheetRef}
+        onAdd={onAddTag}
+        onChange={setTagsSheetIndex}
+      />
+      <SentenceSheet
+        ref={sentenceSheetRef}
+        onChangeIndex={setSentenceSheetIndex}
+        onEdit={onEditSentence}
+        sentence={kotuString}
+        dictionaryForm={selectedMorpheme?.dictionaryForm ?? ''}
+        reading={selectedMorpheme?.reading ?? ''}
+      />
     </>
   );
 };
 
 const styles = StyleSheet.create({
   mainView: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'column',
     alignContent: 'stretch',
     alignItems: 'stretch',
@@ -204,7 +267,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignSelf: 'center',
     justifyContent: 'center',
-    //paddingTop: 15,
   },
   guideText: {
     fontSize: 13,

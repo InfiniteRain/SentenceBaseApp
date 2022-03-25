@@ -5931,6 +5931,11 @@ react-native-console-time-polyfill@^1.2.3:
   resolved "https://registry.yarnpkg.com/react-native-console-time-polyfill/-/react-native-console-time-polyfill-1.2.3.tgz#1039dab1bb9e2d8040f5e19de68e0da781dc9b60"
   integrity sha512-C7CUb1c6GsCssqvjtRuqVqnGwlfEHXxXDvCUuGNbq/gpZZt+9YbZD3ODmXBDxis3tDQA0k1lbT1VMTqWQw9rDg==
 
+react-native-device-info@^8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.5.1.tgz#40b38506d7cc1e2266da49fe7b9672166c765fc9"
+  integrity sha512-VMEP1c/X0KSOqBZDzs9/GHbacgdsoQqaBqI/fK98S5oMmKAfuIFjAjb4kvcNjC2mklD6JrlgXPnqKQQaX+kklg==
+
 react-native-firebaseui-auth@^1.3.0:
   version "1.3.47"
   resolved "https://registry.yarnpkg.com/react-native-firebaseui-auth/-/react-native-firebaseui-auth-1.3.47.tgz#86662ff123a380d00dbe4f9ac9e6302b48f4ff4b"
@@ -5959,6 +5964,11 @@ react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
   integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
+
+react-native-navigation-bar-color@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-navigation-bar-color/-/react-native-navigation-bar-color-2.0.1.tgz#ee2be25cc37105f7da355717b0a9a32c9c059ae6"
+  integrity sha512-1kE/oxWt+HYjRxdZdvke9tJ365xaee5n3+euOQA1En8zQuSbOxiE4SYEGM7TeaWnmLJ0l37mRnPHaB2H4mGh0A==
 
 react-native-paper@^4.11.2:
   version "4.11.2"
