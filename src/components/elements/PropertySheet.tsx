@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {BackHandler, Platform, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import {ThemeContext} from '../../contexts/theme';
 
 type PropertySheetModalProps = {

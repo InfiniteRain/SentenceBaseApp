@@ -20,3 +20,29 @@ export type Morpheme = {
   dictionaryForm: string;
   reading: string;
 };
+
+export type MecabMorpheme = {
+  word: string;
+  pos: string;
+  pos_detail1: string;
+  pos_detail2: string;
+  pos_detail3: string;
+  conjugation1: string;
+  conjugation2: string;
+  dictionary_form: string;
+  reading?: string;
+  pronunciation?: string;
+};
+
+export type MecabMessage =
+  | {
+      type: 'initialized';
+      data: null;
+    }
+  | {
+      type: 'queryResult';
+      data: {
+        query: string;
+        result: MecabMorpheme[];
+      };
+    };
