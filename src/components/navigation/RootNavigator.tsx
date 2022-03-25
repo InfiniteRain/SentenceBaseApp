@@ -15,8 +15,10 @@ export const RootNavigator = () => {
   const [bottomTabsRoute, setBottomTabsRoute] = useState<string | null>(null);
   const [onClear, setOnClear] = useState<(() => void) | undefined>();
   const [onPaste, setOnPaste] = useState<(() => void) | undefined>();
+  const [onEdit, setOnEdit] = useState<(() => void) | undefined>();
   const [isClearDisabled, setClearDisabled] = useState(false);
   const [isPasteDisabled, setPasteDisabled] = useState(false);
+  const [isEditDisabled, setEditDisabled] = useState(false);
 
   useEffect(
     () =>
@@ -43,10 +45,14 @@ export const RootNavigator = () => {
         setOnClear,
         onPaste,
         setOnPaste,
+        onEdit,
+        setOnEdit,
         isClearDisabled,
         setClearDisabled,
         isPasteDisabled,
         setPasteDisabled,
+        isEditDisabled,
+        setEditDisabled,
       }}>
       <BottomSheetModalProvider>
         <StackNavigation.Navigator>
