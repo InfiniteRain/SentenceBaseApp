@@ -185,18 +185,6 @@ export const Mining = () => {
         tags,
       },
       {
-        onSuccess: () => {
-          Toast.show({
-            type: 'success',
-            text1: 'Mined!',
-            text2: 'The sentence was successfully added to the pending list.',
-            position: 'top',
-            visibilityTime: 3000,
-            onPress: () => {
-              Toast.hide();
-            },
-          });
-        },
         onError: () => {
           Toast.show({
             type: 'error',
