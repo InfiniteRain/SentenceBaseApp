@@ -1,4 +1,10 @@
-import React, {useCallback, useContext} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
 import {Caption, Paragraph, Drawer} from 'react-native-paper';
@@ -7,9 +13,35 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {ThemeContext} from '../../contexts/theme';
 import {RootNavigatorProps} from '../../types';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export function DrawerContent({navigation}: RootNavigatorProps) {
   const {theme} = useContext(ThemeContext);
+
+  const [pendingSentences, setPendingSentences] = useState(0);
+  const [batchesMined, setBatchesMined] = useState(0);
+
+  const email = useMemo<string>(() => {
+    return auth().currentUser?.email ?? '';
+  }, []);
+
+  useEffect(() => {
+    const userUid = auth().currentUser?.uid;
+
+    if (!userUid) {
+      return;
+    }
+
+    return firestore()
+      .collection('users')
+      .doc(userUid)
+      .onSnapshot(snap => {
+        const data = snap.data();
+
+        setPendingSentences(data?.pendingSentences ?? 0);
+        setBatchesMined(data?.counters.batches ?? 0);
+      });
+  }, []);
 
   const logout = useCallback(async () => {
     await auth().signOut();
@@ -28,16 +60,20 @@ export function DrawerContent({navigation}: RootNavigatorProps) {
             },
           }}
         />
-        <Caption style={styles.caption}>test@example.com</Caption>
+        <Caption style={styles.caption}>{email}</Caption>
       </View>
       <View style={styles.userInfoSection}>
         <View style={styles.stats}>
           <View style={styles.section}>
-            <Paragraph style={[styles.paragraph, styles.caption]}>32</Paragraph>
+            <Paragraph style={[styles.paragraph, styles.caption]}>
+              {pendingSentences}
+            </Paragraph>
             <Caption style={styles.caption}>Sentences Pending</Caption>
           </View>
           <View style={styles.section}>
-            <Paragraph style={[styles.paragraph, styles.caption]}>46</Paragraph>
+            <Paragraph style={[styles.paragraph, styles.caption]}>
+              {batchesMined}
+            </Paragraph>
             <Caption style={styles.caption}>Batches mined</Caption>
           </View>
         </View>
