@@ -1,5 +1,6 @@
 import {katakanaToHiragana} from './helpers';
 import {MecabMorpheme, Morpheme} from './types';
+import auth from '@react-native-firebase/auth';
 
 type KotuResponse = {
   accentPhrases: {
@@ -12,6 +13,8 @@ type KotuResponse = {
   }[];
 }[];
 
+const sentenceBaseApiUrl =
+  'https://us-central1-sentence-base.cloudfunctions.net/api/v1';
 const kotuUrl = 'https://kotu.io/api/dictionary/parse';
 
 export const kotuQuery = async (
@@ -47,4 +50,45 @@ export const kotuQuery = async (
   }
 
   return morphemes;
+};
+
+const sentenceBaseApiRequest = async (
+  method: 'get' | 'post' | 'delete',
+  endpoint: string,
+  body?: Record<string, unknown>,
+) => {
+  endpoint = endpoint.replace(/^\/+|\/+$/g, '');
+
+  const response = await fetch(`${sentenceBaseApiUrl}/${endpoint}`, {
+    method,
+    ...(body ? {body: JSON.stringify(body)} : {}),
+    headers: new Headers({
+      ...(body ? {'Content-Type': 'application/json'} : {}),
+      Authorization: `Bearer ${await auth().currentUser?.getIdToken()}`,
+    }),
+  });
+  const json = await response.json();
+
+  if (!json.success) {
+    console.log(json);
+    throw new Error(
+      `Request ${method.toUpperCase()} -> ${endpoint} responded with { "success": false }`,
+    );
+  }
+
+  return json.data;
+};
+
+export const addSentence = async (
+  dictionaryForm: string,
+  reading: string,
+  sentence: string,
+  tags: string[],
+) => {
+  return sentenceBaseApiRequest('post', 'sentences', {
+    dictionaryForm,
+    reading,
+    sentence,
+    tags,
+  });
 };

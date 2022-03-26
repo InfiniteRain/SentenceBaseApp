@@ -1,9 +1,0 @@
-yarn run v1.22.15
-$ react-native run-ios
-info Found Xcode workspace "SentenceBaseApp.xcworkspace"
-info Building (using "xcodebuild -workspace SentenceBaseApp.xcworkspace -configuration Debug -scheme SentenceBaseApp -destination id=FC5792A8-317E-4D97-97BF-676D1F5602A9")
-success Successfully built the app
-info Installing "/Users/dlossenko/Library/Developer/Xcode/DerivedData/SentenceBaseApp-dogeaezksuxgqkfdokbtzjqwmvqb/Build/Products/Debug-iphonesimulator/SentenceBaseApp.app"
-info Launching "io.infiniterain.SentenceBaseApp"
-success Successfully launched the app on the simulator
-Done in 47.06s.

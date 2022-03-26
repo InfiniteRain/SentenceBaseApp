@@ -20,6 +20,7 @@ import AuthUI from 'react-native-firebaseui-auth';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {MecabContext} from '../contexts/mecab-context';
+import Toast from 'react-native-toast-message';
 
 const mecabCdnUrl = 'https://infiniterain.github.io/cdn/mecab';
 
@@ -169,6 +170,7 @@ export const App = () => {
                     <RootNavigator />
                   </NavigationContainer>
                 )}
+                <Toast />
                 <View style={styles.mecabWebViewContainer}>
                   <WebView
                     ref={ref => {
