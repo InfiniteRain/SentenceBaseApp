@@ -22,6 +22,7 @@ import {useClipboard} from '../../../hooks/use-clipboard';
 import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
 import Toast from 'react-native-toast-message';
+import {CacheContext} from '../../../contexts/cache-context';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -36,6 +37,7 @@ export const Mining = () => {
     setPasteDisabled,
     setEditDisabled,
   } = useContext(HeaderButtonContext);
+  const {setDoPendingSentencesQuery} = useContext(CacheContext);
 
   const [morphemes, setMorphemes] = useState<Morpheme[]>([]);
   const [selectedMorpheme, setSelectedMorpheme] = useState<Morpheme | null>(
@@ -185,6 +187,9 @@ export const Mining = () => {
         tags,
       },
       {
+        onSuccess: () => {
+          setDoPendingSentencesQuery(true);
+        },
         onError: () => {
           Toast.show({
             type: 'error',
@@ -207,7 +212,14 @@ export const Mining = () => {
       },
     );
     onClear?.();
-  }, [mutateAddSentence, kotuString, selectedMorpheme, tags, onClear]);
+  }, [
+    mutateAddSentence,
+    kotuString,
+    selectedMorpheme,
+    tags,
+    onClear,
+    setDoPendingSentencesQuery,
+  ]);
 
   return (
     <>

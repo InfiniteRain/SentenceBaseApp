@@ -1,4 +1,9 @@
-import {Morpheme} from './types';
+import {
+  Morpheme,
+  SbApiGetPendingSentencesResponse,
+  SbApiResponse,
+  SbApiSentenence,
+} from './types';
 import auth from '@react-native-firebase/auth';
 
 type KotuResponse = {
@@ -34,7 +39,7 @@ export const kotuQuery = async (query: string): Promise<Morpheme[]> => {
   return morphemes;
 };
 
-const sentenceBaseApiRequest = async (
+const sentenceBaseApiRequest = async <T = null>(
   method: 'get' | 'post' | 'delete',
   endpoint: string,
   body?: Record<string, unknown>,
@@ -49,10 +54,9 @@ const sentenceBaseApiRequest = async (
       Authorization: `Bearer ${await auth().currentUser?.getIdToken()}`,
     }),
   });
-  const json = await response.json();
+  const json = (await response.json()) as SbApiResponse<T>;
 
   if (!json.success) {
-    console.log(json);
     throw new Error(
       `Request ${method.toUpperCase()} -> ${endpoint} responded with { "success": false }`,
     );
@@ -66,11 +70,18 @@ export const addSentence = async (
   reading: string,
   sentence: string,
   tags: string[],
-) => {
-  return sentenceBaseApiRequest('post', 'sentences', {
+) =>
+  await sentenceBaseApiRequest('post', 'sentences', {
     dictionaryForm,
     reading,
     sentence,
     tags,
   });
-};
+
+export const getPendingSentences = async (): Promise<SbApiSentenence[]> =>
+  (
+    await sentenceBaseApiRequest<SbApiGetPendingSentencesResponse>(
+      'get',
+      'sentences',
+    )
+  ).sentences;
