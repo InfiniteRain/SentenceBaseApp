@@ -10,8 +10,8 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Button, Caption, Chip, Divider, Text} from 'react-native-paper';
 import {ThemeContext} from '../../../contexts/theme';
-import {useQuery} from 'react-query';
-import {kotuQuery} from '../../../queries';
+import {useMutation, useQuery} from 'react-query';
+import {addSentence, kotuQuery} from '../../../queries';
 import {Morpheme} from '../../../types';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
@@ -22,6 +22,7 @@ import {useClipboard} from '../../../hooks/use-clipboard';
 import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
 import {MecabContext} from '../../../contexts/mecab-context';
+import Toast from 'react-native-toast-message';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -29,6 +30,7 @@ export const Mining = () => {
   const {theme} = useContext(ThemeContext);
   const {mecabQuery} = useContext(MecabContext);
   const {
+    onClear,
     setOnClear,
     setOnPaste,
     setOnEdit,
@@ -43,18 +45,33 @@ export const Mining = () => {
   );
   const [isMorphemeEdited, setMorphemeEdited] = useState<boolean>(false);
   const [kotuString, setKotuString] = useState('');
-  const [clipboardEnabled, setClipboardEnabled] = useState(true);
+  const [isClipboardEnabled, setClipboardEnabled] = useState(true);
   const [tagsSheetIndex, setTagsSheetIndex] = useState(-1);
   const [sentenceSheetIndex, setSentenceSheetIndex] = useState(-1);
 
   const [tags, updateTags] = useAsyncStorage<string[]>('tags', []);
 
-  const clipboardEntry = useClipboard({enabled: clipboardEnabled});
+  const clipboardEntry = useClipboard({enabled: isClipboardEnabled});
 
   const {data: morphemeQueryData, status: morphemeQueryStatus} = useQuery(
     ['kotu', kotuString],
     () => kotuQuery(kotuString, mecabQuery),
     {enabled: kotuString !== ''},
+  );
+
+  const {mutate: mutateAddSentence, status: addSentenceStatus} = useMutation(
+    (params: {
+      dictionaryForm: string;
+      reading: string;
+      sentence: string;
+      tags: string[];
+    }) =>
+      addSentence(
+        params.dictionaryForm,
+        params.reading,
+        params.sentence,
+        params.tags,
+      ),
   );
 
   const tagsSheetRef = useRef<BottomSheetModal>(null);
@@ -157,6 +174,54 @@ export const Mining = () => {
     },
     [kotuString],
   );
+  const onMineSentence = useCallback(() => {
+    const dictionaryForm = selectedMorpheme?.dictionaryForm ?? '';
+    const reading = selectedMorpheme?.reading ?? '';
+    const sentence = kotuString;
+
+    mutateAddSentence(
+      {
+        dictionaryForm,
+        reading,
+        sentence,
+        tags,
+      },
+      {
+        onSuccess: () => {
+          Toast.show({
+            type: 'success',
+            text1: 'Mined!',
+            text2: 'The sentence was successfully added to the pending list.',
+            position: 'top',
+            visibilityTime: 3000,
+            onPress: () => {
+              Toast.hide();
+            },
+          });
+        },
+        onError: () => {
+          Toast.show({
+            type: 'error',
+            text1: 'Failed to add the sentence.',
+            text2: 'Press this notification to restore the sentence.',
+            position: 'top',
+            visibilityTime: 10000,
+            onPress: () => {
+              setMorphemeEdited(true);
+              setSelectedMorpheme({
+                surface: '',
+                dictionaryForm,
+                reading,
+              });
+              setKotuString(sentence);
+              Toast.hide();
+            },
+          });
+        },
+      },
+    );
+    onClear?.();
+  }, [mutateAddSentence, kotuString, selectedMorpheme, tags, onClear]);
 
   return (
     <>
@@ -225,7 +290,9 @@ export const Mining = () => {
         mode="contained"
         style={styles.mineSentenceButton}
         color={theme.colors.primary}
-        disabled={selectedMorpheme === null}>
+        disabled={selectedMorpheme === null || addSentenceStatus === 'loading'}
+        onPress={onMineSentence}
+        loading={addSentenceStatus === 'loading'}>
         Mine Sentence
       </Button>
       <TagsSheet
