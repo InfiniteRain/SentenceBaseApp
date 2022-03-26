@@ -20,3 +20,25 @@ export type Morpheme = {
   dictionaryForm: string;
   reading: string;
 };
+
+export type SbApiResponse<T = null> =
+  | {
+      success: false;
+      errors: unknown[];
+    }
+  | {
+      success: true;
+      data: T;
+    };
+
+export type SbApiSentenence = {
+  dictionaryForm: string;
+  reading: string;
+  sentence: string;
+  frequency: number;
+  tags: string[];
+};
+
+export type SbApiGetPendingSentencesResponse = {
+  sentences: SbApiSentenence[];
+};

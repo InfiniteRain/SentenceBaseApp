@@ -6,6 +6,7 @@ import {Drawer} from './Drawer';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {CacheContext} from '../../contexts/cache-context';
 
 const StackNavigation = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export const RootNavigator = () => {
   const [isClearDisabled, setClearDisabled] = useState(false);
   const [isPasteDisabled, setPasteDisabled] = useState(false);
   const [isEditDisabled, setEditDisabled] = useState(false);
+  const [doPendingSentencesQuery, setDoPendingSentencesQuery] = useState(true);
 
   useEffect(
     () =>
@@ -54,17 +56,20 @@ export const RootNavigator = () => {
         isEditDisabled,
         setEditDisabled,
       }}>
-      <BottomSheetModalProvider>
-        <StackNavigation.Navigator>
-          <StackNavigation.Screen
-            name="Drawer"
-            component={Drawer}
-            options={{headerShown: false}}
-          />
-          <StackNavigation.Screen name="Batch" component={Batch} />
-          <StackNavigation.Screen name="Export" component={Export} />
-        </StackNavigation.Navigator>
-      </BottomSheetModalProvider>
+      <CacheContext.Provider
+        value={{doPendingSentencesQuery, setDoPendingSentencesQuery}}>
+        <BottomSheetModalProvider>
+          <StackNavigation.Navigator>
+            <StackNavigation.Screen
+              name="Drawer"
+              component={Drawer}
+              options={{headerShown: false}}
+            />
+            <StackNavigation.Screen name="Batch" component={Batch} />
+            <StackNavigation.Screen name="Export" component={Export} />
+          </StackNavigation.Navigator>
+        </BottomSheetModalProvider>
+      </CacheContext.Provider>
     </HeaderButtonContext.Provider>
   );
 };
