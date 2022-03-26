@@ -806,14 +806,12 @@ PODS:
     - glog
   - react-native-firebaseui-auth (1.3.47):
     - React
-  - react-native-safe-area-context (4.2.0):
+  - react-native-safe-area-context (4.2.2):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
-  - react-native-webview (11.17.2):
-    - React-Core
   - React-perflogger (0.66.2)
   - React-RCTActionSheet (0.66.2):
     - React-Core/RCTActionSheetHeaders (= 0.66.2)
@@ -880,8 +878,6 @@ PODS:
     - React-logger (= 0.66.2)
     - React-perflogger (= 0.66.2)
   - RNCAsyncStorage (1.16.1):
-    - React-Core
-  - RNCCheckbox (0.5.9):
     - React-Core
   - RNCClipboard (1.8.5):
     - React-Core
@@ -996,7 +992,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-firebaseui-auth (from `../node_modules/react-native-firebaseui-auth`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -1010,7 +1005,6 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -1119,8 +1113,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-firebaseui-auth"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-webview:
-    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -1147,8 +1139,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
-  RNCCheckbox:
-    :path: "../node_modules/@react-native-community/checkbox"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCPicker:
@@ -1246,8 +1236,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b08b2d5e86cef9dc4bb69f0aa0bbe6d210fb7da5
   React-logger: faee236598b0f7e1a5e3b68577016ac451f1f993
   react-native-firebaseui-auth: 3d1a7ed46e4a26d03dc6f458e0b6ee6fe3eaa6c4
-  react-native-safe-area-context: eb87d85631d8efa166c14c2e9826c896b2ce170e
-  react-native-webview: 380c1a03ec94b7ed764dac8db1e7c9952d08c93a
+  react-native-safe-area-context: da2d11bd7df9bf7779e9bdc85081c141cfa544f4
   React-perflogger: 5ab487cacfe6ec19bfe3d3f8072bf71eb07d63da
   React-RCTActionSheet: 03f25695e095fb5aa003828620943c74cc281fec
   React-RCTAnimation: eaf82da39f0c36fb0ef2a28df797c5f73a2a98ea
@@ -1261,7 +1250,6 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 393e26602c1b248683372051e34db63e359e3b01
   ReactCommon: c0263c1a41509aeb94be3214fa7bc3b71eae5ef6
   RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
-  RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
   RNCClipboard: cc054ad1e8a33d2a74cd13e565588b4ca928d8fd
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
   RNDeviceInfo: 8d4177859b062334835962799460528869a487fb
