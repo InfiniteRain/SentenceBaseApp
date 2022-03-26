@@ -21,14 +21,12 @@ import {HeaderButtonContext} from '../../../contexts/header-button-context';
 import {useClipboard} from '../../../hooks/use-clipboard';
 import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
-import {MecabContext} from '../../../contexts/mecab-context';
 import Toast from 'react-native-toast-message';
 
 const isTablet = DeviceInfo.isTablet();
 
 export const Mining = () => {
   const {theme} = useContext(ThemeContext);
-  const {mecabQuery} = useContext(MecabContext);
   const {
     onClear,
     setOnClear,
@@ -55,7 +53,7 @@ export const Mining = () => {
 
   const {data: morphemeQueryData, status: morphemeQueryStatus} = useQuery(
     ['kotu', kotuString],
-    () => kotuQuery(kotuString, mecabQuery),
+    () => kotuQuery(kotuString),
     {enabled: kotuString !== ''},
   );
 
