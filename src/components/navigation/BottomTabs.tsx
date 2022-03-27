@@ -1,6 +1,6 @@
 import React from 'react';
 import {Mining} from '../screens/mining/Mining';
-import {PendingSentences} from '../screens/PendingSentences';
+import {PendingSentences} from '../screens/pending-sentences/PendingSentences';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
