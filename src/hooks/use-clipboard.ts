@@ -6,6 +6,7 @@ const clipboardEventEmitter = new NativeEventEmitter(
   NativeModules.ClipboardListener,
 );
 
+// todo: ignore first event on android
 export const useClipboard = (options?: {enabled?: boolean}) => {
   const [clipboardEntry, setClipboardEntry] = useState<string>('');
 

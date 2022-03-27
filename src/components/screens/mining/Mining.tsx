@@ -23,6 +23,7 @@ import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
 import Toast from 'react-native-toast-message';
 import {CacheContext} from '../../../contexts/cache-context';
+import {useIsFocused} from '@react-navigation/native';
 
 const isTablet = DeviceInfo.isTablet();
 
@@ -49,9 +50,13 @@ export const Mining = () => {
   const [tagsSheetIndex, setTagsSheetIndex] = useState(-1);
   const [sentenceSheetIndex, setSentenceSheetIndex] = useState(-1);
 
+  const isFocused = useIsFocused();
+
   const [tags, updateTags] = useAsyncStorage<string[]>('tags', []);
 
-  const clipboardEntry = useClipboard({enabled: isClipboardEnabled});
+  const clipboardEntry = useClipboard({
+    enabled: isClipboardEnabled && isFocused,
+  });
 
   const {data: morphemeQueryData, status: morphemeQueryStatus} = useQuery(
     ['kotu', kotuString],
