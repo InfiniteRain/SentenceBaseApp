@@ -7,16 +7,17 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {Keyboard, StyleSheet, View} from 'react-native';
+import {Alert, Keyboard, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {ThemeContext} from '../../../contexts/theme';
 import {colors} from '../../../shared';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type EditSheetProps = {
+  sentenceId: string;
   sentence: string;
   tags: string[];
-  onEdit: (sentence: string, tags: string[]) => void;
+  onDelete: (sentenceId: string) => void;
   onChangeIndex?: (index: number) => void;
 };
 
@@ -36,11 +37,26 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
       setTags(props.tags);
     }, [props]);
 
-    const onConfirm = useCallback(() => {
-      props.onEdit(sentence, tags);
+    const onConfirmButtonPressed = useCallback(() => {
       Keyboard.dismiss();
       castedRef.current?.close();
-    }, [props, castedRef, sentence, tags]);
+    }, [castedRef]);
+    const onDeleteButtonPressed = useCallback(() => {
+      Alert.alert('Delete this sentence?', 'This action cannot be reversed.', [
+        {
+          text: 'Yes',
+          onPress() {
+            Keyboard.dismiss();
+            castedRef.current?.close();
+            props.onDelete(props.sentenceId);
+          },
+          style: 'destructive',
+        },
+        {
+          text: 'No',
+        },
+      ]);
+    }, [castedRef, props]);
 
     return (
       <PropertySheet
@@ -79,12 +95,15 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
             defaultValue={props.tags.join(' ')}
             placeholderTextColor={theme.colors.placeholder}
           />
-          <Button mode="contained" onPress={onConfirm} style={styles.button}>
+          <Button
+            mode="contained"
+            onPress={onConfirmButtonPressed}
+            style={styles.button}>
             Confirm
           </Button>
           <Button
             mode="contained"
-            onPress={onConfirm}
+            onPress={onDeleteButtonPressed}
             style={styles.button}
             color={theme.colors.notification}>
             Delete
@@ -124,7 +143,6 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 15,
-    alignItems: 'center',
     justifyContent: 'center',
     height: 44,
   },
