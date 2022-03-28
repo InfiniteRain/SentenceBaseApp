@@ -16,10 +16,11 @@ import {
   View,
 } from 'react-native';
 import {Button, Caption, Divider} from 'react-native-paper';
-import {useQuery} from 'react-query';
+import Toast from 'react-native-toast-message';
+import {useMutation, useQuery} from 'react-query';
 import {CacheContext} from '../../../contexts/cache-context';
 import {ThemeContext} from '../../../contexts/theme';
-import {getPendingSentences} from '../../../queries';
+import {deleteSentence, getPendingSentences} from '../../../queries';
 import {SbApiSentenence} from '../../../types';
 import {EditSheet} from './EditSheet';
 
@@ -30,6 +31,9 @@ export const PendingSentences = () => {
 
   const [sentences, setSentences] = useState<SbApiSentenence[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [editSentenceId, setEditSentenceId] = useState('');
+  const [editSentence, setEditSentence] = useState('');
+  const [editTags, setEditTags] = useState<string[]>([]);
 
   const isFocused = useIsFocused();
 
@@ -37,14 +41,20 @@ export const PendingSentences = () => {
 
   const {
     data: sentencesData,
-    status: getSentencesStatus,
-    refetch,
+    status: sentencesStatus,
+    refetch: refetchSentences,
   } = useQuery(['getSentences', isFocused], () => getPendingSentences(), {
     enabled: isFocused && doPendingSentencesQuery,
     onSettled: () => {
       setIsRefreshing(false);
     },
+    keepPreviousData: true,
   });
+
+  const {mutate: mutateDeleteSentence, status: deleteSentenceStatus} =
+    useMutation(({sentenceId}: {sentenceId: string}) =>
+      deleteSentence(sentenceId),
+    );
 
   useEffect(() => {
     if (sentencesData) {
@@ -62,20 +72,54 @@ export const PendingSentences = () => {
     }
   }, [isFocused]);
 
-  const onSentencePressed = useCallback(() => {
-    editSheetRef.current?.present();
-  }, []);
+  const onSentencePressed = useCallback(
+    (sentenceId: string, sentence: string, tags: string[]) => {
+      setEditSentenceId(sentenceId);
+      setEditSentence(sentence);
+      setEditTags(tags);
+      editSheetRef.current?.present();
+    },
+    [],
+  );
+  const onSentenceDelete = useCallback(
+    (sentenceId: string) => {
+      mutateDeleteSentence(
+        {sentenceId},
+        {
+          onSuccess: () => {
+            setSentences(currentSentences =>
+              currentSentences.filter(
+                sentence => sentence.sentenceId !== sentenceId,
+              ),
+            );
+          },
+          onError: () => {
+            Toast.show({
+              type: 'error',
+              text1: 'Failed to delete the sentence.',
+              position: 'top',
+              visibilityTime: 10000,
+            });
+          },
+        },
+      );
+    },
+    [mutateDeleteSentence],
+  );
 
   return (
     <View style={styles.mainContainer}>
-      {sentences.length > 0 || getSentencesStatus === 'loading' ? (
+      {sentences.length > 0 || sentencesStatus === 'loading' ? (
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({item}: {item: SbApiSentenence}) => (
             <View>
               <TouchableOpacity
                 style={styles.sentenceItemContainer}
-                onPress={onSentencePressed}>
+                onPress={() =>
+                  onSentencePressed(item.sentenceId, item.sentence, item.tags)
+                }
+                disabled={deleteSentenceStatus === 'loading'}>
                 <Text
                   style={{
                     ...styles.sentenceItemWordText,
@@ -108,10 +152,14 @@ export const PendingSentences = () => {
           data={sentences ?? []}
           refreshControl={
             <RefreshControl
-              refreshing={isRefreshing || getSentencesStatus === 'loading'}
+              refreshing={
+                isRefreshing ||
+                sentencesStatus === 'loading' ||
+                deleteSentenceStatus === 'loading'
+              }
               onRefresh={() => {
                 setIsRefreshing(true);
-                refetch();
+                refetchSentences();
               }}
             />
           }
@@ -127,11 +175,21 @@ export const PendingSentences = () => {
         mode="contained"
         style={styles.addNewBatch}
         color={theme.colors.primary}
-        disabled={isRefreshing || getSentencesStatus === 'loading'}
+        disabled={
+          isRefreshing ||
+          sentencesStatus === 'loading' ||
+          deleteSentenceStatus === 'loading'
+        }
         onPress={() => {}}>
         Add New Batch
       </Button>
-      <EditSheet ref={editSheetRef} sentence={''} tags={[]} onEdit={() => {}} />
+      <EditSheet
+        ref={editSheetRef}
+        sentenceId={editSentenceId}
+        sentence={editSentence}
+        tags={editTags}
+        onDelete={onSentenceDelete}
+      />
     </View>
   );
 };

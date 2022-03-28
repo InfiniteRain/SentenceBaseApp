@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     marginTop: 15,
-    alignItems: 'center',
     justifyContent: 'center',
     height: 44,
   },

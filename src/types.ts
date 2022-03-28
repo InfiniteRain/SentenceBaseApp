@@ -32,6 +32,7 @@ export type SbApiResponse<T = null> =
     };
 
 export type SbApiSentenence = {
+  sentenceId: string;
   dictionaryForm: string;
   reading: string;
   sentence: string;

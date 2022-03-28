@@ -307,6 +307,7 @@ export const Mining = () => {
         onAdd={onAddTag}
         onChange={setTagsSheetIndex}
       />
+      {/* todo: why onChange above but onChangeIndex below? */}
       <SentenceSheet
         ref={sentenceSheetRef}
         onChangeIndex={setSentenceSheetIndex}
