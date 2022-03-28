@@ -66,6 +66,7 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
             onChangeText={setSentence}
             blurOnSubmit
             defaultValue={props.sentence}
+            placeholderTextColor={theme.colors.placeholder}
           />
           <View style={styles.secondaryView}>
             <View style={styles.secondaryInputView}>
@@ -82,6 +83,7 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
                 autoCorrect={false}
                 defaultValue={props.dictionaryForm}
                 onChangeText={setDictionaryForm}
+                placeholderTextColor={theme.colors.placeholder}
               />
             </View>
             <View style={styles.secondaryInputView}>
@@ -98,6 +100,7 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
                 autoCorrect={false}
                 defaultValue={props.reading}
                 onChangeText={setReading}
+                placeholderTextColor={theme.colors.placeholder}
               />
             </View>
           </View>
