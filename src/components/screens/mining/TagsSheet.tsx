@@ -91,6 +91,7 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             ref={tagInputRef}
             placeholder="Tag Name"
             autoCorrect={false}
+            placeholderTextColor={theme.colors.placeholder}
           />
           <Button
             mode="contained"
