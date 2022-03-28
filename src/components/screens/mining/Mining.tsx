@@ -104,7 +104,11 @@ export const Mining = () => {
     });
   }, [setOnClear, setOnPaste, setOnEdit]);
   useEffect(() => {
-    setMorphemes(previousData => morphemeQueryData ?? previousData);
+    if (!morphemeQueryData) {
+      return;
+    }
+
+    setMorphemes(morphemeQueryData);
     if (!isMorphemeEdited) {
       setSelectedMorpheme(null);
     }

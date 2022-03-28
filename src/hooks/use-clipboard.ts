@@ -6,7 +6,6 @@ const clipboardEventEmitter = new NativeEventEmitter(
   NativeModules.ClipboardListener,
 );
 
-// todo: ignore first event on android
 export const useClipboard = (options?: {enabled?: boolean}) => {
   const [clipboardEntry, setClipboardEntry] = useState<string>('');
 
@@ -25,15 +24,20 @@ export const useClipboard = (options?: {enabled?: boolean}) => {
       };
     }
 
-    let lastEntry = '';
+    let lastEntry: string | undefined;
     const timeout = setInterval(async () => {
       const entry = await Clipboard.getString();
+
+      if (typeof lastEntry === 'undefined') {
+        lastEntry = entry;
+        return;
+      }
 
       if (entry !== lastEntry) {
         setClipboardEntry(entry);
       }
 
-      lastEntry = entry !== '' ? entry : lastEntry;
+      lastEntry = entry;
     }, 100);
 
     return () => {
