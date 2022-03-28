@@ -1,5 +1,12 @@
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useIsFocused} from '@react-navigation/native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -14,6 +21,7 @@ import {CacheContext} from '../../../contexts/cache-context';
 import {ThemeContext} from '../../../contexts/theme';
 import {getPendingSentences} from '../../../queries';
 import {SbApiSentenence} from '../../../types';
+import {EditSheet} from './EditSheet';
 
 export const PendingSentences = () => {
   const {theme} = useContext(ThemeContext);
@@ -24,6 +32,8 @@ export const PendingSentences = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const isFocused = useIsFocused();
+
+  const editSheetRef = useRef<BottomSheetModal>(null);
 
   const {
     data: sentencesData,
@@ -52,6 +62,10 @@ export const PendingSentences = () => {
     }
   }, [isFocused]);
 
+  const onSentencePressed = useCallback(() => {
+    editSheetRef.current?.present();
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       {sentences.length > 0 || getSentencesStatus === 'loading' ? (
@@ -61,7 +75,7 @@ export const PendingSentences = () => {
             <View>
               <TouchableOpacity
                 style={styles.sentenceItemContainer}
-                onPress={() => {}}>
+                onPress={onSentencePressed}>
                 <Text
                   style={{
                     ...styles.sentenceItemWordText,
@@ -117,6 +131,7 @@ export const PendingSentences = () => {
         onPress={() => {}}>
         Add New Batch
       </Button>
+      <EditSheet ref={editSheetRef} sentence={''} tags={[]} onEdit={() => {}} />
     </View>
   );
 };
