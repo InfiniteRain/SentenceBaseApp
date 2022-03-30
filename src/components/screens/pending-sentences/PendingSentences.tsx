@@ -20,7 +20,11 @@ import Toast from 'react-native-toast-message';
 import {useMutation, useQuery} from 'react-query';
 import {CacheContext} from '../../../contexts/cache-context';
 import {ThemeContext} from '../../../contexts/theme';
-import {deleteSentence, getPendingSentences} from '../../../queries';
+import {
+  deleteSentence,
+  editSentence,
+  getPendingSentences,
+} from '../../../queries';
 import {SbApiSentenence} from '../../../types';
 import {EditSheet} from './EditSheet';
 
@@ -29,18 +33,18 @@ export const PendingSentences = () => {
   const {doPendingSentencesQuery, setDoPendingSentencesQuery} =
     useContext(CacheContext);
 
-  const [sentences, setSentences] = useState<SbApiSentenence[]>([]);
+  const [sentencesInList, setSentencesInList] = useState<SbApiSentenence[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [editSentenceId, setEditSentenceId] = useState('');
-  const [editSentence, setEditSentence] = useState('');
-  const [editTags, setEditTags] = useState<string[]>([]);
+  const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');
+  const [sentenceToEdit, setSentenceToEdit] = useState('');
+  const [tagsToEdit, setTagsToEdit] = useState<string[]>([]);
 
   const isFocused = useIsFocused();
 
   const editSheetRef = useRef<BottomSheetModal>(null);
 
   const {
-    data: sentencesData,
+    data: sentencesQuery,
     status: sentencesStatus,
     refetch: refetchSentences,
   } = useQuery(['getSentences', isFocused], () => getPendingSentences(), {
@@ -51,16 +55,21 @@ export const PendingSentences = () => {
     keepPreviousData: true,
   });
 
-  const {mutate: mutateDeleteSentence, status: deleteSentenceStatus} =
-    useMutation(({sentenceId}: {sentenceId: string}) =>
-      deleteSentence(sentenceId),
+  const {mutate: deleteSentenceMutation, status: deleteSentenceStatus} =
+    useMutation((props: {sentenceId: string}) =>
+      deleteSentence(props.sentenceId),
+    );
+  const {mutate: editSentenceMutation, status: editSentenceStatus} =
+    useMutation(
+      (props: {sentenceId: string; sentence: string; tags: string[]}) =>
+        editSentence(props.sentenceId, props.sentence, props.tags),
     );
 
   useEffect(() => {
-    if (sentencesData) {
-      setSentences(sentencesData);
+    if (sentencesQuery) {
+      setSentencesInList(sentencesQuery);
     }
-  }, [sentencesData]);
+  }, [sentencesQuery]);
   useEffect(() => {
     if (doPendingSentencesQuery && isFocused) {
       setDoPendingSentencesQuery(false);
@@ -72,22 +81,26 @@ export const PendingSentences = () => {
     }
   }, [isFocused]);
 
+  const onListRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    refetchSentences();
+  }, [refetchSentences]);
   const onSentencePressed = useCallback(
     (sentenceId: string, sentence: string, tags: string[]) => {
-      setEditSentenceId(sentenceId);
-      setEditSentence(sentence);
-      setEditTags(tags);
+      setSentenceIdToEdit(sentenceId);
+      setSentenceToEdit(sentence);
+      setTagsToEdit(tags);
       editSheetRef.current?.present();
     },
     [],
   );
   const onSentenceDelete = useCallback(
     (sentenceId: string) => {
-      mutateDeleteSentence(
+      deleteSentenceMutation(
         {sentenceId},
         {
           onSuccess: () => {
-            setSentences(currentSentences =>
+            setSentencesInList(currentSentences =>
               currentSentences.filter(
                 sentence => sentence.sentenceId !== sentenceId,
               ),
@@ -104,12 +117,43 @@ export const PendingSentences = () => {
         },
       );
     },
-    [mutateDeleteSentence],
+    [deleteSentenceMutation],
+  );
+  const onSentenceEdit = useCallback(
+    (sentenceId: string, sentence: string, tags: string[]) => {
+      editSentenceMutation(
+        {sentenceId, sentence, tags},
+        {
+          onSuccess: () => {
+            setSentencesInList(currentSentences =>
+              currentSentences.map(currentSentence =>
+                currentSentence.sentenceId === sentenceId
+                  ? {
+                      ...currentSentence,
+                      sentence,
+                      tags,
+                    }
+                  : currentSentence,
+              ),
+            );
+          },
+          onError: () => {
+            Toast.show({
+              type: 'error',
+              text1: 'Failed to edit the sentence.',
+              position: 'top',
+              visibilityTime: 10000,
+            });
+          },
+        },
+      );
+    },
+    [editSentenceMutation],
   );
 
   return (
     <View style={styles.mainContainer}>
-      {sentences.length > 0 || sentencesStatus === 'loading' ? (
+      {sentencesInList.length > 0 || sentencesStatus === 'loading' ? (
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({item}: {item: SbApiSentenence}) => (
@@ -149,18 +193,16 @@ export const PendingSentences = () => {
               </TouchableOpacity>
             </View>
           )}
-          data={sentences ?? []}
+          data={sentencesInList ?? []}
           refreshControl={
             <RefreshControl
               refreshing={
                 isRefreshing ||
                 sentencesStatus === 'loading' ||
-                deleteSentenceStatus === 'loading'
+                deleteSentenceStatus === 'loading' ||
+                editSentenceStatus === 'loading'
               }
-              onRefresh={() => {
-                setIsRefreshing(true);
-                refetchSentences();
-              }}
+              onRefresh={onListRefresh}
             />
           }
         />
@@ -178,17 +220,19 @@ export const PendingSentences = () => {
         disabled={
           isRefreshing ||
           sentencesStatus === 'loading' ||
-          deleteSentenceStatus === 'loading'
+          deleteSentenceStatus === 'loading' ||
+          editSentenceStatus === 'loading'
         }
         onPress={() => {}}>
         Add New Batch
       </Button>
       <EditSheet
         ref={editSheetRef}
-        sentenceId={editSentenceId}
-        sentence={editSentence}
-        tags={editTags}
+        sentenceId={sentenceIdToEdit}
+        sentence={sentenceToEdit}
+        tags={tagsToEdit}
         onDelete={onSentenceDelete}
+        onEdit={onSentenceEdit}
       />
     </View>
   );

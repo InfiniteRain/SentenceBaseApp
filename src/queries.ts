@@ -88,3 +88,13 @@ export const getPendingSentences = async (): Promise<SbApiSentenence[]> =>
 
 export const deleteSentence = async (sentenceId: string) =>
   await sentenceBaseApiRequest('delete', `sentences/${sentenceId}`);
+
+export const editSentence = async (
+  sentenceId: string,
+  sentence: string,
+  tags: string[],
+) =>
+  await sentenceBaseApiRequest('post', `sentences/${sentenceId}`, {
+    sentence,
+    tags,
+  });

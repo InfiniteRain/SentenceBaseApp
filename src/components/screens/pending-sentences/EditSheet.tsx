@@ -18,6 +18,7 @@ type EditSheetProps = {
   sentence: string;
   tags: string[];
   onDelete: (sentenceId: string) => void;
+  onEdit: (sentenceId: string, sentence: string, tags: string[]) => void;
   onChangeIndex?: (index: number) => void;
 };
 
@@ -37,10 +38,11 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
       setTags(props.tags);
     }, [props]);
 
-    const onConfirmButtonPressed = useCallback(() => {
+    const onEditButtonPressed = useCallback(() => {
       Keyboard.dismiss();
       castedRef.current?.close();
-    }, [castedRef]);
+      props.onEdit(props.sentenceId, sentence, [...new Set(tags)]);
+    }, [castedRef, props, sentence, tags]);
     const onDeleteButtonPressed = useCallback(() => {
       Alert.alert('Delete this sentence?', 'This action cannot be reversed.', [
         {
@@ -97,7 +99,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
           />
           <Button
             mode="contained"
-            onPress={onConfirmButtonPressed}
+            onPress={onEditButtonPressed}
             style={styles.button}>
             Confirm
           </Button>
