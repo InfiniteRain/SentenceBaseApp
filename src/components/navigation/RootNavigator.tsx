@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {CacheContext} from '../../contexts/cache-context';
+import {SbApiSentenence} from '../../types';
 
 const StackNavigation = createNativeStackNavigator();
 
@@ -20,7 +21,8 @@ export const RootNavigator = () => {
   const [isClearDisabled, setClearDisabled] = useState(false);
   const [isPasteDisabled, setPasteDisabled] = useState(false);
   const [isEditDisabled, setEditDisabled] = useState(false);
-  const [doPendingSentencesQuery, setDoPendingSentencesQuery] = useState(true);
+  const [doSentencesQuery, setDoSentencesQuery] = useState(true);
+  const [sentenceList, setSentenceList] = useState<SbApiSentenence[]>([]);
 
   useEffect(
     () =>
@@ -57,7 +59,12 @@ export const RootNavigator = () => {
         setEditDisabled,
       }}>
       <CacheContext.Provider
-        value={{doPendingSentencesQuery, setDoPendingSentencesQuery}}>
+        value={{
+          doSentencesQuery,
+          setDoSentencesQuery,
+          sentenceList,
+          setSentenceList,
+        }}>
         <BottomSheetModalProvider>
           <StackNavigation.Navigator>
             <StackNavigation.Screen

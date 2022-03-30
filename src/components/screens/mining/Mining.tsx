@@ -38,7 +38,7 @@ export const Mining = () => {
     setPasteDisabled,
     setEditDisabled,
   } = useContext(HeaderButtonContext);
-  const {setDoPendingSentencesQuery} = useContext(CacheContext);
+  const {setDoSentencesQuery} = useContext(CacheContext);
 
   const [morphemes, setMorphemes] = useState<Morpheme[]>([]);
   const [selectedMorpheme, setSelectedMorpheme] = useState<Morpheme | null>(
@@ -197,7 +197,7 @@ export const Mining = () => {
       },
       {
         onSuccess: () => {
-          setDoPendingSentencesQuery(true);
+          setDoSentencesQuery(true);
         },
         onError: () => {
           Toast.show({
@@ -227,7 +227,7 @@ export const Mining = () => {
     selectedMorpheme,
     tags,
     onClear,
-    setDoPendingSentencesQuery,
+    setDoSentencesQuery,
   ]);
 
   return (
