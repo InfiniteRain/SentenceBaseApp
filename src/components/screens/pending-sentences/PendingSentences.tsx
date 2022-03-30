@@ -1,5 +1,6 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useIsFocused} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {
   useCallback,
   useContext,
@@ -17,43 +18,37 @@ import {
 } from 'react-native';
 import {Button, Caption, Divider} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import {useMutation, useQuery} from 'react-query';
+import {useMutation} from 'react-query';
 import {CacheContext} from '../../../contexts/cache-context';
 import {ThemeContext} from '../../../contexts/theme';
-import {
-  deleteSentence,
-  editSentence,
-  getPendingSentences,
-} from '../../../queries';
-import {SbApiSentenence} from '../../../types';
+import {usePendingSentences} from '../../../hooks/use-pending-sentences';
+import {deleteSentence, editSentence} from '../../../queries';
+import {RootNavigatorParamList, SbApiSentenence} from '../../../types';
 import {EditSheet} from './EditSheet';
 
 export const PendingSentences = () => {
   const {theme} = useContext(ThemeContext);
-  const {doPendingSentencesQuery, setDoPendingSentencesQuery} =
-    useContext(CacheContext);
+  const {setSentenceList} = useContext(CacheContext);
 
-  const [sentencesInList, setSentencesInList] = useState<SbApiSentenence[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');
   const [sentenceToEdit, setSentenceToEdit] = useState('');
   const [tagsToEdit, setTagsToEdit] = useState<string[]>([]);
 
+  const {
+    sentenceList,
+    status: sentencesStatus,
+    refetch: refetchSentences,
+  } = usePendingSentences(() => {
+    setIsRefreshing(false);
+  });
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootNavigatorParamList>>();
+
   const isFocused = useIsFocused();
 
   const editSheetRef = useRef<BottomSheetModal>(null);
-
-  const {
-    data: sentencesQuery,
-    status: sentencesStatus,
-    refetch: refetchSentences,
-  } = useQuery(['getSentences', isFocused], () => getPendingSentences(), {
-    enabled: isFocused && doPendingSentencesQuery,
-    onSettled: () => {
-      setIsRefreshing(false);
-    },
-    keepPreviousData: true,
-  });
 
   const {mutate: deleteSentenceMutation, status: deleteSentenceStatus} =
     useMutation((props: {sentenceId: string}) =>
@@ -65,16 +60,6 @@ export const PendingSentences = () => {
         editSentence(props.sentenceId, props.sentence, props.tags),
     );
 
-  useEffect(() => {
-    if (sentencesQuery) {
-      setSentencesInList(sentencesQuery);
-    }
-  }, [sentencesQuery]);
-  useEffect(() => {
-    if (doPendingSentencesQuery && isFocused) {
-      setDoPendingSentencesQuery(false);
-    }
-  }, [doPendingSentencesQuery, isFocused, setDoPendingSentencesQuery]);
   useEffect(() => {
     if (isFocused) {
       setIsRefreshing(false);
@@ -100,7 +85,7 @@ export const PendingSentences = () => {
         {sentenceId},
         {
           onSuccess: () => {
-            setSentencesInList(currentSentences =>
+            setSentenceList(currentSentences =>
               currentSentences.filter(
                 sentence => sentence.sentenceId !== sentenceId,
               ),
@@ -117,7 +102,7 @@ export const PendingSentences = () => {
         },
       );
     },
-    [deleteSentenceMutation],
+    [deleteSentenceMutation, setSentenceList],
   );
   const onSentenceEdit = useCallback(
     (sentenceId: string, sentence: string, tags: string[]) => {
@@ -125,7 +110,7 @@ export const PendingSentences = () => {
         {sentenceId, sentence, tags},
         {
           onSuccess: () => {
-            setSentencesInList(currentSentences =>
+            setSentenceList(currentSentences =>
               currentSentences.map(currentSentence =>
                 currentSentence.sentenceId === sentenceId
                   ? {
@@ -148,12 +133,12 @@ export const PendingSentences = () => {
         },
       );
     },
-    [editSentenceMutation],
+    [editSentenceMutation, setSentenceList],
   );
 
   return (
     <View style={styles.mainContainer}>
-      {sentencesInList.length > 0 || sentencesStatus === 'loading' ? (
+      {sentenceList.length > 0 || sentencesStatus === 'loading' ? (
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({item}: {item: SbApiSentenence}) => (
@@ -193,7 +178,7 @@ export const PendingSentences = () => {
               </TouchableOpacity>
             </View>
           )}
-          data={sentencesInList ?? []}
+          data={sentenceList ?? []}
           refreshControl={
             <RefreshControl
               refreshing={
@@ -223,7 +208,7 @@ export const PendingSentences = () => {
           deleteSentenceStatus === 'loading' ||
           editSentenceStatus === 'loading'
         }
-        onPress={() => {}}>
+        onPress={() => navigation.navigate('Batch')}>
         Add New Batch
       </Button>
       <EditSheet
