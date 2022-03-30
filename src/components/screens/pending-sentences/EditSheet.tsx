@@ -41,7 +41,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     const onEditButtonPressed = useCallback(() => {
       Keyboard.dismiss();
       castedRef.current?.close();
-      props.onEdit(props.sentenceId, sentence, [...new Set(tags)]);
+      props.onEdit(props.sentenceId, sentence.trim(), [...new Set(tags)]);
     }, [castedRef, props, sentence, tags]);
     const onDeleteButtonPressed = useCallback(() => {
       Alert.alert('Delete this sentence?', 'This action cannot be reversed.', [
