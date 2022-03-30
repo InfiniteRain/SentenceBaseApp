@@ -1,3 +1,11 @@
+const frequencyList = {
+  ...require('./frequency-lists/jp-dict-1.json'),
+  ...require('./frequency-lists/jp-dict-2.json'),
+  ...require('./frequency-lists/jp-dict-3.json'),
+  ...require('./frequency-lists/jp-dict-4.json'),
+  ...require('./frequency-lists/jp-dict-5.json'),
+};
+
 export const katakanaToHiragana = (text: string): string => {
   const hiragana =
     'がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ' +
@@ -20,3 +28,9 @@ export const katakanaToHiragana = (text: string): string => {
 
   return finalWord;
 };
+
+export const wordFrequency = (
+  dictionaryForm: string,
+  reading: string,
+): number =>
+  frequencyList[`${dictionaryForm}|${katakanaToHiragana(reading)}`] ?? 999999;
