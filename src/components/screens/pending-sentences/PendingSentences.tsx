@@ -5,12 +5,14 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import {
   FlatList,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -136,6 +138,27 @@ export const PendingSentences = () => {
     [editSentenceMutation, setSentenceList],
   );
 
+  const refreshControl = useMemo(
+    () => (
+      <RefreshControl
+        refreshing={
+          isRefreshing ||
+          sentencesStatus === 'loading' ||
+          deleteSentenceStatus === 'loading' ||
+          editSentenceStatus === 'loading'
+        }
+        onRefresh={onListRefresh}
+      />
+    ),
+    [
+      isRefreshing,
+      sentencesStatus,
+      deleteSentenceStatus,
+      editSentenceStatus,
+      onListRefresh,
+    ],
+  );
+
   return (
     <View style={styles.mainContainer}>
       {sentenceList.length > 0 || sentencesStatus === 'loading' ? (
@@ -179,24 +202,16 @@ export const PendingSentences = () => {
             </View>
           )}
           data={sentenceList ?? []}
-          refreshControl={
-            <RefreshControl
-              refreshing={
-                isRefreshing ||
-                sentencesStatus === 'loading' ||
-                deleteSentenceStatus === 'loading' ||
-                editSentenceStatus === 'loading'
-              }
-              onRefresh={onListRefresh}
-            />
-          }
+          refreshControl={refreshControl}
         />
       ) : (
-        <View style={styles.emptyNoticeView}>
+        <ScrollView
+          contentContainerStyle={styles.emptyNoticeView}
+          refreshControl={refreshControl}>
           <Caption style={styles.emptyNoticeText}>
             There are no pending sentences yet.
           </Caption>
-        </View>
+        </ScrollView>
       )}
       <Button
         mode="contained"
