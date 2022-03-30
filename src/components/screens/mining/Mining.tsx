@@ -58,13 +58,13 @@ export const Mining = () => {
     enabled: isClipboardEnabled && isFocused,
   });
 
-  const {data: morphemeQueryData, status: morphemeQueryStatus} = useQuery(
+  const {data: kotuData, status: kotuStatus} = useQuery(
     ['kotu', kotuString],
     () => kotuQuery(kotuString),
     {enabled: kotuString !== ''},
   );
 
-  const {mutate: mutateAddSentence, status: addSentenceStatus} = useMutation(
+  const {mutate: addSentenceMutation, status: addSentenceStatus} = useMutation(
     (params: {
       dictionaryForm: string;
       reading: string;
@@ -104,22 +104,22 @@ export const Mining = () => {
     });
   }, [setOnClear, setOnPaste, setOnEdit]);
   useEffect(() => {
-    if (!morphemeQueryData) {
+    if (!kotuData) {
       return;
     }
 
-    setMorphemes(morphemeQueryData);
+    setMorphemes(kotuData);
     if (!isMorphemeEdited) {
       setSelectedMorpheme(null);
     }
-  }, [morphemeQueryData, isMorphemeEdited]);
+  }, [kotuData, isMorphemeEdited]);
   useEffect(() => {
     setClearDisabled(morphemes.length === 0);
     setEditDisabled(morphemes.length === 0);
   }, [morphemes, setClearDisabled, setEditDisabled]);
   useEffect(() => {
-    setPasteDisabled(morphemeQueryStatus === 'loading');
-  }, [morphemeQueryStatus, setPasteDisabled]);
+    setPasteDisabled(kotuStatus === 'loading');
+  }, [kotuStatus, setPasteDisabled]);
   useEffect(() => {
     setClipboardEnabled(tagsSheetIndex === -1 && sentenceSheetIndex === -1);
   }, [tagsSheetIndex, sentenceSheetIndex]);
@@ -188,7 +188,7 @@ export const Mining = () => {
     const reading = selectedMorpheme?.reading ?? '';
     const sentence = kotuString;
 
-    mutateAddSentence(
+    addSentenceMutation(
       {
         dictionaryForm,
         reading,
@@ -222,7 +222,7 @@ export const Mining = () => {
     );
     onClear?.();
   }, [
-    mutateAddSentence,
+    addSentenceMutation,
     kotuString,
     selectedMorpheme,
     tags,
