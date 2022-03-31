@@ -9,23 +9,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Button, Caption, Divider} from 'react-native-paper';
+import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
+import {Button, Caption} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {useMutation} from 'react-query';
 import {CacheContext} from '../../../contexts/cache-context';
 import {ThemeContext} from '../../../contexts/theme';
 import {usePendingSentences} from '../../../hooks/use-pending-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
-import {RootNavigatorParamList, SbApiSentenence} from '../../../types';
+import {RootNavigatorParamList} from '../../../types';
+import {SentenceList} from '../../elements/SentenceList';
 import {EditSheet} from './EditSheet';
 
 export const PendingSentences = () => {
@@ -162,46 +155,10 @@ export const PendingSentences = () => {
   return (
     <View style={styles.mainContainer}>
       {sentenceList.length > 0 || sentencesStatus === 'loading' ? (
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={({item}: {item: SbApiSentenence}) => (
-            <View>
-              <TouchableOpacity
-                style={styles.sentenceItemContainer}
-                onPress={() =>
-                  onSentencePressed(item.sentenceId, item.sentence, item.tags)
-                }
-                disabled={deleteSentenceStatus === 'loading'}>
-                <Text
-                  style={{
-                    ...styles.sentenceItemWordText,
-                    ...{color: theme.colors.primary},
-                  }}>
-                  {item.dictionaryForm}（{item.reading}）
-                </Text>
-                <Text
-                  style={{
-                    ...styles.sentenceItemText,
-                    ...{color: theme.colors.onSurface},
-                  }}>
-                  {item.sentence}
-                </Text>
-                <View style={styles.tagsContainer}>
-                  {item.tags.map((tag, index) => (
-                    <Text
-                      key={index}
-                      style={{
-                        ...styles.tagsText,
-                        ...{color: theme.colors.disabled},
-                      }}>
-                      {tag}
-                    </Text>
-                  ))}
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          data={sentenceList ?? []}
+        <SentenceList
+          sentenceList={sentenceList ?? []}
+          disabled={deleteSentenceStatus === 'loading'}
+          onSentencePressed={onSentencePressed}
           refreshControl={refreshControl}
         />
       ) : (
