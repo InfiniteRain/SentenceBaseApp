@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Batch} from '../screens/Batch';
+import {CreateBatch} from '../screens/CreateBatch';
 import {Export} from '../screens/Export';
 import {Drawer} from './Drawer';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {CacheContext} from '../../contexts/cache-context';
-import {SbApiSentenence} from '../../types';
+import {SbSentence} from '../../types';
 
 const StackNavigation = createNativeStackNavigator();
 
@@ -22,7 +22,7 @@ export const RootNavigator = () => {
   const [isPasteDisabled, setPasteDisabled] = useState(false);
   const [isEditDisabled, setEditDisabled] = useState(false);
   const [doSentencesQuery, setDoSentencesQuery] = useState(true);
-  const [sentenceList, setSentenceList] = useState<SbApiSentenence[]>([]);
+  const [sentenceList, setSentenceList] = useState<SbSentence[]>([]);
 
   useEffect(
     () =>
@@ -72,7 +72,11 @@ export const RootNavigator = () => {
               component={Drawer}
               options={{headerShown: false}}
             />
-            <StackNavigation.Screen name="Batch" component={Batch} />
+            <StackNavigation.Screen
+              name="CreateBatch"
+              component={CreateBatch}
+              options={{title: 'Create New Batch'}}
+            />
             <StackNavigation.Screen name="Export" component={Export} />
           </StackNavigation.Navigator>
         </BottomSheetModalProvider>

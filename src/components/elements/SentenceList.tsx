@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {ReactNode, useContext} from 'react';
 import {
   FlatList,
   RefreshControlProps,
@@ -9,11 +9,18 @@ import {
 } from 'react-native';
 import {Divider} from 'react-native-paper';
 import {ThemeContext} from '../../contexts/theme';
-import {SbApiSentenence} from '../../types';
+import {SbSentence} from '../../types';
+
+function isSbSentence(value: unknown): value is SbSentence {
+  return (
+    typeof value === 'object' &&
+    typeof (value as SbSentence).sentenceId === 'string'
+  );
+}
 
 export const SentenceList = (props: {
-  sentenceList: SbApiSentenence[];
-  disabled: boolean;
+  sentenceList: (SbSentence | ReactNode)[];
+  disabled: boolean | ((sentence: SbSentence) => boolean);
   onSentencePressed?: (
     sentenceId: string,
     sentence: string,
@@ -29,47 +36,66 @@ export const SentenceList = (props: {
   return (
     <FlatList
       ItemSeparatorComponent={() => <Divider />}
-      renderItem={({item}: {item: SbApiSentenence}) => (
-        <View>
-          <TouchableOpacity
-            style={styles.sentenceItemContainer}
-            onPress={() =>
-              props.onSentencePressed?.(
-                item.sentenceId,
-                item.sentence,
-                item.tags,
-              )
-            }
-            disabled={props.disabled}>
-            <Text
-              style={{
-                ...styles.sentenceItemWordText,
-                ...{color: theme.colors.primary},
-              }}>
-              {item.dictionaryForm}（{item.reading}）
-            </Text>
-            <Text
-              style={{
-                ...styles.sentenceItemText,
-                ...{color: theme.colors.onSurface},
-              }}>
-              {item.sentence}
-            </Text>
-            <View style={styles.tagsContainer}>
-              {item.tags.map((tag, index) => (
-                <Text
-                  key={index}
-                  style={{
-                    ...styles.tagsText,
-                    ...{color: theme.colors.disabled},
-                  }}>
-                  {tag}
-                </Text>
-              ))}
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
+      renderItem={({item}: {item: SbSentence | ReactNode}) => {
+        if (!isSbSentence(item)) {
+          return <>{item}</>;
+        }
+
+        const isDisabled =
+          typeof props.disabled === 'boolean'
+            ? props.disabled
+            : props.disabled(item);
+
+        return (
+          <View>
+            <TouchableOpacity
+              style={styles.sentenceItemContainer}
+              onPress={() =>
+                props.onSentencePressed?.(
+                  item.sentenceId,
+                  item.sentence,
+                  item.tags,
+                )
+              }
+              disabled={isDisabled}>
+              <Text
+                style={{
+                  ...styles.sentenceItemWordText,
+                  ...{
+                    color: isDisabled
+                      ? theme.colors.disabled
+                      : theme.colors.primary,
+                  },
+                }}>
+                {item.dictionaryForm}（{item.reading}）
+              </Text>
+              <Text
+                style={{
+                  ...styles.sentenceItemText,
+                  ...{
+                    color: isDisabled
+                      ? theme.colors.disabled
+                      : theme.colors.onSurface,
+                  },
+                }}>
+                {item.sentence}
+              </Text>
+              <View style={styles.tagsContainer}>
+                {item.tags.map((tag, index) => (
+                  <Text
+                    key={index}
+                    style={{
+                      ...styles.tagsText,
+                      ...{color: theme.colors.disabled},
+                    }}>
+                    {tag}
+                  </Text>
+                ))}
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      }}
       data={props.sentenceList ?? []}
       refreshControl={props.refreshControl}
     />

@@ -131,25 +131,17 @@ export const PendingSentences = () => {
     [editSentenceMutation, setSentenceList],
   );
 
+  const isDisabled = useMemo(
+    () =>
+      isRefreshing ||
+      sentencesStatus === 'loading' ||
+      deleteSentenceStatus === 'loading' ||
+      editSentenceStatus === 'loading',
+    [isRefreshing, sentencesStatus, deleteSentenceStatus, editSentenceStatus],
+  );
   const refreshControl = useMemo(
-    () => (
-      <RefreshControl
-        refreshing={
-          isRefreshing ||
-          sentencesStatus === 'loading' ||
-          deleteSentenceStatus === 'loading' ||
-          editSentenceStatus === 'loading'
-        }
-        onRefresh={onListRefresh}
-      />
-    ),
-    [
-      isRefreshing,
-      sentencesStatus,
-      deleteSentenceStatus,
-      editSentenceStatus,
-      onListRefresh,
-    ],
+    () => <RefreshControl refreshing={isDisabled} onRefresh={onListRefresh} />,
+    [isDisabled, onListRefresh],
   );
 
   return (
@@ -157,7 +149,7 @@ export const PendingSentences = () => {
       {sentenceList.length > 0 || sentencesStatus === 'loading' ? (
         <SentenceList
           sentenceList={sentenceList ?? []}
-          disabled={deleteSentenceStatus === 'loading'}
+          disabled={isDisabled}
           onSentencePressed={onSentencePressed}
           refreshControl={refreshControl}
         />
@@ -174,14 +166,9 @@ export const PendingSentences = () => {
         mode="contained"
         style={styles.addNewBatch}
         color={theme.colors.primary}
-        disabled={
-          isRefreshing ||
-          sentencesStatus === 'loading' ||
-          deleteSentenceStatus === 'loading' ||
-          editSentenceStatus === 'loading'
-        }
-        onPress={() => navigation.navigate('Batch')}>
-        Add New Batch
+        disabled={isDisabled}
+        onPress={() => navigation.navigate('CreateBatch')}>
+        Create New Batch
       </Button>
       <EditSheet
         ref={editSheetRef}
