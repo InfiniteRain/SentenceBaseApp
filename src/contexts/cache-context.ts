@@ -1,11 +1,11 @@
 import {createContext} from 'react';
-import {SbApiSentenence} from '../types';
+import {SbSentence} from '../types';
 
 type CacheContext = {
   doSentencesQuery: boolean;
   setDoSentencesQuery: (value: React.SetStateAction<boolean>) => void;
-  sentenceList: SbApiSentenence[];
-  setSentenceList: (value: React.SetStateAction<SbApiSentenence[]>) => void;
+  sentenceList: SbSentence[];
+  setSentenceList: (value: React.SetStateAction<SbSentence[]>) => void;
 };
 
 export const CacheContext = createContext<CacheContext>({} as CacheContext);

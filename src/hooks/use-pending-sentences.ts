@@ -2,14 +2,12 @@ import {useIsFocused} from '@react-navigation/native';
 import {useContext, useEffect} from 'react';
 import {useQuery} from 'react-query';
 import {CacheContext} from '../contexts/cache-context';
+import {wordFrequency} from '../helpers';
 import {getPendingSentences} from '../queries';
-import {SbApiSentenence} from '../types';
+import {SbApiSentence} from '../types';
 
 export const usePendingSentences = (
-  onQuerySettled?: (
-    data: SbApiSentenence[] | undefined,
-    error: unknown,
-  ) => void,
+  onQuerySettled?: (data: SbApiSentence[] | undefined, error: unknown) => void,
 ) => {
   const {doSentencesQuery, setDoSentencesQuery, sentenceList, setSentenceList} =
     useContext(CacheContext);
@@ -22,7 +20,17 @@ export const usePendingSentences = (
     {
       enabled: isFocused && doSentencesQuery,
       onSettled: onQuerySettled,
-      onSuccess: setSentenceList,
+      onSuccess: apiSentences => {
+        setSentenceList(
+          apiSentences.map(apiSentence => ({
+            ...apiSentence,
+            dictionaryFrequency: wordFrequency(
+              apiSentence.dictionaryForm,
+              apiSentence.reading,
+            ),
+          })),
+        );
+      },
       keepPreviousData: true,
     },
   );

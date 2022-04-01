@@ -6,7 +6,7 @@ export type CombinedTheme = PaperTheme & NavigationTheme;
 
 export type RootNavigatorParamList = {
   Drawer: undefined;
-  Batch: undefined;
+  CreateBatch: undefined;
   Export: undefined;
 };
 
@@ -31,7 +31,7 @@ export type SbApiResponse<T = null> =
       data: T;
     };
 
-export type SbApiSentenence = {
+export type SbApiSentence = {
   sentenceId: string;
   dictionaryForm: string;
   reading: string;
@@ -40,6 +40,10 @@ export type SbApiSentenence = {
   tags: string[];
 };
 
+export type SbSentence = SbApiSentence & {
+  dictionaryFrequency: number;
+};
+
 export type SbApiGetPendingSentencesResponse = {
-  sentences: SbApiSentenence[];
+  sentences: SbApiSentence[];
 };

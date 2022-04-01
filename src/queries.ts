@@ -2,7 +2,7 @@ import {
   Morpheme,
   SbApiGetPendingSentencesResponse,
   SbApiResponse,
-  SbApiSentenence,
+  SbApiSentence,
 } from './types';
 import auth from '@react-native-firebase/auth';
 
@@ -78,7 +78,7 @@ export const addSentence = async (
     tags,
   });
 
-export const getPendingSentences = async (): Promise<SbApiSentenence[]> =>
+export const getPendingSentences = async (): Promise<SbApiSentence[]> =>
   (
     await sentenceBaseApiRequest<SbApiGetPendingSentencesResponse>(
       'get',

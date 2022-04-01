@@ -19,6 +19,7 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import AuthUI from 'react-native-firebaseui-auth';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Toast from 'react-native-toast-message';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const DefaultTheme: CombinedTheme = {
   ...PaperDefaultTheme,
@@ -87,7 +88,7 @@ export const App = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeContext.Provider value={{theme, setTheme}}>
           <PaperProvider theme={theme}>
-            <>
+            <SafeAreaProvider>
               {!currentUser ? (
                 <View style={styles.loggedOutView}>
                   <ActivityIndicator animating={true} size={64} />
@@ -98,7 +99,7 @@ export const App = () => {
                 </NavigationContainer>
               )}
               <Toast />
-            </>
+            </SafeAreaProvider>
           </PaperProvider>
         </ThemeContext.Provider>
       </QueryClientProvider>

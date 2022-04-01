@@ -1,10 +1,12 @@
-const frequencyList = {
-  ...require('./frequency-lists/jp-dict-1.json'),
-  ...require('./frequency-lists/jp-dict-2.json'),
-  ...require('./frequency-lists/jp-dict-3.json'),
-  ...require('./frequency-lists/jp-dict-4.json'),
-  ...require('./frequency-lists/jp-dict-5.json'),
-};
+const frequencyList = new Map<string, number>(
+  Object.entries({
+    ...require('./frequency-lists/jp-dict-1.json'),
+    ...require('./frequency-lists/jp-dict-2.json'),
+    ...require('./frequency-lists/jp-dict-3.json'),
+    ...require('./frequency-lists/jp-dict-4.json'),
+    ...require('./frequency-lists/jp-dict-5.json'),
+  }),
+);
 
 export const katakanaToHiragana = (text: string): string => {
   const hiragana =
@@ -33,4 +35,5 @@ export const wordFrequency = (
   dictionaryForm: string,
   reading: string,
 ): number =>
-  frequencyList[`${dictionaryForm}|${katakanaToHiragana(reading)}`] ?? 999999;
+  frequencyList.get(`${dictionaryForm}|${katakanaToHiragana(reading)}`) ??
+  999999;

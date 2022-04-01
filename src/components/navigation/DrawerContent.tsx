@@ -85,7 +85,7 @@ export function DrawerContent({navigation}: RootNavigatorProps) {
           )}
           label="Export Batch"
           onPress={() => {
-            navigation.push('Batch');
+            navigation.push('Export');
           }}
         />
         <DrawerItem
