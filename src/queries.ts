@@ -10,8 +10,14 @@ type KotuResponse = {
   accentPhrases: {
     components: {
       surface: string;
+      kana: string;
       surfaceOriginal: string;
       originalKana: string;
+      pitchAccents: {
+        descriptive: string;
+        mora: number;
+      }[];
+      isBasic: boolean;
     }[];
   }[];
 }[];
@@ -31,8 +37,13 @@ export const kotuQuery = async (query: string): Promise<Morpheme[]> => {
   for (const component of components) {
     morphemes.push({
       surface: component.surface.trim(),
+      surfaceReading: component.kana.trim(),
       dictionaryForm: (component.surfaceOriginal || component.surface).trim(),
-      reading: (component.originalKana || component.surface).trim(),
+      dictionaryFormReading: (
+        component.originalKana || component.surface
+      ).trim(),
+      pitchAccents: component.pitchAccents,
+      isBasic: component.isBasic,
     });
   }
 
