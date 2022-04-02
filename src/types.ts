@@ -4,6 +4,7 @@ import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
 export type CombinedTheme = PaperTheme & NavigationTheme;
 
@@ -33,6 +34,7 @@ export type Morpheme = {
     mora: number;
   }[];
   isBasic: boolean;
+  partOfSpeech: string;
 };
 
 export type SbApiResponse<T = null> =
@@ -60,4 +62,25 @@ export type SbSentence = SbApiSentence & {
 
 export type SbApiGetPendingSentencesResponse = {
   sentences: SbApiSentence[];
+};
+
+export type SbBatch = {
+  createdAt: FirebaseFirestoreTypes.Timestamp;
+  sentences: {
+    sentenceId: string;
+    sentence: string;
+    wordDictionaryForm: string;
+    wordReading: string;
+    tags: string[];
+  }[];
+};
+
+export type ExportSettings = {
+  profile: string;
+  noteType: string;
+  deck: string;
+  wordField: string;
+  sentenceField: string;
+  audioField: string;
+  definitionField: string;
 };

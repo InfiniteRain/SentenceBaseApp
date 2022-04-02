@@ -3,22 +3,11 @@ import {
   SbApiGetPendingSentencesResponse,
   SbApiResponse,
   SbApiSentence,
+  SbBatch,
 } from './types';
 import auth from '@react-native-firebase/auth';
-import firestore, {
-  FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore';
-
-type SbBatch = {
-  createdAt: FirebaseFirestoreTypes.Timestamp;
-  sentences: {
-    sentenceId: string;
-    sentence: string;
-    wordDictionaryForm: string;
-    wordReading: string;
-    tags: string[];
-  }[];
-};
+import firestore from '@react-native-firebase/firestore';
+import {Buffer} from 'buffer';
 
 type KotuResponse = {
   accentPhrases: {
@@ -32,13 +21,30 @@ type KotuResponse = {
         mora: number;
       }[];
       isBasic: boolean;
+      partOfSpeech: string;
     }[];
   }[];
 }[];
 
+type JishoResponse = {
+  data?: {
+    slug?: string;
+    japanese?: {
+      word?: string;
+      reading?: string;
+    }[];
+    senses?: {
+      english_definitions?: string[];
+      parts_of_speech?: string[];
+    }[];
+  }[];
+};
+
 const sentenceBaseApiUrl =
   'https://us-central1-sentence-base.cloudfunctions.net/api/v1';
 const kotuUrl = 'https://kotu.io/api/dictionary/parse';
+const jishoUrl = 'https://jisho.org/api/v1/search/words';
+const forvoUrl = 'https://forvo.com/word';
 
 export const kotuQuery = async (query: string): Promise<Morpheme[]> => {
   const response = await fetch(kotuUrl, {method: 'post', body: query});
@@ -58,10 +64,51 @@ export const kotuQuery = async (query: string): Promise<Morpheme[]> => {
       ).trim(),
       pitchAccents: component.pitchAccents,
       isBasic: component.isBasic,
+      partOfSpeech: component.partOfSpeech,
     });
   }
 
   return morphemes;
+};
+
+export const jishoQuery = async (keyword: string) => {
+  const response = await fetch(`${jishoUrl}?keyword=${keyword}`);
+  return (await response.json()) as JishoResponse;
+};
+
+export const forvoQuery = async (
+  dictionaryForm: string,
+): Promise<string | null> => {
+  const url = `${forvoUrl}/${dictionaryForm}/`;
+  const headers = new Headers({
+    'User-Agent':
+      'Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0',
+  });
+  const request = await fetch(url, {headers});
+  const html = await request.text();
+  const pronunciationsRegex = /var pronunciations = \[([\w\W\n]*?)\];/;
+  const pronunciationsValue = html.match(pronunciationsRegex)?.[0];
+
+  if (!pronunciationsValue) {
+    return null;
+  }
+
+  const dataRegex =
+    /Japanese.*?Pronunciation by (?:<a.*?>)?(\w+).*?class="lang_xx">(.*?)<.*?,.*?,.*?,.*?,'(.+?)',.*?,.*?,.*?'(.+?)'/gm;
+  const filenameBase64 = [...pronunciationsValue.matchAll(dataRegex)][0]?.[3];
+  const audioHostRegex = /var _AUDIO_HTTP_HOST='(.+?)';/;
+  const audioHost = html.match(audioHostRegex)?.[1];
+  const protocol = 'https';
+
+  if (!filenameBase64) {
+    console.log('b');
+    return null;
+  }
+
+  const filenameDecoded = Buffer.from(filenameBase64, 'base64').toString();
+  const audioUrl = `${protocol}://${audioHost}/mp3/${filenameDecoded}`;
+
+  return audioUrl;
 };
 
 const sentenceBaseApiRequest = async <T = null>(

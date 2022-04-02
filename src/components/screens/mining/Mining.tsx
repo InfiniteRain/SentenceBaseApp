@@ -175,6 +175,7 @@ export const Mining = () => {
               dictionaryFormReading: reading,
               pitchAccents: [],
               isBasic: false,
+              partOfSpeech: '',
             }
           : null,
       );
@@ -218,6 +219,7 @@ export const Mining = () => {
                 dictionaryFormReading: reading,
                 pitchAccents: [],
                 isBasic: false,
+                partOfSpeech: '',
               });
               setKotuString(sentence);
               Toast.hide();
