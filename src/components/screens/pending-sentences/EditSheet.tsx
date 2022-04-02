@@ -65,7 +65,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
         ref={ref}
         snapPoints={snapPoints}
         onChange={props.onChangeIndex}>
-        <View style={styles.mainView}>
+        <View style={styles.mainContainer}>
           <BottomSheetLabeledTextInput
             label="Sentence"
             containerStyle={styles.sentenceInput}
@@ -101,7 +101,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
 );
 
 const styles = StyleSheet.create({
-  mainView: {
+  mainContainer: {
     flexDirection: 'column',
     alignItems: 'stretch',
     paddingHorizontal: 15,
