@@ -1,21 +1,16 @@
-import {
-  BottomSheetModal,
-  BottomSheetTextInput,
-  TouchableOpacity,
-} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, TouchableOpacity} from '@gorhom/bottom-sheet';
 import React, {
   forwardRef,
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Button, Divider, Text} from 'react-native-paper';
 import {ThemeContext} from '../../../contexts/theme';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
-import {colors} from '../../../shared';
+import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {IconButton} from '../../elements/IconButton';
 import {PropertySheet} from '../../elements/PropertySheet';
 
@@ -29,8 +24,6 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
     const castedRef = ref as React.RefObject<BottomSheetModal>;
 
     const {theme} = useContext(ThemeContext);
-
-    const tagInputRef = useRef<any>(null);
 
     const [tag, setTag] = useState('');
     const [filteredTagHistory, setFilteredTagHistory] = useState<string[]>([]);
@@ -79,18 +72,10 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
     return (
       <PropertySheet ref={ref} onDismiss={resetState} onChange={props.onChange}>
         <View style={styles.tagInputView}>
-          <BottomSheetTextInput
-            style={{
-              ...styles.tagInput,
-              ...{
-                color: theme.colors.onSurface,
-              },
-            }}
+          <BottomSheetLabeledTextInput
+            label="Tag"
+            containerStyle={styles.tagInput}
             onChangeText={text => setTag(text.trim())}
-            autoCapitalize="none"
-            ref={tagInputRef}
-            placeholder="Tag Name"
-            autoCorrect={false}
             placeholderTextColor={theme.colors.placeholder}
           />
           <Button
@@ -159,18 +144,13 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   tagInput: {
-    borderRadius: 10,
-    fontSize: 16,
-    lineHeight: 20,
-    padding: 8,
-    backgroundColor: colors.input,
     flex: 1,
     marginRight: 10,
   },
   addTagButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 44,
+    height: 54,
   },
   tagHistoryView: {
     flex: 1,

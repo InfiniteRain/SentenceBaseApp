@@ -1,4 +1,4 @@
-import {BottomSheetModal, BottomSheetTextInput} from '@gorhom/bottom-sheet';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {
   forwardRef,
   useCallback,
@@ -10,7 +10,7 @@ import React, {
 import {Alert, Keyboard, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {ThemeContext} from '../../../contexts/theme';
-import {colors} from '../../../shared';
+import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type EditSheetProps = {
@@ -31,7 +31,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     const [sentence, setSentence] = useState('');
     const [tags, setTags] = useState<string[]>([]);
 
-    const snapPoints = useMemo(() => ['39%'], []);
+    const snapPoints = useMemo(() => ['43%'], []);
 
     useEffect(() => {
       setSentence(props.sentence);
@@ -66,36 +66,20 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
         snapPoints={snapPoints}
         onChange={props.onChangeIndex}>
         <View style={styles.mainView}>
-          <BottomSheetTextInput
-            style={{
-              ...styles.primaryInput,
-              ...{
-                color: theme.colors.onSurface,
-              },
-            }}
-            autoCapitalize="none"
-            placeholder="Sentence"
-            autoCorrect={false}
+          <BottomSheetLabeledTextInput
+            label="Sentence"
+            containerStyle={styles.sentenceInput}
             multiline
             numberOfLines={2}
             onChangeText={setSentence}
             blurOnSubmit
             defaultValue={props.sentence}
-            placeholderTextColor={theme.colors.placeholder}
           />
-          <BottomSheetTextInput
-            style={{
-              ...styles.secondaryInput,
-              ...{
-                color: theme.colors.onSurface,
-              },
-            }}
-            autoCapitalize="none"
-            placeholder="Tags"
-            autoCorrect={false}
+          <BottomSheetLabeledTextInput
+            label="Tags (separated by space)"
+            containerStyle={styles.tagsInput}
             onChangeText={value => setTags(value.split(/\s+/))}
             defaultValue={props.tags.join(' ')}
-            placeholderTextColor={theme.colors.placeholder}
           />
           <Button
             mode="contained"
@@ -116,17 +100,6 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
   },
 );
 
-const inputStyle = {
-  borderRadius: 10,
-  fontSize: 16,
-  lineHeight: 20,
-  paddingHorizontal: 8,
-  paddingTop: 12,
-  paddingBottom: 12,
-  minHeight: 44,
-  backgroundColor: colors.input,
-};
-
 const styles = StyleSheet.create({
   mainView: {
     flexDirection: 'column',
@@ -134,13 +107,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 15,
   },
-  primaryInput: {
-    ...inputStyle,
-    maxHeight: 69,
-    minHeight: 69,
+  sentenceInput: {
+    maxHeight: 79,
+    minHeight: 79,
   },
-  secondaryInput: {
-    ...inputStyle,
+  tagsInput: {
     marginTop: 15,
   },
   button: {

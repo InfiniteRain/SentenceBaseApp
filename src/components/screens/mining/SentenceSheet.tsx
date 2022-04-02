@@ -1,16 +1,14 @@
-import {BottomSheetModal, BottomSheetTextInput} from '@gorhom/bottom-sheet';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {ThemeContext} from '../../../contexts/theme';
-import {colors} from '../../../shared';
+import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type SentenceSheetProps = {
@@ -25,13 +23,11 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
   (props, ref) => {
     const castedRef = ref as React.RefObject<BottomSheetModal>;
 
-    const {theme} = useContext(ThemeContext);
-
     const [sentence, setSentence] = useState('');
     const [dictionaryForm, setDictionaryForm] = useState('');
     const [reading, setReading] = useState('');
 
-    const snapPoints = useMemo(() => ['31%'], []);
+    const snapPoints = useMemo(() => ['35%'], []);
 
     useEffect(() => {
       setSentence(props.sentence);
@@ -51,56 +47,30 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
         snapPoints={snapPoints}
         onChange={props.onChangeIndex}>
         <View style={styles.mainView}>
-          <BottomSheetTextInput
-            style={{
-              ...styles.primaryInput,
-              ...{
-                color: theme.colors.onSurface,
-              },
-            }}
-            autoCapitalize="none"
-            placeholder="Sentence"
-            autoCorrect={false}
+          <BottomSheetLabeledTextInput
+            label="Sentence"
+            containerStyle={styles.sentenceInput}
             multiline
             numberOfLines={2}
             onChangeText={setSentence}
             blurOnSubmit
             defaultValue={props.sentence}
-            placeholderTextColor={theme.colors.placeholder}
           />
           <View style={styles.secondaryView}>
             <View style={styles.secondaryInputView}>
-              <BottomSheetTextInput
-                style={{
-                  ...styles.secondaryInput,
-                  ...{
-                    color: theme.colors.onSurface,
-                    marginRight: 7.5,
-                  },
-                }}
-                autoCapitalize="none"
-                placeholder="Word"
-                autoCorrect={false}
+              <BottomSheetLabeledTextInput
+                label="Word"
+                containerStyle={styles.wordInput}
                 defaultValue={props.dictionaryForm}
                 onChangeText={setDictionaryForm}
-                placeholderTextColor={theme.colors.placeholder}
               />
             </View>
             <View style={styles.secondaryInputView}>
-              <BottomSheetTextInput
-                style={{
-                  ...styles.secondaryInput,
-                  ...{
-                    color: theme.colors.onSurface,
-                    marginLeft: 7.5,
-                  },
-                }}
-                autoCapitalize="none"
-                placeholder="Reading"
-                autoCorrect={false}
+              <BottomSheetLabeledTextInput
+                label="Reading"
+                containerStyle={styles.readingInput}
                 defaultValue={props.reading}
                 onChangeText={setReading}
-                placeholderTextColor={theme.colors.placeholder}
               />
             </View>
           </View>
@@ -117,17 +87,6 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
   },
 );
 
-const inputStyle = {
-  borderRadius: 10,
-  fontSize: 16,
-  lineHeight: 20,
-  paddingHorizontal: 8,
-  paddingTop: 12,
-  paddingBottom: 12,
-  minHeight: 44,
-  backgroundColor: colors.input,
-};
-
 const styles = StyleSheet.create({
   mainView: {
     flexDirection: 'column',
@@ -138,17 +97,20 @@ const styles = StyleSheet.create({
   secondaryView: {
     flexDirection: 'row',
   },
-  primaryInput: {
-    ...inputStyle,
-    maxHeight: 69,
-    minHeight: 69,
+  sentenceInput: {
+    maxHeight: 79,
+    minHeight: 79,
   },
   secondaryInputView: {
     flex: 1,
   },
-  secondaryInput: {
-    ...inputStyle,
+  wordInput: {
     marginTop: 15,
+    marginRight: 7.5,
+  },
+  readingInput: {
+    marginTop: 15,
+    marginLeft: 7.5,
   },
   confirmButton: {
     marginTop: 15,
