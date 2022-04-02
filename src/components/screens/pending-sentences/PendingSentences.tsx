@@ -166,7 +166,7 @@ export const PendingSentences = () => {
         mode="contained"
         style={styles.addNewBatch}
         color={theme.colors.primary}
-        disabled={isDisabled}
+        disabled={isDisabled || sentenceList.length === 0}
         onPress={() => navigation.navigate('CreateBatch')}>
         Create New Batch
       </Button>
