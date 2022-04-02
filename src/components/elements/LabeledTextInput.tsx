@@ -1,5 +1,9 @@
-import React, {useContext} from 'react';
-import {TextInputProps, TextStyle} from 'react-native';
+import React, {useCallback, useContext, useRef} from 'react';
+import {
+  TextInputProps,
+  TextStyle,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {
   StyleProp,
   StyleSheet,
@@ -20,29 +24,38 @@ export type LabeledTextInputProps = TextInputProps & {
 export const LabeledTextInput = (props: LabeledTextInputProps) => {
   const {theme} = useContext(ThemeContext);
 
+  const inputRef = useRef<TextInput>({} as TextInput);
+
+  const onPress = useCallback(() => {
+    inputRef.current.focus();
+  }, [inputRef]);
+
   return (
-    <View style={[styles.mainContainer, props.containerStyle]}>
-      <Text
-        style={[
-          styles.label,
-          {color: theme.colors.placeholder},
-          props.labelStyle,
-        ]}>
-        {props.label}
-      </Text>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            color: theme.colors.onSurface,
-          },
-        ]}
-        autoCapitalize="none"
-        autoCorrect={false}
-        placeholderTextColor={theme.colors.placeholder}
-        {...props}
-      />
-    </View>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={[styles.mainContainer, props.containerStyle]}>
+        <Text
+          style={[
+            styles.label,
+            {color: theme.colors.placeholder},
+            props.labelStyle,
+          ]}>
+          {props.label}
+        </Text>
+        <TextInput
+          ref={inputRef}
+          style={[
+            styles.input,
+            {
+              color: theme.colors.onSurface,
+            },
+          ]}
+          autoCapitalize="none"
+          autoCorrect={false}
+          placeholderTextColor={theme.colors.placeholder}
+          {...props}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
