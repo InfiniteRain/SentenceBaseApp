@@ -5,6 +5,20 @@ import {
   SbApiSentence,
 } from './types';
 import auth from '@react-native-firebase/auth';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
+
+type SbBatch = {
+  createdAt: FirebaseFirestoreTypes.Timestamp;
+  sentences: {
+    sentenceId: string;
+    sentence: string;
+    wordDictionaryForm: string;
+    wordReading: string;
+    tags: string[];
+  }[];
+};
 
 type KotuResponse = {
   accentPhrases: {
@@ -109,3 +123,18 @@ export const editSentence = async (
     sentence,
     tags,
   });
+
+export const getMostRecentBatch = async (): Promise<SbBatch | null> => {
+  const snapshot = await firestore()
+    .collection('batches')
+    .where('userUid', '==', auth().currentUser?.uid)
+    .orderBy('createdAt', 'desc')
+    .limit(1)
+    .get();
+
+  if (snapshot.docs.length === 0) {
+    return null;
+  }
+
+  return snapshot.docs[0].data() as SbBatch;
+};

@@ -77,7 +77,11 @@ export const RootNavigator = () => {
               component={CreateBatch}
               options={{title: 'Create New Batch'}}
             />
-            <StackNavigation.Screen name="Export" component={Export} />
+            <StackNavigation.Screen
+              name="Export"
+              component={Export}
+              options={{title: 'Export to Anki'}}
+            />
           </StackNavigation.Navigator>
         </BottomSheetModalProvider>
       </CacheContext.Provider>
