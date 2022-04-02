@@ -17,8 +17,14 @@ export type RootNavigatorProps = NativeStackScreenProps<
 
 export type Morpheme = {
   surface: string;
+  surfaceReading: string;
   dictionaryForm: string;
-  reading: string;
+  dictionaryFormReading: string;
+  pitchAccents: {
+    descriptive: string;
+    mora: number;
+  }[];
+  isBasic: boolean;
 };
 
 export type SbApiResponse<T = null> =

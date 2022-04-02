@@ -170,8 +170,11 @@ export const Mining = () => {
         dictionaryForm !== '' && reading !== ''
           ? {
               surface: '',
+              surfaceReading: '',
               dictionaryForm,
-              reading,
+              dictionaryFormReading: reading,
+              pitchAccents: [],
+              isBasic: false,
             }
           : null,
       );
@@ -185,7 +188,7 @@ export const Mining = () => {
   );
   const onMineSentence = useCallback(() => {
     const dictionaryForm = selectedMorpheme?.dictionaryForm ?? '';
-    const reading = selectedMorpheme?.reading ?? '';
+    const reading = selectedMorpheme?.dictionaryFormReading ?? '';
     const sentence = kotuString;
 
     addSentenceMutation(
@@ -210,8 +213,11 @@ export const Mining = () => {
               setMorphemeEdited(true);
               setSelectedMorpheme({
                 surface: '',
+                surfaceReading: '',
                 dictionaryForm,
-                reading,
+                dictionaryFormReading: reading,
+                pitchAccents: [],
+                isBasic: false,
               });
               setKotuString(sentence);
               Toast.hide();
@@ -247,7 +253,7 @@ export const Mining = () => {
             style={{...styles.selectedMorphemeReading, ...morphemeStyle}}
             numberOfLines={1}
             adjustsFontSizeToFit>
-            「{selectedMorpheme?.reading ?? 'Reading'}」
+            「{selectedMorpheme?.dictionaryFormReading ?? 'Reading'}」
           </Text>
         </View>
         <Divider style={styles.divider} />
@@ -314,7 +320,7 @@ export const Mining = () => {
         onEdit={onEditSentence}
         sentence={kotuString}
         dictionaryForm={selectedMorpheme?.dictionaryForm ?? ''}
-        reading={selectedMorpheme?.reading ?? ''}
+        reading={selectedMorpheme?.dictionaryFormReading ?? ''}
       />
     </>
   );
