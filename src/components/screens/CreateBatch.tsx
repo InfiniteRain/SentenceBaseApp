@@ -6,11 +6,19 @@ import {SentenceList} from '../elements/SentenceList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Button, Caption} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useMutation} from 'react-query';
+import {RootNavigationProps, SbSentence} from '../../types';
+import {CacheContext} from '../../contexts/cache-context';
+import {useNavigation} from '@react-navigation/native';
+import {createBatch} from '../../queries';
 
 const sentneceLimit = 10;
 
 export const CreateBatch = () => {
   const {theme} = useContext(ThemeContext);
+  const {setDoSentencesQuery} = useContext(CacheContext);
+
+  const navigation = useNavigation<RootNavigationProps>();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedSentencesIds, setSelectedSentenceIds] = useState<string[]>([]);
@@ -23,10 +31,32 @@ export const CreateBatch = () => {
     setIsRefreshing(false);
   });
 
+  const {mutate: createBatchMutation, status: createBatchStatus} = useMutation(
+    (props: {sentenceIds: string[]}) => createBatch(props.sentenceIds),
+    {
+      onSuccess() {
+        navigation.popToTop();
+        navigation.navigate('Export');
+        setDoSentencesQuery(true);
+      },
+    },
+  );
+
   const onListRefresh = useCallback(() => {
     setIsRefreshing(true);
     refetchSentences();
   }, [refetchSentences]);
+  const onSentencePressed = useCallback(
+    sentenceId => {
+      if (selectedSentencesIds.includes(sentenceId)) {
+        setSelectedSentenceIds(list => list.filter(id => id !== sentenceId));
+        return;
+      }
+
+      setSelectedSentenceIds(list => [...list, sentenceId]);
+    },
+    [selectedSentencesIds],
+  );
 
   const pendingSentencesList = useMemo(
     () =>
@@ -104,6 +134,29 @@ export const CreateBatch = () => {
     [guideSteps],
   );
 
+  const calculateDisabled = useCallback(
+    (sentence: SbSentence): boolean => {
+      if (
+        isRefreshing ||
+        sentencesStatus === 'loading' ||
+        createBatchStatus === 'loading'
+      ) {
+        return true;
+      }
+
+      return (
+        isLimitReached && !selectedSentencesIds.includes(sentence.sentenceId)
+      );
+    },
+    [
+      isRefreshing,
+      sentencesStatus,
+      createBatchStatus,
+      isLimitReached,
+      selectedSentencesIds,
+    ],
+  );
+
   return (
     <SafeAreaView style={styles.mainContainer} edges={['bottom']}>
       <SentenceList
@@ -118,26 +171,8 @@ export const CreateBatch = () => {
             sentence => !selectedSentencesIds.includes(sentence.sentenceId),
           ),
         ]}
-        disabled={sentence => {
-          if (isRefreshing || sentencesStatus === 'loading') {
-            return true;
-          }
-
-          return (
-            isLimitReached &&
-            !selectedSentencesIds.includes(sentence.sentenceId)
-          );
-        }}
-        onSentencePressed={sentenceId => {
-          if (selectedSentencesIds.includes(sentenceId)) {
-            setSelectedSentenceIds(list =>
-              list.filter(id => id !== sentenceId),
-            );
-            return;
-          }
-
-          setSelectedSentenceIds(list => [...list, sentenceId]);
-        }}
+        disabled={calculateDisabled}
+        onSentencePressed={onSentencePressed}
         refreshControl={refreshControl}
       />
       <Button
@@ -148,9 +183,13 @@ export const CreateBatch = () => {
           isRefreshing ||
           sentencesStatus === 'loading' ||
           !isLimitReached ||
-          selectedSentencesIds.length === 0
+          selectedSentencesIds.length === 0 ||
+          createBatchStatus === 'loading'
         }
-        onPress={() => {}}>
+        loading={createBatchStatus === 'loading'}
+        onPress={() =>
+          createBatchMutation({sentenceIds: selectedSentencesIds})
+        }>
         Confirm Batch
       </Button>
     </SafeAreaView>

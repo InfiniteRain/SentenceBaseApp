@@ -3,14 +3,14 @@ import {Platform, StyleSheet, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerContent} from './DrawerContent';
 import {BottomTabs} from './BottomTabs';
-import {RootNavigatorProps} from '../../types';
+import {RootNavigatorScreenProps} from '../../types';
 import {ThemeContext} from '../../contexts/theme';
 import {IconButton} from '../elements/IconButton';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 
 const DrawerNavigation = createDrawerNavigator();
 
-export const Drawer = (props: RootNavigatorProps) => {
+export const Drawer = (props: RootNavigatorScreenProps) => {
   const {theme} = useContext(ThemeContext);
   const {
     bottomTabsRoute,

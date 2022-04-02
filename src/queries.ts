@@ -124,6 +124,11 @@ export const editSentence = async (
     tags,
   });
 
+export const createBatch = async (sentenceIds: string[]) =>
+  await sentenceBaseApiRequest('post', 'batches', {
+    sentences: sentenceIds,
+  });
+
 export const getMostRecentBatch = async (): Promise<SbBatch | null> => {
   const snapshot = await firestore()
     .collection('batches')

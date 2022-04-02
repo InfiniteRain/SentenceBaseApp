@@ -25,7 +25,7 @@ export const PendingSentences = () => {
   const {theme} = useContext(ThemeContext);
   const {setSentenceList} = useContext(CacheContext);
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setRefreshing] = useState(false);
   const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');
   const [sentenceToEdit, setSentenceToEdit] = useState('');
   const [tagsToEdit, setTagsToEdit] = useState<string[]>([]);
@@ -35,7 +35,7 @@ export const PendingSentences = () => {
     status: sentencesStatus,
     refetch: refetchSentences,
   } = usePendingSentences(() => {
-    setIsRefreshing(false);
+    setRefreshing(false);
   });
 
   const navigation =
@@ -57,12 +57,12 @@ export const PendingSentences = () => {
 
   useEffect(() => {
     if (isFocused) {
-      setIsRefreshing(false);
+      setRefreshing(false);
     }
   }, [isFocused]);
 
   const onListRefresh = useCallback(() => {
-    setIsRefreshing(true);
+    setRefreshing(true);
     refetchSentences();
   }, [refetchSentences]);
   const onSentencePressed = useCallback(
