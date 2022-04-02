@@ -2,6 +2,9 @@ import {katakanaToHiragana} from './helpers';
 import {kotuQuery} from './queries';
 import {Morpheme} from './types';
 
+const verb = '動詞';
+const adjective = '形容詞';
+
 const caclulateBracketPosition = (
   morpheme: Morpheme,
 ): {
@@ -69,11 +72,9 @@ export const generateExtendedFormat = async (text: string) => {
     }
 
     const {bracketPosition, furigana} = caclulateBracketPosition(morpheme);
-    const dictionaryFormPart =
-      // todo: [verb, adjective].includes(pos);
-      morpheme.dictionaryFormReading !== morpheme.surfaceReading
-        ? `,${morpheme.dictionaryFormReading}`
-        : '';
+    const dictionaryFormPart = [verb, adjective].includes(morpheme.partOfSpeech)
+      ? `,${morpheme.dictionaryFormReading}`
+      : '';
     const pitchPart = `;${getPitchAccentString(morpheme)}`;
     const bracketContent = `[${furigana}${dictionaryFormPart}${pitchPart}]`;
     const formattedSegment =

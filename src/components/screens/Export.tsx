@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -8,19 +8,20 @@ import {getMostRecentBatch} from '../../queries';
 import {LabeledTextInput} from '../elements/LabeledTextInput';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useAsyncStorage} from '../../hooks/use-async-storage';
-
-type ExportSettings = {
-  profile: string;
-  noteType: string;
-  deck: string;
-  wordField: string;
-  sentenceField: string;
-  audioField: string;
-  definitionField: string;
-};
+import {exportBatch} from '../../export';
+import {ExportSettings, RootNavigationProps} from '../../types';
+import {
+  CommonActions,
+  DrawerActions,
+  useNavigation,
+} from '@react-navigation/native';
 
 export const Export = () => {
   const {theme} = useContext(ThemeContext);
+
+  const navigation = useNavigation<RootNavigationProps>();
+
+  const [isExporting, setExporting] = useState(false);
 
   const [exportSettings, updateExportSettings] =
     useAsyncStorage<ExportSettings>('exportSettings', {
@@ -46,22 +47,63 @@ export const Export = () => {
     }));
   };
 
+  const onExportBatch = useCallback(() => {
+    if (!batchData) {
+      return;
+    }
+
+    setExporting(true);
+    exportBatch(batchData, exportSettings, {
+      onProgress(index, lastIndex) {
+        console.log('progress', index, lastIndex);
+      },
+      onSuccess() {
+        navigation.dispatch(DrawerActions.closeDrawer());
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'Mining'}],
+          }),
+        );
+        navigation.popToTop();
+      },
+      onSettled() {
+        setExporting(false);
+      },
+    });
+  }, [navigation, batchData, exportSettings]);
+
   const dateCreated = useMemo(() => {
     const date = new Date(0);
     date.setUTCSeconds(batchData?.createdAt.seconds ?? 0);
     return date;
   }, [batchData]);
-  const isBadInput = useMemo(
-    () =>
-      exportSettings.profile === '' ||
-      exportSettings.noteType === '' ||
-      exportSettings.deck === '' ||
-      (exportSettings.wordField === '' &&
-        exportSettings.sentenceField === '' &&
-        exportSettings.audioField === '' &&
-        exportSettings.definitionField === ''),
-    [exportSettings],
-  );
+  const isBadInput = useMemo(() => {
+    const {
+      profile,
+      noteType,
+      deck,
+      wordField,
+      sentenceField,
+      audioField,
+      definitionField,
+    } = exportSettings;
+
+    return (
+      // All required input have to be filled.
+      profile === '' ||
+      noteType === '' ||
+      deck === '' ||
+      // At least one field input has to be filled.
+      (wordField === '' &&
+        sentenceField === '' &&
+        audioField === '' &&
+        definitionField === '') ||
+      // Sound input field has to be unique.
+      ([wordField, sentenceField, definitionField].includes(audioField) &&
+        audioField !== '')
+    );
+  }, [exportSettings]);
 
   return (
     <SafeAreaView style={styles.mainContainer} edges={['bottom']}>
@@ -75,8 +117,10 @@ export const Export = () => {
             </Text>
           ) : (
             <>
-              <Text>Your most recent sentence batch was created at:</Text>
-              <Text style={styles.boldFont}>
+              <Text style={{color: theme.colors.onSurface}}>
+                Your most recent batch was created on:
+              </Text>
+              <Text style={[styles.boldFont, {color: theme.colors.onSurface}]}>
                 {dateCreated.toLocaleString()}
               </Text>
             </>
@@ -85,21 +129,21 @@ export const Export = () => {
         <View style={styles.inputView}>
           <LabeledTextInput
             containerStyle={styles.input}
-            label="Profile *"
+            label="Profile (required)"
             placeholder="User 1"
             defaultValue={exportSettings.profile}
             onChangeText={value => updateExportSetting('profile', value)}
           />
           <LabeledTextInput
             containerStyle={styles.input}
-            label="Note Type *"
+            label="Note Type (required)"
             placeholder="Basic"
             defaultValue={exportSettings.noteType}
             onChangeText={value => updateExportSetting('noteType', value)}
           />
           <LabeledTextInput
             containerStyle={styles.input}
-            label="Deck *"
+            label="Deck (required)"
             placeholder="Default"
             defaultValue={exportSettings.deck}
             onChangeText={value => updateExportSetting('deck', value)}
@@ -120,7 +164,7 @@ export const Export = () => {
           />
           <LabeledTextInput
             containerStyle={styles.input}
-            label="Word Audio Field"
+            label="Word Audio Field (has to be unique)"
             placeholder="Back"
             defaultValue={exportSettings.audioField}
             onChangeText={value => updateExportSetting('audioField', value)}
@@ -141,15 +185,20 @@ export const Export = () => {
           mode="contained"
           style={styles.exportBatchButton}
           color={theme.colors.primary}
-          disabled={isBadInput || batchData === null}>
+          disabled={
+            isBadInput ||
+            batchStatus === 'loading' ||
+            batchData === null ||
+            isExporting
+          }
+          onPress={onExportBatch}
+          loading={isExporting}>
           Export Most Recent Batch
         </Button>
       </View>
     </SafeAreaView>
   );
 };
-
-// 'anki://x-callback-url/addnote?profile=User%201&type=Basic-27e55&deck=Personal&fldFront=front%20text&fldBack=back%20text2&dupes=1&x-success=sentencebase://',
 
 const styles = StyleSheet.create({
   mainContainer: {
