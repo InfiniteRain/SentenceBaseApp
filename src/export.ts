@@ -69,7 +69,7 @@ export const exportBatch = async (
   },
 ) => {
   for (const [index, sentence] of batch.sentences.entries()) {
-    events?.onProgress?.(index, batch.sentences.length);
+    events?.onProgress?.(index, batch.sentences.length - 1);
 
     const parameters = new Map<string, string>();
     const upsertField = (key: string, value: string) => {
@@ -91,15 +91,26 @@ export const exportBatch = async (
       parameters.set(encodeURIComponent(key), encodeURIComponent(value));
     };
 
-    const wordFieldValue = await generateExtendedFormat(
-      sentence.wordDictionaryForm,
-    );
-    const sentenceFieldValue = await generateExtendedFormat(sentence.sentence);
-    const definitionFieldValue = await generateDefinitionString(
-      sentence.wordDictionaryForm,
-      sentence.wordReading,
-    );
-    const audioFieldValue = await forvoQuery(sentence.wordDictionaryForm);
+    let wordFieldValue: string;
+    let sentenceFieldValue: string;
+    let definitionFieldValue: string;
+    let audioFieldValue: string;
+
+    try {
+      wordFieldValue = await generateExtendedFormat(
+        sentence.wordDictionaryForm,
+      );
+      sentenceFieldValue = await generateExtendedFormat(sentence.sentence);
+      definitionFieldValue = await generateDefinitionString(
+        sentence.wordDictionaryForm,
+        sentence.wordReading,
+      );
+      audioFieldValue = (await forvoQuery(sentence.wordDictionaryForm)) ?? '';
+    } catch {
+      events?.onSettled?.();
+      events?.onError?.(new Error('Failed to fetch word information.'));
+      return;
+    }
 
     insertParam('profile', exportSettings.profile);
     insertParam('type', exportSettings.noteType);
@@ -107,7 +118,8 @@ export const exportBatch = async (
     upsertField(exportSettings.wordField, wordFieldValue);
     upsertField(exportSettings.sentenceField, sentenceFieldValue);
     upsertField(exportSettings.definitionField, definitionFieldValue);
-    upsertField(exportSettings.audioField, audioFieldValue ?? '');
+    upsertField(exportSettings.audioField, audioFieldValue);
+    insertParam('tags', sentence.tags.join(' '));
     insertParam('dupes', '1');
     insertParam('x-success', sentenceBaseLink);
 
@@ -117,10 +129,10 @@ export const exportBatch = async (
     const ankiLink = `${ankiLinkBase}${paramString}`;
 
     try {
-      //await Linking.openURL(ankiLink);
-    } catch (e) {
+      await Linking.openURL(ankiLink);
+    } catch {
       events?.onSettled?.();
-      events?.onError?.(e as Error);
+      events?.onError?.(new Error('Failed to export cards.'));
       return;
     }
   }
