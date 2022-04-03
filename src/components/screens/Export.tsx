@@ -127,6 +127,10 @@ export const Export = () => {
         audioField !== '')
     );
   }, [exportSettings]);
+  const areInputsDisabled = useMemo(
+    () => isExporting || batchStatus === 'loading',
+    [isExporting, batchStatus],
+  );
 
   return (
     <SafeAreaView style={styles.mainContainer} edges={['bottom']}>
@@ -150,13 +154,13 @@ export const Export = () => {
           )}
         </View>
         <View style={styles.inputView}>
-          {/* Add disable functionality */}
           <LabeledTextInput
             containerStyle={styles.input}
             label="Profile (required)"
             placeholder="User 1"
             defaultValue={exportSettings.profile}
             onChangeText={value => updateExportSetting('profile', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -164,6 +168,7 @@ export const Export = () => {
             placeholder="Basic"
             defaultValue={exportSettings.noteType}
             onChangeText={value => updateExportSetting('noteType', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -171,6 +176,7 @@ export const Export = () => {
             placeholder="Default"
             defaultValue={exportSettings.deck}
             onChangeText={value => updateExportSetting('deck', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -178,6 +184,7 @@ export const Export = () => {
             placeholder="Front"
             defaultValue={exportSettings.wordField}
             onChangeText={value => updateExportSetting('wordField', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -185,6 +192,7 @@ export const Export = () => {
             placeholder="Front"
             defaultValue={exportSettings.sentenceField}
             onChangeText={value => updateExportSetting('sentenceField', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -192,6 +200,7 @@ export const Export = () => {
             placeholder="Back"
             defaultValue={exportSettings.audioField}
             onChangeText={value => updateExportSetting('audioField', value)}
+            disabled={areInputsDisabled}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -201,6 +210,7 @@ export const Export = () => {
             onChangeText={value =>
               updateExportSetting('definitionField', value)
             }
+            disabled={areInputsDisabled}
           />
         </View>
       </KeyboardAwareScrollView>

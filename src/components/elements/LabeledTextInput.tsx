@@ -16,6 +16,7 @@ import {LayoutContext} from '../../contexts/layout-context';
 
 export type LabeledTextInputProps = TextInputProps & {
   label: string;
+  disabled?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   inpitStyle?: StyleProp<TextStyle>;
@@ -52,6 +53,7 @@ export const LabeledTextInput = (props: LabeledTextInputProps) => {
           autoCapitalize="none"
           autoCorrect={false}
           placeholderTextColor={theme.colors.placeholder}
+          disabled={props.disabled}
           {...props}
         />
       </View>
