@@ -8,18 +8,25 @@ import {
   Provider as PaperProvider,
   DefaultTheme as PaperDefaultTheme,
   DarkTheme as PaperDarkTheme,
-  ActivityIndicator,
 } from 'react-native-paper';
 import {RootNavigator} from './navigation/RootNavigator';
 import {LayoutContext} from '../contexts/layout-context';
 import {CombinedTheme} from '../types';
-import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import AuthUI from 'react-native-firebaseui-auth';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Toast from 'react-native-toast-message';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Bar as ProgressBar} from 'react-native-progress';
 
 const DefaultTheme: CombinedTheme = {
   ...PaperDefaultTheme,
@@ -45,6 +52,8 @@ export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [theme, setTheme] = useState<CombinedTheme>(DefaultTheme);
   const [isLoading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressText, setProgressText] = useState('');
   const [currentUser, setCurrentUser] = useState<FirebaseAuthTypes.User | null>(
     null,
   );
@@ -88,7 +97,16 @@ export const App = () => {
       />
       <QueryClientProvider client={queryClient}>
         <LayoutContext.Provider
-          value={{theme, setTheme, isLoading, setLoading}}>
+          value={{
+            theme,
+            setTheme,
+            isLoading,
+            setLoading,
+            progress,
+            setProgress,
+            progressText,
+            setProgressText,
+          }}>
           <PaperProvider theme={theme}>
             <SafeAreaProvider>
               {!currentUser ? (
@@ -102,8 +120,33 @@ export const App = () => {
               )}
               <Toast />
               {isLoading && (
-                <View style={styles.loading}>
-                  <ActivityIndicator size="large" />
+                <View
+                  style={[
+                    styles.loading,
+                    {
+                      backgroundColor: theme.colors.background,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.progressText,
+                      {
+                        color: theme.colors.onSurface,
+                      },
+                    ]}>
+                    {progressText}
+                  </Text>
+                  <ProgressBar
+                    progress={progress}
+                    width={300}
+                    height={10}
+                    color={theme.colors.primary}
+                    borderColor={theme.colors.onSurface}
+                  />
+                  <ActivityIndicator
+                    style={styles.activityIndicator}
+                    size="large"
+                  />
                 </View>
               )}
             </SafeAreaProvider>
@@ -128,6 +171,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(128, 128, 128, 0.5)',
+  },
+  progressText: {
+    fontSize: 16,
+    marginBottom: 15,
+  },
+  activityIndicator: {
+    marginTop: 15,
   },
 });

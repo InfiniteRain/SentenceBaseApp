@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from 'react-query';
@@ -17,7 +17,8 @@ import {
 } from '@react-navigation/native';
 
 export const Export = () => {
-  const {theme} = useContext(LayoutContext);
+  const {theme, setLoading, setProgress, setProgressText} =
+    useContext(LayoutContext);
 
   const navigation = useNavigation<RootNavigationProps>();
 
@@ -53,9 +54,11 @@ export const Export = () => {
     }
 
     setExporting(true);
+    setLoading(true);
     exportBatch(batchData, exportSettings, {
       onProgress(index, lastIndex) {
-        console.log('progress', index, lastIndex);
+        setProgress(index / lastIndex);
+        setProgressText(`Exporting card ${index + 1}/${lastIndex + 1}...`);
       },
       onSuccess() {
         navigation.dispatch(DrawerActions.closeDrawer());
@@ -66,12 +69,32 @@ export const Export = () => {
           }),
         );
         navigation.popToTop();
+        Alert.alert('Success', 'Cards were exported successfully.', [
+          {
+            text: 'Ok',
+          },
+        ]);
+      },
+      onError(error) {
+        Alert.alert('Failure', error.message, [
+          {
+            text: 'Ok',
+          },
+        ]);
       },
       onSettled() {
         setExporting(false);
+        setLoading(false);
       },
     });
-  }, [navigation, batchData, exportSettings]);
+  }, [
+    navigation,
+    batchData,
+    exportSettings,
+    setLoading,
+    setProgress,
+    setProgressText,
+  ]);
 
   const dateCreated = useMemo(() => {
     const date = new Date(0);
