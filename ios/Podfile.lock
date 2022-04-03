@@ -352,10 +352,8 @@ PODS:
   - BoringSSL-GRPC/Interface (0.0.7)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - FBAEMKit (11.2.1):
-    - FBAEMKit/AEM (= 11.2.1)
-  - FBAEMKit/AEM (11.2.1):
-    - FBSDKCoreKit_Basics (~> 11.2.1)
+  - FBAEMKit (12.3.2):
+    - FBSDKCoreKit_Basics (= 12.3.2)
   - FBLazyVector (0.66.2)
   - FBReactNativeSpec (0.66.2):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -364,68 +362,61 @@ PODS:
     - React-Core (= 0.66.2)
     - React-jsi (= 0.66.2)
     - ReactCommon/turbomodule/core (= 0.66.2)
-  - FBSDKCoreKit (11.2.1):
-    - FBSDKCoreKit/Core (= 11.2.1)
-  - FBSDKCoreKit/Core (11.2.1):
-    - FBAEMKit (~> 11.2.1)
-    - FBSDKCoreKit_Basics (~> 11.2.1)
-  - FBSDKCoreKit_Basics (11.2.1):
-    - FBSDKCoreKit_Basics/Basics (= 11.2.1)
-  - FBSDKCoreKit_Basics/Basics (11.2.1)
-  - FBSDKLoginKit (11.2.1):
-    - FBSDKLoginKit/Login (= 11.2.1)
-  - FBSDKLoginKit/Login (11.2.1):
-    - FBSDKCoreKit (~> 11.2.1)
-    - FBSDKCoreKit_Basics (~> 11.2.1)
-  - Firebase/Auth (8.10.0):
+  - FBSDKCoreKit (12.3.2):
+    - FBAEMKit (= 12.3.2)
+    - FBSDKCoreKit_Basics (= 12.3.2)
+  - FBSDKCoreKit_Basics (12.3.2)
+  - FBSDKLoginKit (12.3.2):
+    - FBSDKCoreKit (= 12.3.2)
+  - Firebase/Auth (8.12.1):
     - Firebase/CoreOnly
-    - FirebaseAuth (~> 8.10.0)
-  - Firebase/CoreOnly (8.10.0):
-    - FirebaseCore (= 8.10.0)
-  - Firebase/Firestore (8.10.0):
+    - FirebaseAuth (~> 8.12.0)
+  - Firebase/CoreOnly (8.12.1):
+    - FirebaseCore (= 8.12.1)
+  - Firebase/Firestore (8.12.1):
     - Firebase/CoreOnly
-    - FirebaseFirestore (~> 8.10.0)
-  - Firebase/Functions (8.10.0):
+    - FirebaseFirestore (~> 8.12.1)
+  - Firebase/Functions (8.12.1):
     - Firebase/CoreOnly
-    - FirebaseFunctions (~> 8.10.0)
-  - FirebaseAnonymousAuthUI (12.0.0):
+    - FirebaseFunctions (~> 8.12.0)
+  - FirebaseAnonymousAuthUI (12.1.1):
     - FirebaseAuth (~> 8.0)
     - FirebaseAuthUI
     - FirebaseCore
-  - FirebaseAuth (8.10.0):
+  - FirebaseAuth (8.12.0):
     - FirebaseCore (~> 8.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 7.6)
-    - GoogleUtilities/Environment (~> 7.6)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/Environment (~> 7.7)
     - GTMSessionFetcher/Core (~> 1.5)
-  - FirebaseAuthUI (12.0.2):
+  - FirebaseAuthUI (12.1.1):
     - FirebaseAuth (~> 8.0)
     - FirebaseCore
-  - FirebaseCore (8.10.0):
+  - FirebaseCore (8.12.1):
     - FirebaseCoreDiagnostics (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.6)
-    - GoogleUtilities/Logger (~> 7.6)
-  - FirebaseCoreDiagnostics (8.10.0):
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+  - FirebaseCoreDiagnostics (8.13.0):
     - GoogleDataTransport (~> 9.1)
-    - GoogleUtilities/Environment (~> 7.6)
-    - GoogleUtilities/Logger (~> 7.6)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseDatabase (8.10.0):
+  - FirebaseDatabase (8.13.0):
     - FirebaseCore (~> 8.0)
     - leveldb-library (~> 1.22)
-  - FirebaseDatabaseUI (12.0.0):
+  - FirebaseDatabaseUI (12.1.1):
     - FirebaseDatabase (~> 8.0)
-  - FirebaseEmailAuthUI (12.0.0):
+  - FirebaseEmailAuthUI (12.1.1):
     - FirebaseAuth
     - FirebaseAuthUI
     - FirebaseCore
     - GoogleUtilities/UserDefaults
-  - FirebaseFacebookAuthUI (12.0.0):
+  - FirebaseFacebookAuthUI (12.1.1):
     - FBSDKCoreKit_Basics
-    - FBSDKLoginKit (~> 11.0)
+    - FBSDKLoginKit (< 13.0, >= 11.0)
     - FirebaseAuth
     - FirebaseAuthUI
     - FirebaseCore
-  - FirebaseFirestore (8.10.0):
+  - FirebaseFirestore (8.12.1):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
     - abseil/container/flat_hash_map (= 0.20200225.0)
@@ -438,58 +429,58 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30908.0)
-  - FirebaseFirestoreUI (12.0.0):
+  - FirebaseFirestoreUI (12.1.1):
     - FirebaseFirestore (~> 8.0)
-  - FirebaseFunctions (8.10.0):
+  - FirebaseFunctions (8.12.0):
     - FirebaseCore (~> 8.0)
     - GTMSessionFetcher/Core (~> 1.5)
-  - FirebaseGoogleAuthUI (12.0.0):
+  - FirebaseGoogleAuthUI (12.1.1):
     - FirebaseAuth
     - FirebaseAuthUI
     - FirebaseCore
     - GoogleSignIn (~> 6.0)
-  - FirebaseOAuthUI (12.0.2):
+  - FirebaseOAuthUI (12.1.1):
     - FirebaseAuth (~> 8.0)
     - FirebaseAuthUI (< 13.0, >= 12.0.2)
-  - FirebasePhoneAuthUI (12.0.0):
+  - FirebasePhoneAuthUI (12.1.1):
     - FirebaseAuth
     - FirebaseAuthUI
-  - FirebaseStorage (8.10.0):
+  - FirebaseStorage (8.13.0):
     - FirebaseCore (~> 8.0)
     - GTMSessionFetcher/Core (~> 1.5)
-  - FirebaseStorageUI (12.0.0):
+  - FirebaseStorageUI (12.1.1):
     - FirebaseStorage (~> 8.0)
     - SDWebImage (~> 5.6)
-  - FirebaseUI (12.0.2):
-    - FirebaseUI/Anonymous (= 12.0.2)
-    - FirebaseUI/Auth (= 12.0.2)
-    - FirebaseUI/Database (= 12.0.2)
-    - FirebaseUI/Email (= 12.0.2)
-    - FirebaseUI/Facebook (= 12.0.2)
-    - FirebaseUI/Firestore (= 12.0.2)
-    - FirebaseUI/Google (= 12.0.2)
-    - FirebaseUI/OAuth (= 12.0.2)
-    - FirebaseUI/Phone (= 12.0.2)
-    - FirebaseUI/Storage (= 12.0.2)
-  - FirebaseUI/Anonymous (12.0.2):
+  - FirebaseUI (12.1.1):
+    - FirebaseUI/Anonymous (= 12.1.1)
+    - FirebaseUI/Auth (= 12.1.1)
+    - FirebaseUI/Database (= 12.1.1)
+    - FirebaseUI/Email (= 12.1.1)
+    - FirebaseUI/Facebook (= 12.1.1)
+    - FirebaseUI/Firestore (= 12.1.1)
+    - FirebaseUI/Google (= 12.1.1)
+    - FirebaseUI/OAuth (= 12.1.1)
+    - FirebaseUI/Phone (= 12.1.1)
+    - FirebaseUI/Storage (= 12.1.1)
+  - FirebaseUI/Anonymous (12.1.1):
     - FirebaseAnonymousAuthUI (~> 12.0)
-  - FirebaseUI/Auth (12.0.2):
+  - FirebaseUI/Auth (12.1.1):
     - FirebaseAuthUI (~> 12.0)
-  - FirebaseUI/Database (12.0.2):
+  - FirebaseUI/Database (12.1.1):
     - FirebaseDatabaseUI (~> 12.0)
-  - FirebaseUI/Email (12.0.2):
+  - FirebaseUI/Email (12.1.1):
     - FirebaseEmailAuthUI (~> 12.0)
-  - FirebaseUI/Facebook (12.0.2):
+  - FirebaseUI/Facebook (12.1.1):
     - FirebaseFacebookAuthUI (~> 12.0)
-  - FirebaseUI/Firestore (12.0.2):
+  - FirebaseUI/Firestore (12.1.1):
     - FirebaseFirestoreUI (~> 12.0)
-  - FirebaseUI/Google (12.0.2):
+  - FirebaseUI/Google (12.1.1):
     - FirebaseGoogleAuthUI (~> 12.0)
-  - FirebaseUI/OAuth (12.0.2):
+  - FirebaseUI/OAuth (12.1.1):
     - FirebaseOAuthUI (~> 12.0)
-  - FirebaseUI/Phone (12.0.2):
+  - FirebaseUI/Phone (12.1.1):
     - FirebasePhoneAuthUI (~> 12.0)
-  - FirebaseUI/Storage (12.0.2):
+  - FirebaseUI/Storage (12.1.1):
     - FirebaseStorageUI (~> 12.0)
   - Flipper (0.99.0):
     - Flipper-Folly (~> 2.6)
@@ -813,10 +804,14 @@ PODS:
   - React-jsinspector (0.66.2)
   - React-logger (0.66.2):
     - glog
-  - react-native-firebaseui-auth (1.3.0):
+  - react-native-firebaseui-auth (1.3.47):
     - React
-  - react-native-webview (11.14.4):
-    - React-Core
+  - react-native-safe-area-context (4.2.2):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - ReactCommon/turbomodule/core
   - React-perflogger (0.66.2)
   - React-RCTActionSheet (0.66.2):
     - React-Core/RCTActionSheetHeaders (= 0.66.2)
@@ -882,37 +877,74 @@ PODS:
     - React-jsi (= 0.66.2)
     - React-logger (= 0.66.2)
     - React-perflogger (= 0.66.2)
-  - RNCAsyncStorage (1.15.11):
-    - React-Core
-  - RNCCheckbox (0.5.9):
+  - RNCAsyncStorage (1.16.1):
     - React-Core
   - RNCClipboard (1.8.5):
     - React-Core
-  - RNCPicker (2.2.0):
+  - RNCPicker (2.2.1):
     - React-Core
-  - RNFBApp (14.2.2):
-    - Firebase/CoreOnly (= 8.10.0)
+  - RNDeviceInfo (8.5.1):
     - React-Core
-  - RNFBAuth (14.2.2):
-    - Firebase/Auth (= 8.10.0)
+  - RNFBApp (14.3.2):
+    - Firebase/CoreOnly (= 8.12.1)
     - React-Core
-    - RNFBApp
-  - RNFBFirestore (14.2.2):
-    - Firebase/Firestore (= 8.10.0)
+  - RNFBAuth (14.3.2):
+    - Firebase/Auth (= 8.12.1)
     - React-Core
     - RNFBApp
-  - RNFBFunctions (14.2.2):
-    - Firebase/Functions (= 8.10.0)
+  - RNFBFirestore (14.3.2):
+    - Firebase/Firestore (= 8.12.1)
+    - React-Core
+    - RNFBApp
+  - RNFBFunctions (14.3.2):
+    - Firebase/Functions (= 8.12.1)
     - React-Core
     - RNFBApp
   - RNFS (2.18.0):
     - React
+  - RNGestureHandler (2.3.2):
+    - React-Core
   - RNGoogleSignin (7.0.4):
     - GoogleSignIn (~> 6.0.0)
     - React-Core
-  - SDWebImage (5.12.2):
-    - SDWebImage/Core (= 5.12.2)
-  - SDWebImage/Core (5.12.2)
+  - RNReanimated (2.4.1):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNScreens (3.13.1):
+    - React-Core
+    - React-RCTImage
+  - RNSVG (12.3.0):
+    - React-Core
+  - RNVectorIcons (9.1.0):
+    - React-Core
+  - SDWebImage (5.12.4):
+    - SDWebImage/Core (= 5.12.4)
+  - SDWebImage/Core (5.12.4)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -961,7 +993,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-firebaseui-auth (from `../node_modules/react-native-firebaseui-auth`)
-  - react-native-webview (from `../node_modules/react-native-webview`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -975,15 +1007,20 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1077,8 +1114,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-firebaseui-auth:
     :path: "../node_modules/react-native-firebaseui-auth"
-  react-native-webview:
-    :path: "../node_modules/react-native-webview"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -1105,12 +1142,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
-  RNCCheckbox:
-    :path: "../node_modules/@react-native-community/checkbox"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -1121,8 +1158,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/functions"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1133,31 +1180,31 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  FBAEMKit: 5de0a7aaa854eec69bb5be20795952a63d38a5f6
+  FBAEMKit: 955ca52eba8219c20f90774e8c6ff8bc7b3192a3
   FBLazyVector: 57a8b34460679fb69e1ce7d625b04dbd1596b1f1
   FBReactNativeSpec: 18438b1c04ce502ed681cd19db3f4508964c082a
-  FBSDKCoreKit: bf655f808b040ed66a72b9922911b39d703e64f4
-  FBSDKCoreKit_Basics: 73ebe3a27eb688ac5b5aa7e99f68992993042115
-  FBSDKLoginKit: 2e76831ef08d356b8f9150ea51cce865074ea304
-  Firebase: 44213362f1dcc52555b935dc925ed35ac55f1b20
-  FirebaseAnonymousAuthUI: dc0d806fb53268e79fa64ae8ffd8e1adfc242244
-  FirebaseAuth: 59a2d2b933b5b79e18fb1e6ad230c6abdaa73d26
-  FirebaseAuthUI: e75ef9d6cfcd8f1ba8bee2b360493a9947533f6c
-  FirebaseCore: 04186597c095da37d90ff9fd3e53bc61a1ff2440
-  FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
-  FirebaseDatabase: 5f3e83b0a0d8759378fbd5d05661244d14dfbbb0
-  FirebaseDatabaseUI: 0c16b8e11f58bf9e8644d219fa16b361db142255
-  FirebaseEmailAuthUI: 6d0c5646c49b33a72dbe73a0ff9c908a59b5ff29
-  FirebaseFacebookAuthUI: a478313687c2001b53470d7cc265a48a2c504ab8
-  FirebaseFirestore: 0e7321a508cc9de54316ec45400caba6b5719beb
-  FirebaseFirestoreUI: ec98193d249eaa30ed615857b1daf475fbc75248
-  FirebaseFunctions: 9c406f9b2deb72719437565c106ca4a439d2a661
-  FirebaseGoogleAuthUI: 6981c0c3c054367f9ccd730fbcf483504deb0a68
-  FirebaseOAuthUI: 8dc3d0270781133b10b2666d1163cd298501f453
-  FirebasePhoneAuthUI: d84be4a096ddc19f9aace4a6ebcf80fe334f466b
-  FirebaseStorage: 815410224b548172c578f02554a86bbc8f817f50
-  FirebaseStorageUI: 9f5b32264e77dc073dec45f00c5b3a77e5ca901e
-  FirebaseUI: b04b32ead3a6dcd5a50829e14b8f3f6d044d5d62
+  FBSDKCoreKit: 678f64eda3f0ff25c189c2ebbfe87b1d96a85a6d
+  FBSDKCoreKit_Basics: 6bee7c1f0932432901781203fa5e587ec5099148
+  FBSDKLoginKit: 56d55e23fe66a6db045826190b0b4dbc0e1ca0a0
+  Firebase: 580d09e8edafc3073ebf09c03fd42e4d80d35fe9
+  FirebaseAnonymousAuthUI: d360aca0dd89480ad31c632b0f638aa4af932705
+  FirebaseAuth: 5250d7bdba35e57cc34ec7ddc525f82b2757f2a0
+  FirebaseAuthUI: 71ad7db60f0e3eb34b790868163dde99fde6d989
+  FirebaseCore: 8138de860a90ca7eec5e324da5788fb0ebf1d93c
+  FirebaseCoreDiagnostics: c2836d254a8f0bbb4121ff18f2c2ea39d118fd08
+  FirebaseDatabase: c610ab55bcb033d5eb3d17acba57301068a28497
+  FirebaseDatabaseUI: 7c7620ad506f829bfd05a3db93a45ae371af33da
+  FirebaseEmailAuthUI: d4b6c4f450dccc7764ec83b6884ebf2c700d1a7e
+  FirebaseFacebookAuthUI: 1dc97b056ca35d410eb75fa84ec901cfed0ef491
+  FirebaseFirestore: dfeb58916ee3ae0ef2453d4849a683672705920c
+  FirebaseFirestoreUI: cdfa6c04124a44dfff28fe64385229541206138a
+  FirebaseFunctions: aead53cdd81ce7371043b79250060546c25f9c7c
+  FirebaseGoogleAuthUI: 00f4a3ff878bb96ba5a04cb7752b08235a3dbd9e
+  FirebaseOAuthUI: 264bbf01beff69162c74f464512f16903a33bb38
+  FirebasePhoneAuthUI: bcd9026caa9a97a27a16cc3539eace8df829cf65
+  FirebaseStorage: 0f115042c1596f5df5a80b67cf414d8f028ccddd
+  FirebaseStorageUI: e8fecbe7f0524f1d67aea714065e5a46843b2d0e
+  FirebaseUI: dc90cd9081a0c2dcb94413cfdac3f1b662205c42
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 57ffbe81ef95306cc9e69c4aa3aeeeeb58a6a28c
@@ -1193,8 +1240,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 573adf0d6ce5e05c55872dfde5b1589acb88a96f
   React-jsinspector: b08b2d5e86cef9dc4bb69f0aa0bbe6d210fb7da5
   React-logger: faee236598b0f7e1a5e3b68577016ac451f1f993
-  react-native-firebaseui-auth: bd30143b753ce94d1f97c4867612b6b4dae323a6
-  react-native-webview: a287d7c405756d253d88ed8e4f3c1a5256834d30
+  react-native-firebaseui-auth: 3d1a7ed46e4a26d03dc6f458e0b6ee6fe3eaa6c4
+  react-native-safe-area-context: da2d11bd7df9bf7779e9bdc85081c141cfa544f4
   React-perflogger: 5ab487cacfe6ec19bfe3d3f8072bf71eb07d63da
   React-RCTActionSheet: 03f25695e095fb5aa003828620943c74cc281fec
   React-RCTAnimation: eaf82da39f0c36fb0ef2a28df797c5f73a2a98ea
@@ -1207,20 +1254,25 @@ SPEC CHECKSUMS:
   React-RCTVibration: 3e815c3d2dd2e0e931b68595b5b92d23ba38b3fb
   React-runtimeexecutor: 393e26602c1b248683372051e34db63e359e3b01
   ReactCommon: c0263c1a41509aeb94be3214fa7bc3b71eae5ef6
-  RNCAsyncStorage: eb05c0284dd6b50b32f92fad55e2a41e03358c43
-  RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
+  RNCAsyncStorage: b49b4e38a1548d03b74b30e558a1d18465b94be7
   RNCClipboard: cc054ad1e8a33d2a74cd13e565588b4ca928d8fd
-  RNCPicker: 2568e0d0b4644dd9d5f2cec9eca197f5f3f5acb3
-  RNFBApp: 78d0446e8b28dc30616c134a9e4d8d4b01f9f966
-  RNFBAuth: ac807e2ed1c08f1157bd866ede64faa706eab303
-  RNFBFirestore: 0b11664ee7aef061378ad3a3acc48d0bc31d821a
-  RNFBFunctions: 781443dff0fba04ffe2c33b69a93c3c7d0ea665a
+  RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
+  RNDeviceInfo: 8d4177859b062334835962799460528869a487fb
+  RNFBApp: 096fb7586e167f3ba3dc7a4bf5811a19aec58735
+  RNFBAuth: 586d2548d4c5dfef663d6b0ee02b6434309b8e88
+  RNFBFirestore: cd240246412393409e80f5d6a701e43b8a52452c
+  RNFBFunctions: c90956d191c4ea12cbf81568e20f3019ddd5852e
   RNFS: 3ab21fa6c56d65566d1fb26c2228e2b6132e5e32
+  RNGestureHandler: 6e757e487a4834e7280e98e9bac66d2d9c575e9c
   RNGoogleSignin: c4381751eefd73c552b923ba347a9bfc6f18771c
-  SDWebImage: 240e5c12b592fb1268c1d03b8c90d90e8c2ffe82
+  RNReanimated: e8afbe2a9e08e9e778ea72ddb1a8533445812621
+  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
+  SDWebImage: 631cf572cc93dfdfe54162e556410a61f1141928
   Yoga: 9a08effa851c1d8cc1647691895540bc168ea65f
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 0d3c489fcb05c90d3b0c46915d77b37c589ac798
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2

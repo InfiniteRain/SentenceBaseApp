@@ -1,0 +1,43 @@
+diff --git a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetModal/BottomSheetModal.d.ts b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetModal/BottomSheetModal.d.ts
+index 6475e6d..4d4b916 100644
+--- a/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetModal/BottomSheetModal.d.ts
++++ b/node_modules/@gorhom/bottom-sheet/lib/typescript/components/bottomSheetModal/BottomSheetModal.d.ts
+@@ -2,5 +2,5 @@ import React from 'react';
+ import type { BottomSheetModalMethods } from '../../types';
+ import type { BottomSheetModalProps } from './types';
+ declare type BottomSheetModal = BottomSheetModalMethods;
+-declare const BottomSheetModal: React.MemoExoticComponent<React.ForwardRefExoticComponent<BottomSheetModalProps & React.RefAttributes<BottomSheetModalMethods>>>;
++declare const BottomSheetModal: React.MemoExoticComponent<React.ForwardRefExoticComponent<BottomSheetModalProps & React.RefAttributes<BottomSheetModalMethods> & {containerHeight?: number}>>;
+ export default BottomSheetModal;
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
+index 6724e26..f392f25 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
+@@ -24,6 +24,7 @@ type BottomSheetModal = BottomSheetModalMethods;
+ const BottomSheetModalComponent = forwardRef<
+   BottomSheetModal,
+   BottomSheetModalProps 
++    & { containerHeight?: number }
+ >(function BottomSheetModal(props, ref) {
+   const {
+     // modal props
+@@ -50,13 +51,18 @@ const BottomSheetModalComponent = forwardRef<
+   //#endregion
+ 
+   //#region hooks
+-  const {
++  let {
+     containerHeight,
+     containerOffset,
+     mountSheet,
+     unmountSheet,
+     willUnmountSheet,
+   } = useBottomSheetModalInternal();
++
++  if (props.containerHeight) {
++    containerHeight = props.containerHeight;
++  }
++
+   const { removePortal: unmountPortal } = usePortal();
+   //#endregion
+ 
