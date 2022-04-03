@@ -1,6 +1,6 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {Platform, RefreshControl, StyleSheet, View} from 'react-native';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 import {usePendingSentences} from '../../hooks/use-pending-sentences';
 import {SentenceList} from '../elements/SentenceList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -15,7 +15,7 @@ import {createBatch} from '../../queries';
 const sentneceLimit = 10;
 
 export const CreateBatch = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
   const {setDoSentencesQuery} = useContext(CacheContext);
 
   const navigation = useNavigation<RootNavigationProps>();

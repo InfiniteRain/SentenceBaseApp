@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import {Alert, Keyboard, StyleSheet, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {ThemeContext} from '../../../contexts/theme';
+import {LayoutContext} from '../../../contexts/layout-context';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {PropertySheet} from '../../elements/PropertySheet';
 
@@ -26,7 +26,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
   (props, ref) => {
     const castedRef = ref as React.RefObject<BottomSheetModal>;
 
-    const {theme} = useContext(ThemeContext);
+    const {theme} = useContext(LayoutContext);
 
     const [sentence, setSentence] = useState('');
     const [tags, setTags] = useState<string[]>([]);

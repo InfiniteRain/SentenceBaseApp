@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {Divider} from 'react-native-paper';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 import {SbSentence} from '../../types';
 
 function isSbSentence(value: unknown): value is SbSentence {
@@ -31,7 +31,7 @@ export const SentenceList = (props: {
     string | React.JSXElementConstructor<any>
   >;
 }) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
 
   return (
     <FlatList

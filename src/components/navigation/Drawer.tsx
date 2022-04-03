@@ -4,14 +4,14 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerContent} from './DrawerContent';
 import {BottomTabs} from './BottomTabs';
 import {RootNavigatorScreenProps} from '../../types';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 import {IconButton} from '../elements/IconButton';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 
 const DrawerNavigation = createDrawerNavigator();
 
 export const Drawer = (props: RootNavigatorScreenProps) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
   const {
     bottomTabsRoute,
     onClear,

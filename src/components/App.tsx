@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native-paper';
 import {RootNavigator} from './navigation/RootNavigator';
-import {ThemeContext} from '../contexts/theme';
+import {LayoutContext} from '../contexts/layout-context';
 import {CombinedTheme} from '../types';
 import {StatusBar, StyleSheet, useColorScheme, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from 'react-query';
@@ -44,6 +44,7 @@ const queryClient = new QueryClient();
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [theme, setTheme] = useState<CombinedTheme>(DefaultTheme);
+  const [isLoading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<FirebaseAuthTypes.User | null>(
     null,
   );
@@ -86,7 +87,8 @@ export const App = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
       <QueryClientProvider client={queryClient}>
-        <ThemeContext.Provider value={{theme, setTheme}}>
+        <LayoutContext.Provider
+          value={{theme, setTheme, isLoading, setLoading}}>
           <PaperProvider theme={theme}>
             <SafeAreaProvider>
               {!currentUser ? (
@@ -99,9 +101,14 @@ export const App = () => {
                 </NavigationContainer>
               )}
               <Toast />
+              {isLoading && (
+                <View style={styles.loading}>
+                  <ActivityIndicator size="large" />
+                </View>
+              )}
             </SafeAreaProvider>
           </PaperProvider>
-        </ThemeContext.Provider>
+        </LayoutContext.Provider>
       </QueryClientProvider>
     </>
   );
@@ -112,5 +119,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(128, 128, 128, 0.5)',
   },
 });

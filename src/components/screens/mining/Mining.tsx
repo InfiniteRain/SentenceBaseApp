@@ -9,7 +9,7 @@ import React, {
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Button, Caption, Chip, Divider, Text} from 'react-native-paper';
-import {ThemeContext} from '../../../contexts/theme';
+import {LayoutContext} from '../../../contexts/layout-context';
 import {useMutation, useQuery} from 'react-query';
 import {addSentence, kotuQuery} from '../../../queries';
 import {Morpheme} from '../../../types';
@@ -28,7 +28,7 @@ import {useIsFocused} from '@react-navigation/native';
 const isTablet = DeviceInfo.isTablet();
 
 export const Mining = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
   const {
     onClear,
     setOnClear,
