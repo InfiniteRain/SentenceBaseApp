@@ -372,6 +372,8 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: 'rgba(128, 128, 128, 0.5)',
   },
   wordText: {
     fontSize: 24,
