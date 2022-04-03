@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {LayoutContext} from '../../contexts/layout-context';
 
 type PropertySheetModalProps = {
@@ -23,6 +23,8 @@ export const PropertySheet = forwardRef<
   BottomSheetModal,
   PropertySheetModalProps
 >((props, ref) => {
+  const {height} = useWindowDimensions();
+
   const castedRef = ref as React.RefObject<BottomSheetModal>;
 
   const {theme} = useContext(LayoutContext);
@@ -83,7 +85,8 @@ export const PropertySheet = forwardRef<
         />
       )}
       onChange={onChange}
-      onDismiss={props.onDismiss}>
+      onDismiss={props.onDismiss}
+      containerHeight={height}>
       {props.children}
     </BottomSheetModal>
   );
