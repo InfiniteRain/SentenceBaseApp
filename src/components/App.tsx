@@ -89,6 +89,12 @@ export const App = () => {
     [],
   );
 
+  // todo: rename cache-context into sentence-cache-context
+  // todo: get rid of react native paper
+  // todo: add padding on drawer labels for android devices
+  // todo: support export on android devices
+  // todo: when on tablets, add a blank space to the left of the app
+
   return (
     <>
       <StatusBar
