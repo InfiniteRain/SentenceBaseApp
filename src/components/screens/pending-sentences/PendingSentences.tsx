@@ -14,7 +14,7 @@ import {Button, Caption} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {useMutation} from 'react-query';
 import {CacheContext} from '../../../contexts/cache-context';
-import {ThemeContext} from '../../../contexts/theme';
+import {LayoutContext} from '../../../contexts/layout-context';
 import {usePendingSentences} from '../../../hooks/use-pending-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
 import {RootNavigatorParamList} from '../../../types';
@@ -22,7 +22,7 @@ import {SentenceList} from '../../elements/SentenceList';
 import {EditSheet} from './EditSheet';
 
 export const PendingSentences = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
   const {setSentenceList} = useContext(CacheContext);
 
   const [isRefreshing, setRefreshing] = useState(false);

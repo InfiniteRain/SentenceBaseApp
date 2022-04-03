@@ -12,7 +12,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 
 export type LabeledTextInputProps = TextInputProps & {
   label: string;
@@ -22,7 +22,7 @@ export type LabeledTextInputProps = TextInputProps & {
 };
 
 export const LabeledTextInput = (props: LabeledTextInputProps) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
 
   const inputRef = useRef<TextInput>({} as TextInput);
 

@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 
 type PropertySheetModalProps = {
   snapPoints?: string[];
@@ -25,7 +25,7 @@ export const PropertySheet = forwardRef<
 >((props, ref) => {
   const castedRef = ref as React.RefObject<BottomSheetModal>;
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
 
   const snapPoints = useMemo(() => props.snapPoints ?? ['50%'], [props]);

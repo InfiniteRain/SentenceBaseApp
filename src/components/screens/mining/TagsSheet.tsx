@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Button, Divider, Text} from 'react-native-paper';
-import {ThemeContext} from '../../../contexts/theme';
+import {LayoutContext} from '../../../contexts/layout-context';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {IconButton} from '../../elements/IconButton';
@@ -23,7 +23,7 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
   (props, ref) => {
     const castedRef = ref as React.RefObject<BottomSheetModal>;
 
-    const {theme} = useContext(ThemeContext);
+    const {theme} = useContext(LayoutContext);
 
     const [tag, setTag] = useState('');
     const [filteredTagHistory, setFilteredTagHistory] = useState<string[]>([]);

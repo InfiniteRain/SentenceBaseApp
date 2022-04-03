@@ -10,13 +10,13 @@ import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
 import {Caption, Paragraph, Drawer} from 'react-native-paper';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 import {RootNavigatorScreenProps} from '../../types';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
 
   const [pendingSentences, setPendingSentences] = useState(0);
   const [batchesMined, setBatchesMined] = useState(0);

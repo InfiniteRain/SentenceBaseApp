@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from 'react-query';
-import {ThemeContext} from '../../contexts/theme';
+import {LayoutContext} from '../../contexts/layout-context';
 import {getMostRecentBatch} from '../../queries';
 import {LabeledTextInput} from '../elements/LabeledTextInput';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -17,7 +17,7 @@ import {
 } from '@react-navigation/native';
 
 export const Export = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(LayoutContext);
 
   const navigation = useNavigation<RootNavigationProps>();
 
@@ -127,6 +127,7 @@ export const Export = () => {
           )}
         </View>
         <View style={styles.inputView}>
+          {/* Add disable functionality */}
           <LabeledTextInput
             containerStyle={styles.input}
             label="Profile (required)"
