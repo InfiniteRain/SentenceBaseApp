@@ -123,16 +123,12 @@ export const App = () => {
                 <View
                   style={[
                     styles.loading,
-                    {
-                      backgroundColor: theme.colors.background,
-                    },
+                    {backgroundColor: theme.colors.background},
                   ]}>
                   <Text
                     style={[
                       styles.progressText,
-                      {
-                        color: theme.colors.onSurface,
-                      },
+                      {color: theme.colors.onSurface},
                     ]}>
                     {progressText}
                   </Text>

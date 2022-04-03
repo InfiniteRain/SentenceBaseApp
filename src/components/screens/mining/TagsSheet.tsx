@@ -96,12 +96,10 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
                     style={styles.historyItemTextContainer}
                     onPress={() => selectTag(item)}>
                     <Text
-                      style={{
-                        ...styles.historyItemText,
-                        ...{
-                          color: theme.colors.primary,
-                        },
-                      }}>
+                      style={[
+                        styles.historyItemText,
+                        {color: theme.colors.primary},
+                      ]}>
                       {item}
                     </Text>
                   </TouchableOpacity>
@@ -118,12 +116,7 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             />
           ) : (
             <Text
-              style={{
-                ...styles.emptyHistoryText,
-                ...{
-                  color: theme.colors.disabled,
-                },
-              }}>
+              style={[styles.emptyHistoryText, {color: theme.colors.disabled}]}>
               {tagHistory.length > 0
                 ? `Tag containing "${tag}" wasn't found in the history.`
                 : 'Tag history is empty.'}

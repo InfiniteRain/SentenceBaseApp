@@ -17,7 +17,7 @@ export const IconButton = (props: {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={{...styles.container, ...(props.style as object)}}
+      style={[styles.container, props.style]}
       disabled={props.disabled}>
       <MaterialCommunityIcon
         name={props.icon}

@@ -64,16 +64,14 @@ export const PropertySheet = forwardRef<
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       style={styles.bottomSheetModal}
-      backgroundStyle={{
-        backgroundColor: theme.colors.surface,
-      }}
+      backgroundStyle={{backgroundColor: theme.colors.surface}}
       handleComponent={() => (
         <View style={styles.closeLineContainer}>
           <View
-            style={{
-              ...styles.closeLine,
-              ...{backgroundColor: theme.colors.onSurface},
-            }}
+            style={[
+              styles.closeLine,
+              {backgroundColor: theme.colors.onSurface},
+            ]}
           />
         </View>
       )}

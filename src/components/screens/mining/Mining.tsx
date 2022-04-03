@@ -243,16 +243,13 @@ export const Mining = () => {
       <ScrollView contentContainerStyle={styles.mainView}>
         <View style={styles.selectedMorphemeView}>
           <Text
-            style={{
-              ...styles.selectedMorphemeDictionaryForm,
-              ...morphemeStyle,
-            }}
+            style={[styles.selectedMorphemeDictionaryForm, morphemeStyle]}
             numberOfLines={1}
             adjustsFontSizeToFit>
             「{selectedMorpheme?.dictionaryForm ?? 'Word'}」
           </Text>
           <Text
-            style={{...styles.selectedMorphemeReading, ...morphemeStyle}}
+            style={[styles.selectedMorphemeReading, morphemeStyle]}
             numberOfLines={1}
             adjustsFontSizeToFit>
             「{selectedMorpheme?.dictionaryFormReading ?? 'Reading'}」
@@ -264,10 +261,10 @@ export const Mining = () => {
             {morphemes.map((morpheme, index) => (
               <TouchableOpacity
                 key={index}
-                style={{
-                  ...styles.wordTouchableOpacity,
-                  ...{backgroundColor: theme.colors.surface},
-                }}
+                style={[
+                  styles.wordTouchableOpacity,
+                  {backgroundColor: theme.colors.surface},
+                ]}
                 onPress={() => setSelectedMorpheme({...morpheme})}>
                 <Text style={styles.wordText}>{morpheme.surface}</Text>
               </TouchableOpacity>
