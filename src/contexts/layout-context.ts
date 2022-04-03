@@ -3,13 +3,13 @@ import {CombinedTheme} from '../types';
 
 type LayoutContext = {
   theme: CombinedTheme;
-  setTheme: (theme: CombinedTheme) => void;
+  setTheme: (theme: React.SetStateAction<CombinedTheme>) => void;
   isLoading: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: (loading: React.SetStateAction<boolean>) => void;
   progress: number;
-  setProgress: (progress: number) => void;
+  setProgress: (progress: React.SetStateAction<number>) => void;
   progressText: string;
-  setProgressText: (progressText: string) => void;
+  setProgressText: (progressText: React.SetStateAction<string>) => void;
 };
 
 export const LayoutContext = createContext<LayoutContext>({} as LayoutContext);
