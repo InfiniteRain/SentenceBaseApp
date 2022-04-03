@@ -132,7 +132,11 @@ export const exportBatch = async (
       await Linking.openURL(ankiLink);
     } catch {
       events?.onSettled?.();
-      events?.onError?.(new Error('Failed to export cards.'));
+      events?.onError?.(
+        new Error(
+          'Failed to export cards. Make sure you have AnkiMobile installed.',
+        ),
+      );
       return;
     }
   }
