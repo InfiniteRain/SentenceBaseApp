@@ -2,19 +2,21 @@ import {createContext} from 'react';
 
 type HeaderButtonContext = {
   bottomTabsRoute: string | null;
-  setBottomTabsRoute: (bottomTabsRoute: string | null) => void;
+  setBottomTabsRoute: (
+    bottomTabsRoute: React.SetStateAction<string | null>,
+  ) => void;
   onClear: (() => void) | undefined;
-  setOnClear: (handler: (() => void) | undefined) => void;
+  setOnClear: (handler: React.SetStateAction<(() => void) | undefined>) => void;
   onPaste: (() => void) | undefined;
-  setOnPaste: (handler: (() => void) | undefined) => void;
+  setOnPaste: (handler: React.SetStateAction<(() => void) | undefined>) => void;
   onEdit: (() => void) | undefined;
-  setOnEdit: (handler: (() => void) | undefined) => void;
+  setOnEdit: (handler: React.SetStateAction<(() => void) | undefined>) => void;
   isClearDisabled: boolean;
-  setClearDisabled: (disabled: boolean) => void;
+  setClearDisabled: (disabled: React.SetStateAction<boolean>) => void;
   isPasteDisabled: boolean;
-  setPasteDisabled: (disabled: boolean) => void;
+  setPasteDisabled: (disabled: React.SetStateAction<boolean>) => void;
   isEditDisabled: boolean;
-  setEditDisabled: (disabled: boolean) => void;
+  setEditDisabled: (disabled: React.SetStateAction<boolean>) => void;
 };
 
 export const HeaderButtonContext = createContext<HeaderButtonContext>(
