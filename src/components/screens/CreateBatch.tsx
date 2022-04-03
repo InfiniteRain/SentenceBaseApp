@@ -93,13 +93,13 @@ export const CreateBatch = () => {
   const divider = useMemo(
     () => (
       <View
-        style={{
-          ...styles.dividerView,
-          ...{
+        style={[
+          styles.dividerView,
+          {
             backgroundColor: theme.colors.surface,
             borderColor: theme.colors.disabled,
           },
-        }}>
+        ]}>
         <FontAwesomeIcon
           name="caret-up"
           color={

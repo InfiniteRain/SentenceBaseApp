@@ -59,35 +59,32 @@ export const SentenceList = (props: {
               }
               disabled={isDisabled}>
               <Text
-                style={{
-                  ...styles.sentenceItemWordText,
-                  ...{
+                style={[
+                  styles.sentenceItemWordText,
+                  {
                     color: isDisabled
                       ? theme.colors.disabled
                       : theme.colors.primary,
                   },
-                }}>
+                ]}>
                 {item.dictionaryForm}（{item.reading}）
               </Text>
               <Text
-                style={{
-                  ...styles.sentenceItemText,
-                  ...{
+                style={[
+                  styles.sentenceItemText,
+                  {
                     color: isDisabled
                       ? theme.colors.disabled
                       : theme.colors.onSurface,
                   },
-                }}>
+                ]}>
                 {item.sentence}
               </Text>
               <View style={styles.tagsContainer}>
                 {item.tags.map((tag, index) => (
                   <Text
                     key={index}
-                    style={{
-                      ...styles.tagsText,
-                      ...{color: theme.colors.disabled},
-                    }}>
+                    style={[styles.tagsText, {color: theme.colors.disabled}]}>
                     {tag}
                   </Text>
                 ))}
