@@ -26,6 +26,8 @@ import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
 import {useIsFocused} from '@react-navigation/native';
 
 const isTablet = DeviceInfo.isTablet();
+const filterRegex =
+  /^“([^”]+)”\n\n\w+ \w+\n[^\n]+\n[^\n]+\n\w+ \w+ \w+ \w+ \w+ \w+ \w+.$/;
 
 export const Mining = () => {
   const {theme} = useContext(LayoutContext);
@@ -83,8 +85,11 @@ export const Mining = () => {
   const sentenceSheetRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
+    const filteredClipboardEntry =
+      clipboardEntry.trim().match(filterRegex)?.[1] ?? clipboardEntry;
+
     setMorphemeEdited(false);
-    setKotuString(clipboardEntry.trim());
+    setKotuString(filteredClipboardEntry);
   }, [clipboardEntry]);
   useEffect(() => {
     setOnClear(() => () => {
