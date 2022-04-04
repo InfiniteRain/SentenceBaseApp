@@ -6,7 +6,7 @@ import {Drawer} from './Drawer';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderButtonContext} from '../../contexts/header-button-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {CacheContext} from '../../contexts/cache-context';
+import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 import {SbSentence} from '../../types';
 
 const StackNavigation = createNativeStackNavigator();
@@ -58,7 +58,7 @@ export const RootNavigator = () => {
         isEditDisabled,
         setEditDisabled,
       }}>
-      <CacheContext.Provider
+      <SentenceCacheContext.Provider
         value={{
           doSentencesQuery,
           setDoSentencesQuery,
@@ -84,7 +84,7 @@ export const RootNavigator = () => {
             />
           </StackNavigation.Navigator>
         </BottomSheetModalProvider>
-      </CacheContext.Provider>
+      </SentenceCacheContext.Provider>
     </HeaderButtonContext.Provider>
   );
 };

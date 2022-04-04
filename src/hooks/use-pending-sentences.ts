@@ -1,7 +1,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import {useContext, useEffect} from 'react';
 import {useQuery} from 'react-query';
-import {CacheContext} from '../contexts/cache-context';
+import {SentenceCacheContext} from '../contexts/sentence-cache-context';
 import {wordFrequency} from '../helpers';
 import {getPendingSentences} from '../queries';
 import {SbApiSentence} from '../types';
@@ -10,7 +10,7 @@ export const usePendingSentences = (
   onQuerySettled?: (data: SbApiSentence[] | undefined, error: unknown) => void,
 ) => {
   const {doSentencesQuery, setDoSentencesQuery, sentenceList, setSentenceList} =
-    useContext(CacheContext);
+    useContext(SentenceCacheContext);
 
   const isFocused = useIsFocused();
 

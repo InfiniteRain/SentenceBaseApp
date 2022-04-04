@@ -13,7 +13,7 @@ import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {Button, Caption} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {useMutation} from 'react-query';
-import {CacheContext} from '../../../contexts/cache-context';
+import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {usePendingSentences} from '../../../hooks/use-pending-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
@@ -23,7 +23,7 @@ import {EditSheet} from './EditSheet';
 
 export const PendingSentences = () => {
   const {theme} = useContext(LayoutContext);
-  const {setSentenceList} = useContext(CacheContext);
+  const {setSentenceList} = useContext(SentenceCacheContext);
 
   const [isRefreshing, setRefreshing] = useState(false);
   const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');

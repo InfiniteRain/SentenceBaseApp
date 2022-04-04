@@ -22,7 +22,7 @@ import {useClipboard} from '../../../hooks/use-clipboard';
 import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
 import Toast from 'react-native-toast-message';
-import {CacheContext} from '../../../contexts/cache-context';
+import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
 import {useIsFocused} from '@react-navigation/native';
 
 const isTablet = DeviceInfo.isTablet();
@@ -38,7 +38,7 @@ export const Mining = () => {
     setPasteDisabled,
     setEditDisabled,
   } = useContext(HeaderButtonContext);
-  const {setDoSentencesQuery} = useContext(CacheContext);
+  const {setDoSentencesQuery} = useContext(SentenceCacheContext);
 
   const [morphemes, setMorphemes] = useState<Morpheme[]>([]);
   const [selectedMorpheme, setSelectedMorpheme] = useState<Morpheme | null>(

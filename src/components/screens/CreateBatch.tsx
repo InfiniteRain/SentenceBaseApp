@@ -8,7 +8,7 @@ import {Button, Caption} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useMutation} from 'react-query';
 import {RootNavigationProps, SbSentence} from '../../types';
-import {CacheContext} from '../../contexts/cache-context';
+import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 import {useNavigation} from '@react-navigation/native';
 import {createBatch} from '../../queries';
 
@@ -16,7 +16,7 @@ const sentneceLimit = 10;
 
 export const CreateBatch = () => {
   const {theme} = useContext(LayoutContext);
-  const {setDoSentencesQuery} = useContext(CacheContext);
+  const {setDoSentencesQuery} = useContext(SentenceCacheContext);
 
   const navigation = useNavigation<RootNavigationProps>();
 
