@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   caption: {
     fontSize: 14,
     lineHeight: 14,
+    paddingTop: 5,
   },
   stats: {
     marginTop: 15,
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontWeight: 'bold',
     marginRight: 3,
+    paddingTop: 5,
   },
   drawerSection: {
     marginTop: 15,
