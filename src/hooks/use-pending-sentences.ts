@@ -14,7 +14,7 @@ export const usePendingSentences = (
 
   const isFocused = useIsFocused();
 
-  const {status, refetch} = useQuery(
+  const {isFetching, refetch} = useQuery(
     ['getSentences', isFocused],
     () => getPendingSentences(),
     {
@@ -43,7 +43,7 @@ export const usePendingSentences = (
 
   return {
     sentenceList,
-    status,
+    isFetching,
     refetch,
   };
 };

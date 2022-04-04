@@ -25,7 +25,7 @@ export const CreateBatch = () => {
 
   const {
     sentenceList,
-    status: sentencesStatus,
+    isFetching: isFetchingSentences,
     refetch: refetchSentences,
   } = usePendingSentences(() => {
     setIsRefreshing(false);
@@ -70,11 +70,11 @@ export const CreateBatch = () => {
   const refreshControl = useMemo(
     () => (
       <RefreshControl
-        refreshing={isRefreshing || sentencesStatus === 'loading'}
+        refreshing={isRefreshing || isFetchingSentences}
         onRefresh={onListRefresh}
       />
     ),
-    [isRefreshing, sentencesStatus, onListRefresh],
+    [isRefreshing, isFetchingSentences, onListRefresh],
   );
   const guideSteps = useMemo(
     () => [
@@ -138,7 +138,7 @@ export const CreateBatch = () => {
     (sentence: SbSentence): boolean => {
       if (
         isRefreshing ||
-        sentencesStatus === 'loading' ||
+        isFetchingSentences ||
         createBatchStatus === 'loading'
       ) {
         return true;
@@ -150,7 +150,7 @@ export const CreateBatch = () => {
     },
     [
       isRefreshing,
-      sentencesStatus,
+      isFetchingSentences,
       createBatchStatus,
       isLimitReached,
       selectedSentencesIds,
@@ -181,7 +181,7 @@ export const CreateBatch = () => {
         color={theme.colors.primary}
         disabled={
           isRefreshing ||
-          sentencesStatus === 'loading' ||
+          isFetchingSentences ||
           !isLimitReached ||
           selectedSentencesIds.length === 0 ||
           createBatchStatus === 'loading'

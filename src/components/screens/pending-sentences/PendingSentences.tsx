@@ -32,7 +32,7 @@ export const PendingSentences = () => {
 
   const {
     sentenceList,
-    status: sentencesStatus,
+    isFetching: isFetchingSentences,
     refetch: refetchSentences,
   } = usePendingSentences(() => {
     setRefreshing(false);
@@ -134,10 +134,15 @@ export const PendingSentences = () => {
   const isDisabled = useMemo(
     () =>
       isRefreshing ||
-      sentencesStatus === 'loading' ||
+      isFetchingSentences ||
       deleteSentenceStatus === 'loading' ||
       editSentenceStatus === 'loading',
-    [isRefreshing, sentencesStatus, deleteSentenceStatus, editSentenceStatus],
+    [
+      isRefreshing,
+      isFetchingSentences,
+      deleteSentenceStatus,
+      editSentenceStatus,
+    ],
   );
   const refreshControl = useMemo(
     () => <RefreshControl refreshing={isDisabled} onRefresh={onListRefresh} />,
@@ -146,7 +151,7 @@ export const PendingSentences = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {sentenceList.length > 0 || sentencesStatus === 'loading' ? (
+      {sentenceList.length > 0 || isFetchingSentences ? (
         <SentenceList
           sentenceList={sentenceList ?? []}
           disabled={isDisabled}
