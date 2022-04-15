@@ -4,7 +4,7 @@ import {LayoutContext} from '../../contexts/layout-context';
 import {usePendingSentences} from '../../hooks/use-pending-sentences';
 import {SentenceList} from '../elements/SentenceList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {Caption} from 'react-native-paper';
+import {Caption} from '../elements/Caption';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useMutation} from 'react-query';
 import {RootNavigationProps, SbSentence} from '../../types';

@@ -6,12 +6,13 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {Divider, Text} from 'react-native-paper';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {Divider} from 'react-native-paper';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
+import {Caption} from '../../elements/Caption';
 import {IconButton} from '../../elements/IconButton';
 import {PropertySheet} from '../../elements/PropertySheet';
 
@@ -116,15 +117,11 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
               data={filteredTagHistory}
             />
           ) : (
-            <Text
-              style={[
-                styles.emptyHistoryText,
-                {color: theme.colors.disabledText},
-              ]}>
+            <Caption style={styles.emptyHistoryText}>
               {tagHistory.length > 0
                 ? `Tag containing "${tag}" wasn't found in the history.`
                 : 'Tag history is empty.'}
-            </Text>
+            </Caption>
           )}
         </View>
       </PropertySheet>

@@ -5,9 +5,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
-import {Caption, Paragraph, Drawer} from 'react-native-paper';
+import {Divider} from 'react-native-paper';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {LayoutContext} from '../../contexts/layout-context';
@@ -15,6 +15,7 @@ import {RootNavigatorScreenProps} from '../../types';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
+import {Caption} from '../elements/Caption';
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
@@ -77,20 +78,21 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
       <View style={styles.userInfoSection}>
         <View style={styles.stats}>
           <View style={styles.section}>
-            <Paragraph style={[styles.paragraph, styles.caption]}>
+            <Text style={[styles.paragraph, styles.caption]}>
               {pendingSentences}
-            </Paragraph>
+            </Text>
             <Caption style={styles.caption}>Sentences Pending</Caption>
           </View>
           <View style={styles.section}>
-            <Paragraph style={[styles.paragraph, styles.caption]}>
+            <Text style={[styles.paragraph, styles.caption]}>
               {minedBatches}
-            </Paragraph>
+            </Text>
             <Caption style={styles.caption}>Batches mined</Caption>
           </View>
         </View>
       </View>
-      <Drawer.Section style={styles.drawerSection}>
+      <View style={styles.drawerSection}>
+        <Divider />
         <DrawerItem
           icon={({color, size}) => (
             <MaterialCommunityIcon name="export" color={color} size={size} />
@@ -107,10 +109,12 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
           label="Preferences"
           onPress={() => {}}
         />
-      </Drawer.Section>
-      <Drawer.Section>
-        <DrawerItem label="Logout" onPress={logout} />
-      </Drawer.Section>
+        <Divider />
+        <View>
+          <DrawerItem label="Logout" onPress={logout} />
+        </View>
+        <Divider />
+      </View>
     </DrawerContentScrollView>
   );
 }

@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react';
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
-import {Caption} from 'react-native-paper';
+import {Caption} from '../../elements/Caption';
 import Toast from 'react-native-toast-message';
 import {useMutation} from 'react-query';
 import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';

@@ -6,9 +6,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Caption, Chip, Divider, Text} from 'react-native-paper';
+import {Chip, Divider} from 'react-native-paper';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useMutation, useQuery} from 'react-query';
 import {addSentence, kotuQuery} from '../../../queries';
@@ -24,6 +24,7 @@ import {SentenceSheet} from './SentenceSheet';
 import Toast from 'react-native-toast-message';
 import {useIsFocused} from '@react-navigation/native';
 import {Button} from '../../elements/Button';
+import {Caption} from '../../elements/Caption';
 
 const isTablet = DeviceInfo.isTablet();
 const filterRegex =
@@ -358,11 +359,6 @@ const styles = StyleSheet.create({
     alignContent: 'space-around',
   },
   wordTouchableOpacity: {
-    shadowOpacity: 0.1,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
     elevation: 5,
     padding: 5,
     margin: 5,
