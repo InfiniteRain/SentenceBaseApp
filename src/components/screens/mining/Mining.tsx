@@ -27,6 +27,11 @@ import {useIsFocused} from '@react-navigation/native';
 const isTablet = DeviceInfo.isTablet();
 const filterRegex =
   /^“([^”]+)”\n\n\w+ \w+\n[^\n]+\n[^\n]+\n\w+ \w+ \w+ \w+ \w+ \w+ \w+.$/;
+const proccessClipboardEntry = (entry: string): string => {
+  entry = entry.trim();
+  entry = entry.match(filterRegex)?.[1] ?? entry;
+  return entry.replace(/\s+/g, '　');
+};
 
 export const Mining = () => {
   const {theme} = useContext(LayoutContext);
@@ -83,11 +88,8 @@ export const Mining = () => {
   const sentenceSheetRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
-    const filteredClipboardEntry =
-      clipboardEntry.trim().match(filterRegex)?.[1] ?? clipboardEntry;
-
     setMorphemeEdited(false);
-    setKotuString(filteredClipboardEntry);
+    setKotuString(proccessClipboardEntry(clipboardEntry));
   }, [clipboardEntry]);
   useEffect(() => {
     setOnClear(() => () => {
@@ -98,7 +100,7 @@ export const Mining = () => {
     });
     setOnPaste(() => async () => {
       setKotuString('');
-      setKotuString((await Clipboard.getString()).trim());
+      setKotuString(proccessClipboardEntry(await Clipboard.getString()));
       setSelectedMorpheme(null);
       setMorphemeEdited(false);
     });
