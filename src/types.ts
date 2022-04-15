@@ -9,6 +9,7 @@ export type AppTheme = NavigationTheme & {
   colors: {
     surface: string;
     surfaceText: string;
+    surfaceBorder: string;
     dangerText: string;
     placeholderText: string;
     disabledText: string;

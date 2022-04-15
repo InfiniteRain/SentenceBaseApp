@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Chip} from 'react-native-paper';
+import {Chip} from '../../elements/Chip';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useMutation, useQuery} from 'react-query';
 import {addSentence, kotuQuery} from '../../../queries';
@@ -283,14 +283,12 @@ export const Mining = () => {
         {tags.map((tag, index) => (
           <Chip
             key={index}
-            mode="outlined"
             style={styles.tagChip}
             onClose={() => onDeleteTagButtonPressed(index)}>
             {tag}
           </Chip>
         ))}
         <Chip
-          mode="outlined"
           style={styles.tagChip}
           icon="plus"
           onPress={onAddTagButtonPressed}>
