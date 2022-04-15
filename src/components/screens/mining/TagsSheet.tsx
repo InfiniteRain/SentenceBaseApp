@@ -1,4 +1,4 @@
-import {BottomSheetModal, TouchableOpacity} from '@gorhom/bottom-sheet';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {
   forwardRef,
   useCallback,
@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
@@ -42,24 +42,21 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
       );
     }, [tagHistory, tag]);
 
-    const selectTag = useCallback(
-      (selectedTag: string) => {
-        const tagsToAdd = selectedTag.trim().split(/\s+/);
+    const onAddTagPressed = useCallback(() => {
+      const tagsToAdd = tag.trim().split(/\s+/);
 
-        props.onAdd(tagsToAdd);
+      props.onAdd(tagsToAdd);
 
-        updateTagHistory(currentHistory =>
-          [
-            ...tagsToAdd,
-            ...currentHistory.filter(entry => !tagsToAdd.includes(entry)),
-          ].filter((_, index) => index < 50),
-        );
+      updateTagHistory(currentHistory =>
+        [
+          ...tagsToAdd,
+          ...currentHistory.filter(entry => !tagsToAdd.includes(entry)),
+        ].filter((_, index) => index < 50),
+      );
 
-        setTag('');
-        castedRef.current?.close();
-      },
-      [props, castedRef, updateTagHistory],
-    );
+      setTag('');
+      castedRef.current?.close();
+    }, [props, castedRef, updateTagHistory, tag]);
     const removeTagFromHistory = useCallback(
       (selectedTag: string) => {
         updateTagHistory(currentHistory =>
@@ -80,13 +77,14 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             containerStyle={styles.tagInput}
             onChangeText={text => setTag(text.trim())}
             placeholderTextColor={theme.colors.placeholderText}
+            defaultValue={tag}
           />
           <Button
             title="Add Tag"
             type="primary"
             disabled={tag.length === 0}
             style={styles.addTagButton}
-            onPress={() => selectTag(tag)}
+            onPress={onAddTagPressed}
           />
         </View>
         <View style={styles.tagHistoryView}>
@@ -97,7 +95,7 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
                 <View style={styles.historyItemContainer}>
                   <TouchableOpacity
                     style={styles.historyItemTextContainer}
-                    onPress={() => selectTag(item)}>
+                    onPress={() => setTag(item)}>
                     <Text
                       style={[
                         styles.historyItemText,
@@ -156,13 +154,20 @@ const styles = StyleSheet.create({
   historyItemTextContainer: {
     flexGrow: 1,
     alignItems: 'center',
+    marginLeft: 25,
+    marginRight: 50,
   },
   historyItemText: {
     fontSize: 24,
     paddingVertical: 5,
   },
   historyItemIcon: {
-    marginRight: 15,
+    position: 'absolute',
+    right: 10,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyHistoryText: {alignSelf: 'center'},
 });

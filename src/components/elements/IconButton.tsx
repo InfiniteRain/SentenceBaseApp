@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {LayoutContext} from '../../contexts/layout-context';
 
@@ -19,7 +18,7 @@ export const IconButton = (props: IconButtonProps) => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={[styles.container, props.style]}
+      style={[styles.mainView, props.style]}
       disabled={props.disabled}>
       <MaterialCommunityIcon
         name={props.icon}
@@ -31,7 +30,7 @@ export const IconButton = (props: IconButtonProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainView: {
     margin: 10,
   },
 });
