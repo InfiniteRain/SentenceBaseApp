@@ -105,7 +105,6 @@ export const forvoQuery = async (
   const protocol = 'https';
 
   if (!filenameBase64) {
-    console.log('b');
     return null;
   }
 
