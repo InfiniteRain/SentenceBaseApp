@@ -2,15 +2,13 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import {Alert, Keyboard, StyleSheet, View} from 'react-native';
-import {Button} from 'react-native-paper';
-import {LayoutContext} from '../../../contexts/layout-context';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
+import {Button} from '../../elements/Button';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type EditSheetProps = {
@@ -25,8 +23,6 @@ type EditSheetProps = {
 export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
   (props, ref) => {
     const castedRef = ref as React.RefObject<BottomSheetModal>;
-
-    const {theme} = useContext(LayoutContext);
 
     const [sentence, setSentence] = useState('');
     const [tags, setTags] = useState<string[]>([]);
@@ -82,18 +78,17 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
             defaultValue={props.tags.join(' ')}
           />
           <Button
-            mode="contained"
-            onPress={onEditButtonPressed}
-            style={styles.button}>
-            Confirm
-          </Button>
-          <Button
-            mode="contained"
-            onPress={onDeleteButtonPressed}
+            title="Edit"
+            type="primary"
             style={styles.button}
-            color={theme.colors.notification}>
-            Delete
-          </Button>
+            onPress={onEditButtonPressed}
+          />
+          <Button
+            title="Delete"
+            type="danger"
+            style={styles.button}
+            onPress={onDeleteButtonPressed}
+          />
         </View>
       </PropertySheet>
     );
@@ -116,7 +111,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 15,
-    justifyContent: 'center',
-    height: 44,
   },
 });

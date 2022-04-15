@@ -89,11 +89,6 @@ export const App = () => {
     [],
   );
 
-  // todo: get rid of react native paper
-  // todo: support export on android devices
-  // todo: when on tablets, add a blank space to the left of the app
-  // todo: add a way to invoke app from outside (via context menus etc)
-
   return (
     <>
       <StatusBar

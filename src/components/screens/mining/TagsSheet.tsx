@@ -7,10 +7,11 @@ import React, {
   useState,
 } from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {Button, Divider, Text} from 'react-native-paper';
+import {Divider, Text} from 'react-native-paper';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
+import {Button} from '../../elements/Button';
 import {IconButton} from '../../elements/IconButton';
 import {PropertySheet} from '../../elements/PropertySheet';
 
@@ -79,12 +80,12 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             placeholderTextColor={theme.colors.placeholder}
           />
           <Button
-            mode="contained"
-            onPress={() => selectTag(tag)}
+            title="Add Tag"
+            type="primary"
             disabled={tag.length === 0}
-            style={styles.addTagButton}>
-            Add Tag
-          </Button>
+            style={styles.addTagButton}
+            onPress={() => selectTag(tag)}
+          />
         </View>
         <View style={styles.tagHistoryView}>
           {filteredTagHistory.length > 0 ? (
@@ -141,8 +142,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   addTagButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
     height: 54,
   },
   tagHistoryView: {

@@ -4,12 +4,13 @@ import {LayoutContext} from '../../contexts/layout-context';
 import {usePendingSentences} from '../../hooks/use-pending-sentences';
 import {SentenceList} from '../elements/SentenceList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import {Button, Caption} from 'react-native-paper';
+import {Caption} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useMutation} from 'react-query';
 import {RootNavigationProps, SbSentence} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 import {createBatch} from '../../queries';
+import {Button} from '../elements/Button';
 
 const sentneceLimit = 10;
 
@@ -173,9 +174,9 @@ export const CreateBatch = () => {
         refreshControl={refreshControl}
       />
       <Button
-        mode="contained"
-        style={styles.addNewBatch}
-        color={theme.colors.primary}
+        title="Confirm Batch"
+        type="primary"
+        loading={createBatchStatus === 'loading'}
         disabled={
           isRefreshing ||
           isFetchingSentences ||
@@ -183,12 +184,9 @@ export const CreateBatch = () => {
           selectedSentencesIds.length === 0 ||
           createBatchStatus === 'loading'
         }
-        loading={createBatchStatus === 'loading'}
-        onPress={() =>
-          createBatchMutation({sentenceIds: selectedSentencesIds})
-        }>
-        Confirm Batch
-      </Button>
+        style={styles.addNewBatch}
+        onPress={() => createBatchMutation({sentenceIds: selectedSentencesIds})}
+      />
     </SafeAreaView>
   );
 };
@@ -210,8 +208,6 @@ const styles = StyleSheet.create({
   addNewBatch: {
     marginHorizontal: 15,
     marginVertical: 15,
-    height: 44,
-    justifyContent: 'center',
   },
   guideView: {
     flexGrow: 1,

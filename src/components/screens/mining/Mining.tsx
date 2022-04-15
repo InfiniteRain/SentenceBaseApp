@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Button, Caption, Chip, Divider, Text} from 'react-native-paper';
+import {Caption, Chip, Divider, Text} from 'react-native-paper';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useMutation, useQuery} from 'react-query';
 import {addSentence, kotuQuery} from '../../../queries';
@@ -23,6 +23,7 @@ import DeviceInfo from 'react-native-device-info';
 import {SentenceSheet} from './SentenceSheet';
 import Toast from 'react-native-toast-message';
 import {useIsFocused} from '@react-navigation/native';
+import {Button} from '../../elements/Button';
 
 const isTablet = DeviceInfo.isTablet();
 const filterRegex =
@@ -294,14 +295,13 @@ export const Mining = () => {
         </Chip>
       </View>
       <Button
-        mode="contained"
-        style={styles.mineSentenceButton}
-        color={theme.colors.primary}
+        title="Mine Sentence"
+        type="primary"
+        loading={addSentenceStatus === 'loading'}
         disabled={selectedMorpheme === null || addSentenceStatus === 'loading'}
+        style={styles.mineSentenceButton}
         onPress={onMineSentence}
-        loading={addSentenceStatus === 'loading'}>
-        Mine Sentence
-      </Button>
+      />
       <TagsSheet
         ref={tagsSheetRef}
         onAdd={onAddTag}
@@ -387,7 +387,5 @@ const styles = StyleSheet.create({
   mineSentenceButton: {
     marginHorizontal: 15,
     marginBottom: 15,
-    height: 44,
-    justifyContent: 'center',
   },
 });

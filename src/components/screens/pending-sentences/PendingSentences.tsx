@@ -10,19 +10,18 @@ import React, {
   useState,
 } from 'react';
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
-import {Button, Caption} from 'react-native-paper';
+import {Caption} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {useMutation} from 'react-query';
 import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
-import {LayoutContext} from '../../../contexts/layout-context';
 import {usePendingSentences} from '../../../hooks/use-pending-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
 import {RootNavigatorParamList} from '../../../types';
 import {SentenceList} from '../../elements/SentenceList';
 import {EditSheet} from './EditSheet';
+import {Button} from '../../elements/Button';
 
 export const PendingSentences = () => {
-  const {theme} = useContext(LayoutContext);
   const {setSentenceList} = useContext(SentenceCacheContext);
 
   const [isRefreshing, setRefreshing] = useState(false);
@@ -168,13 +167,12 @@ export const PendingSentences = () => {
         </ScrollView>
       )}
       <Button
-        mode="contained"
-        style={styles.addNewBatch}
-        color={theme.colors.primary}
+        title="Create New Batch"
+        type="primary"
         disabled={isDisabled || sentenceList.length === 0}
-        onPress={() => navigation.navigate('CreateBatch')}>
-        Create New Batch
-      </Button>
+        style={styles.addNewBatch}
+        onPress={() => navigation.navigate('CreateBatch')}
+      />
       <EditSheet
         ref={editSheetRef}
         sentenceId={sentenceIdToEdit}
@@ -209,8 +207,6 @@ const styles = StyleSheet.create({
   addNewBatch: {
     marginHorizontal: 15,
     marginVertical: 15,
-    height: 44,
-    justifyContent: 'center',
   },
   emptyNoticeView: {
     flexGrow: 1,

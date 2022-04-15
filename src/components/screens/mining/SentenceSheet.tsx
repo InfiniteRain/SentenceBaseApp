@@ -7,8 +7,8 @@ import React, {
   useState,
 } from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
-import {Button} from 'react-native-paper';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
+import {Button} from '../../elements/Button';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type SentenceSheetProps = {
@@ -75,12 +75,12 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
             </View>
           </View>
           <Button
-            mode="contained"
-            onPress={onConfirm}
+            title="Confirm"
+            type="primary"
+            disabled={sentence.length === 0}
             style={styles.confirmButton}
-            disabled={sentence.length === 0}>
-            Confirm
-          </Button>
+            onPress={onConfirm}
+          />
         </View>
       </PropertySheet>
     );
@@ -114,7 +114,5 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     marginTop: 15,
-    justifyContent: 'center',
-    height: 44,
   },
 });

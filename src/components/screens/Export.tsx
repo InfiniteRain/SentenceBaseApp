@@ -1,6 +1,5 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {Alert, StyleSheet, Text, View} from 'react-native';
-import {Button} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from 'react-query';
 import {LayoutContext} from '../../contexts/layout-context';
@@ -15,6 +14,7 @@ import {
   DrawerActions,
   useNavigation,
 } from '@react-navigation/native';
+import {Button} from '../elements/Button';
 
 export const Export = () => {
   const {theme, setLoading, setProgress, setProgressText} =
@@ -216,9 +216,8 @@ export const Export = () => {
       </KeyboardAwareScrollView>
       <View style={styles.exportBatchButtonView}>
         <Button
-          mode="contained"
-          style={styles.exportBatchButton}
-          color={theme.colors.primary}
+          title="Export Most Recent Batch"
+          type="primary"
           disabled={
             isBadInput ||
             batchStatus === 'loading' ||
@@ -226,9 +225,7 @@ export const Export = () => {
             isExporting
           }
           onPress={onExportBatch}
-          loading={isExporting}>
-          Export Most Recent Batch
-        </Button>
+        />
       </View>
     </SafeAreaView>
   );
@@ -261,9 +258,5 @@ const styles = StyleSheet.create({
   },
   exportBatchButtonView: {
     margin: 30,
-  },
-  exportBatchButton: {
-    height: 44,
-    justifyContent: 'center',
   },
 });
