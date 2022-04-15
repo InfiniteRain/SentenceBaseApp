@@ -22,6 +22,7 @@ export const RootNavigator = () => {
   const [isPasteDisabled, setPasteDisabled] = useState(false);
   const [isEditDisabled, setEditDisabled] = useState(false);
   const [doSentencesQuery, setDoSentencesQuery] = useState(true);
+  const [ignoreNextUpdate, setIgnoreNextUpdate] = useState(false);
   const [sentenceList, setSentenceList] = useState<SbSentence[]>([]);
 
   useEffect(
@@ -64,6 +65,8 @@ export const RootNavigator = () => {
           setDoSentencesQuery,
           sentenceList,
           setSentenceList,
+          ignoreNextUpdate,
+          setIgnoreNextUpdate,
         }}>
         <BottomSheetModalProvider>
           <StackNavigation.Navigator>

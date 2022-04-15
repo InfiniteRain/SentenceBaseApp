@@ -20,10 +20,17 @@ import {Divider} from '../elements/Divider';
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
-  const {setDoSentencesQuery} = useContext(SentenceCacheContext);
+  const {setDoSentencesQuery, ignoreNextUpdate, setIgnoreNextUpdate} =
+    useContext(SentenceCacheContext);
 
   const [pendingSentences, setPendingSentences] = useState(0);
   const [minedBatches, setMinedBatches] = useState(0);
+  const [lastPendingSentencesCount, setLastPendingSentencesCount] = useState<
+    number | null
+  >(null);
+  const [lastMinedBatchesCount, setLastMinedBatchesCount] = useState<
+    number | null
+  >(null);
 
   const email = useMemo<string>(() => {
     return auth().currentUser?.email ?? '';
@@ -36,9 +43,6 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
       return;
     }
 
-    let lastPendingSentencesCount: number | null = null;
-    let lastMinedBatchesCount: number | null = null;
-
     return firestore()
       .collection('users')
       .doc(userUid)
@@ -50,17 +54,31 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         setPendingSentences(pendingSentencesCount);
         setMinedBatches(minedBatchesCount);
 
-        if (
+        const countsChanged =
           lastPendingSentencesCount !== pendingSentencesCount ||
-          lastMinedBatchesCount !== minedBatchesCount
-        ) {
-          setDoSentencesQuery(true);
+          lastMinedBatchesCount !== minedBatchesCount;
 
-          lastPendingSentencesCount = pendingSentencesCount;
-          lastMinedBatchesCount = minedBatchesCount;
+        if (!countsChanged) {
+          return;
         }
+
+        setLastPendingSentencesCount(pendingSentencesCount);
+        setLastMinedBatchesCount(minedBatchesCount);
+
+        if (ignoreNextUpdate) {
+          setIgnoreNextUpdate(false);
+          return;
+        }
+
+        setDoSentencesQuery(true);
       });
-  }, [setDoSentencesQuery]);
+  }, [
+    setDoSentencesQuery,
+    ignoreNextUpdate,
+    setIgnoreNextUpdate,
+    lastPendingSentencesCount,
+    lastMinedBatchesCount,
+  ]);
 
   const logout = useCallback(async () => {
     await auth().signOut();

@@ -1,5 +1,5 @@
 import {useIsFocused} from '@react-navigation/native';
-import {useContext, useEffect} from 'react';
+import {useContext} from 'react';
 import {useQuery} from 'react-query';
 import {SentenceCacheContext} from '../contexts/sentence-cache-context';
 import {wordFrequency} from '../helpers';
@@ -19,7 +19,10 @@ export const usePendingSentences = (
     () => getPendingSentences(),
     {
       enabled: isFocused && doSentencesQuery,
-      onSettled: onQuerySettled,
+      onSettled(...args) {
+        onQuerySettled?.(...args);
+        setDoSentencesQuery(false);
+      },
       onSuccess: apiSentences => {
         setSentenceList(
           apiSentences.map(apiSentence => ({
@@ -34,12 +37,6 @@ export const usePendingSentences = (
       keepPreviousData: true,
     },
   );
-
-  useEffect(() => {
-    if (doSentencesQuery && isFocused) {
-      setDoSentencesQuery(false);
-    }
-  }, [doSentencesQuery, isFocused, setDoSentencesQuery]);
 
   return {
     sentenceList,

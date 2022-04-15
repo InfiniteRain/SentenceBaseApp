@@ -22,7 +22,8 @@ import {EditSheet} from './EditSheet';
 import {Button} from '../../elements/Button';
 
 export const PendingSentences = () => {
-  const {setSentenceList} = useContext(SentenceCacheContext);
+  const {setSentenceList, setIgnoreNextUpdate} =
+    useContext(SentenceCacheContext);
 
   const [isRefreshing, setRefreshing] = useState(false);
   const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');
@@ -75,6 +76,7 @@ export const PendingSentences = () => {
   );
   const onSentenceDelete = useCallback(
     (sentenceId: string) => {
+      setIgnoreNextUpdate(true);
       deleteSentenceMutation(
         {sentenceId},
         {
@@ -96,7 +98,7 @@ export const PendingSentences = () => {
         },
       );
     },
-    [deleteSentenceMutation, setSentenceList],
+    [deleteSentenceMutation, setSentenceList, setIgnoreNextUpdate],
   );
   const onSentenceEdit = useCallback(
     (sentenceId: string, sentence: string, tags: string[]) => {
