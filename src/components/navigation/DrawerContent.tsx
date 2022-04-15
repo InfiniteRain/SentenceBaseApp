@@ -14,12 +14,14 @@ import {LayoutContext} from '../../contexts/layout-context';
 import {RootNavigatorScreenProps} from '../../types';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
+  const {setDoSentencesQuery} = useContext(SentenceCacheContext);
 
   const [pendingSentences, setPendingSentences] = useState(0);
-  const [batchesMined, setBatchesMined] = useState(0);
+  const [minedBatches, setMinedBatches] = useState(0);
 
   const email = useMemo<string>(() => {
     return auth().currentUser?.email ?? '';
@@ -32,16 +34,31 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
       return;
     }
 
+    let lastPendingSentencesCount: number | null = null;
+    let lastMinedBatchesCount: number | null = null;
+
     return firestore()
       .collection('users')
       .doc(userUid)
       .onSnapshot(snap => {
         const data = snap.data();
+        const pendingSentencesCount = data?.pendingSentences ?? 0;
+        const minedBatchesCount = data?.counters.batches ?? 0;
 
-        setPendingSentences(data?.pendingSentences ?? 0);
-        setBatchesMined(data?.counters.batches ?? 0);
+        setPendingSentences(pendingSentencesCount);
+        setMinedBatches(minedBatchesCount);
+
+        if (
+          lastPendingSentencesCount !== pendingSentencesCount ||
+          lastMinedBatchesCount !== minedBatchesCount
+        ) {
+          setDoSentencesQuery(true);
+
+          lastPendingSentencesCount = pendingSentencesCount;
+          lastMinedBatchesCount = minedBatchesCount;
+        }
       });
-  }, []);
+  }, [setDoSentencesQuery]);
 
   const logout = useCallback(async () => {
     await auth().signOut();
@@ -67,7 +84,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
           </View>
           <View style={styles.section}>
             <Paragraph style={[styles.paragraph, styles.caption]}>
-              {batchesMined}
+              {minedBatches}
             </Paragraph>
             <Caption style={styles.caption}>Batches mined</Caption>
           </View>
