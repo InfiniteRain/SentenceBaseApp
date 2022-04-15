@@ -14,6 +14,7 @@ export type AppTheme = NavigationTheme & {
     disabledText: string;
     disabledButton: string;
     disabledButtonText: string;
+    divider: string;
   };
 };
 

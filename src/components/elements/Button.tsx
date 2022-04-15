@@ -4,12 +4,12 @@ import {
   GestureResponderEvent,
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
 import {LayoutContext} from '../../contexts/layout-context';
+import {Text} from './Text';
 
 export type ButtonProps = {
   title: string;

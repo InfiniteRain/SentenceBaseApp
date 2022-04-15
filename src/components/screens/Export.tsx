@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from 'react-query';
 import {LayoutContext} from '../../contexts/layout-context';
@@ -15,6 +15,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import {Button} from '../elements/Button';
+import {Text} from '../elements/Text';
 
 export const Export = () => {
   const {theme, setLoading, setProgress, setProgressText} =
@@ -144,11 +145,8 @@ export const Export = () => {
             </Text>
           ) : (
             <>
-              <Text style={{color: theme.colors.surfaceText}}>
-                Your most recent batch was created on:
-              </Text>
-              <Text
-                style={[styles.boldFont, {color: theme.colors.surfaceText}]}>
+              <Text>Your most recent batch was created on:</Text>
+              <Text style={styles.boldFont}>
                 {dateCreated.toLocaleString()}
               </Text>
             </>

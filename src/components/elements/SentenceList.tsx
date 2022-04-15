@@ -3,13 +3,13 @@ import {
   FlatList,
   RefreshControlProps,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Divider} from 'react-native-paper';
 import {LayoutContext} from '../../contexts/layout-context';
 import {SbSentence} from '../../types';
+import {Divider} from './Divider';
+import {Text} from './Text';
 
 function isSbSentence(value: unknown): value is SbSentence {
   return (

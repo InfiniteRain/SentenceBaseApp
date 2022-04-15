@@ -6,15 +6,16 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {Divider} from 'react-native-paper';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {LayoutContext} from '../../../contexts/layout-context';
 import {useAsyncStorage} from '../../../hooks/use-async-storage';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
 import {Caption} from '../../elements/Caption';
+import {Divider} from '../../elements/Divider';
 import {IconButton} from '../../elements/IconButton';
 import {PropertySheet} from '../../elements/PropertySheet';
+import {Text} from '../../elements/Text';
 
 type TagsSheetProps = {
   onAdd: (tagsToAdd: string[]) => void;

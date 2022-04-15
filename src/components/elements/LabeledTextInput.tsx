@@ -4,15 +4,9 @@ import {
   TextStyle,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, TextInput, View, ViewStyle} from 'react-native';
 import {LayoutContext} from '../../contexts/layout-context';
+import {Text} from './Text';
 
 export type LabeledTextInputProps = TextInputProps & {
   label: string;

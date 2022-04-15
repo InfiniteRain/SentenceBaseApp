@@ -16,7 +16,6 @@ import {
   ActivityIndicator,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
@@ -27,6 +26,7 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Toast from 'react-native-toast-message';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Bar as ProgressBar} from 'react-native-progress';
+import {Text} from './elements/Text';
 
 const LightTheme: AppTheme = {
   ...PaperDefaultTheme,
@@ -41,6 +41,7 @@ const LightTheme: AppTheme = {
     disabledText: 'rgba(0, 0, 0, 0.26)',
     disabledButton: 'rgba(0, 0, 0, 0.12)',
     disabledButtonText: 'rgba(0, 0, 0, 0.32)',
+    divider: 'rgba(0, 0, 0, 0.12)',
   },
 };
 
@@ -57,6 +58,7 @@ const DarkTheme: AppTheme = {
     disabledText: 'rgba(255, 255, 255, 0.38)',
     disabledButton: 'rgba(255, 255, 255, 0.12)',
     disabledButtonText: 'rgba(255, 255, 255, 0.32)',
+    divider: 'rgba(255, 255, 255, 0.12)',
   },
 };
 
@@ -140,13 +142,7 @@ export const App = () => {
                     styles.loading,
                     {backgroundColor: theme.colors.background},
                   ]}>
-                  <Text
-                    style={[
-                      styles.progressText,
-                      {color: theme.colors.surfaceText},
-                    ]}>
-                    {progressText}
-                  </Text>
+                  <Text style={styles.progressText}>{progressText}</Text>
                   <ProgressBar
                     progress={progress}
                     width={300}

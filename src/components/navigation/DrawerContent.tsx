@@ -5,9 +5,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {DrawerItem, DrawerContentScrollView} from '@react-navigation/drawer';
-import {Divider} from 'react-native-paper';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {LayoutContext} from '../../contexts/layout-context';
@@ -16,6 +15,8 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 import {Caption} from '../elements/Caption';
+import {Text} from '../elements/Text';
+import {Divider} from '../elements/Divider';
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
