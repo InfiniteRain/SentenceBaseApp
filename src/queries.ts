@@ -55,6 +55,10 @@ export const kotuQuery = async (query: string): Promise<Morpheme[]> => {
 
   const morphemes: Morpheme[] = [];
   for (const component of components) {
+    if (component.surface.trim() === '') {
+      continue;
+    }
+
     morphemes.push({
       surface: component.surface.trim(),
       surfaceReading: component.kana.trim(),
