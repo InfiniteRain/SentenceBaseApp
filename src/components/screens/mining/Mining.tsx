@@ -262,7 +262,10 @@ export const Mining = () => {
                 key={index}
                 style={[
                   styles.wordTouchableOpacity,
-                  {backgroundColor: theme.colors.surface},
+                  {
+                    backgroundColor: theme.colors.surface,
+                    borderColor: theme.colors.surfaceBorder,
+                  },
                 ]}
                 onPress={() => setSelectedMorpheme({...morpheme})}>
                 <Text style={styles.wordText}>{morpheme.surface}</Text>
@@ -364,7 +367,6 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 5,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#808080',
   },
   wordText: {
     fontSize: 24,

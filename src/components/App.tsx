@@ -4,11 +4,6 @@ import {
   DefaultTheme as NavigationDefaultTheme,
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
-import {
-  Provider as PaperProvider,
-  DefaultTheme as PaperDefaultTheme,
-  DarkTheme as PaperDarkTheme,
-} from 'react-native-paper';
 import {RootNavigator} from './navigation/RootNavigator';
 import {LayoutContext} from '../contexts/layout-context';
 import {AppTheme} from '../types';
@@ -29,10 +24,8 @@ import {Bar as ProgressBar} from 'react-native-progress';
 import {Text} from './elements/Text';
 
 const LightTheme: AppTheme = {
-  ...PaperDefaultTheme,
   ...NavigationDefaultTheme,
   colors: {
-    ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
     surface: '#ffffff',
     surfaceText: '#000000',
@@ -47,10 +40,8 @@ const LightTheme: AppTheme = {
 };
 
 const DarkTheme: AppTheme = {
-  ...PaperDarkTheme,
   ...NavigationDarkTheme,
   colors: {
-    ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
     surface: '#121212',
     surfaceText: '#FFFFFF',
@@ -125,41 +116,38 @@ export const App = () => {
             progressText,
             setProgressText,
           }}>
-          {/* todo: remove */}
-          <PaperProvider theme={theme as any}>
-            <SafeAreaProvider>
-              {!currentUser ? (
-                <View style={styles.loggedOutView}>
-                  <ActivityIndicator animating={true} size={64} />
-                </View>
-              ) : (
-                <NavigationContainer theme={theme}>
-                  <RootNavigator />
-                </NavigationContainer>
-              )}
-              <Toast />
-              {isLoading && (
-                <View
-                  style={[
-                    styles.loading,
-                    {backgroundColor: theme.colors.background},
-                  ]}>
-                  <Text style={styles.progressText}>{progressText}</Text>
-                  <ProgressBar
-                    progress={progress}
-                    width={300}
-                    height={10}
-                    color={theme.colors.primary}
-                    borderColor={theme.colors.surfaceText}
-                  />
-                  <ActivityIndicator
-                    style={styles.activityIndicator}
-                    size="large"
-                  />
-                </View>
-              )}
-            </SafeAreaProvider>
-          </PaperProvider>
+          <SafeAreaProvider>
+            {!currentUser ? (
+              <View style={styles.loggedOutView}>
+                <ActivityIndicator animating={true} size={64} />
+              </View>
+            ) : (
+              <NavigationContainer theme={theme}>
+                <RootNavigator />
+              </NavigationContainer>
+            )}
+            <Toast />
+            {isLoading && (
+              <View
+                style={[
+                  styles.loading,
+                  {backgroundColor: theme.colors.background},
+                ]}>
+                <Text style={styles.progressText}>{progressText}</Text>
+                <ProgressBar
+                  progress={progress}
+                  width={300}
+                  height={10}
+                  color={theme.colors.primary}
+                  borderColor={theme.colors.surfaceText}
+                />
+                <ActivityIndicator
+                  style={styles.activityIndicator}
+                  size="large"
+                />
+              </View>
+            )}
+          </SafeAreaProvider>
         </LayoutContext.Provider>
       </QueryClientProvider>
     </>
