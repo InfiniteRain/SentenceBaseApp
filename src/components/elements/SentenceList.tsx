@@ -11,14 +11,7 @@ import {SbSentence} from '../../types';
 import {Divider} from './Divider';
 import {Text} from './Text';
 
-function isSbSentence(value: unknown): value is SbSentence {
-  return (
-    typeof value === 'object' &&
-    typeof (value as SbSentence).sentenceId === 'string'
-  );
-}
-
-export const SentenceList = (props: {
+export type SentenceListProps = {
   sentenceList: (SbSentence | ReactNode)[];
   disabled: boolean | ((sentence: SbSentence) => boolean);
   onSentencePressed?: (
@@ -30,7 +23,16 @@ export const SentenceList = (props: {
     RefreshControlProps,
     string | React.JSXElementConstructor<any>
   >;
-}) => {
+};
+
+function isSbSentence(value: unknown): value is SbSentence {
+  return (
+    typeof value === 'object' &&
+    typeof (value as SbSentence).sentenceId === 'string'
+  );
+}
+
+export const SentenceList = (props: SentenceListProps) => {
   const {theme} = useContext(LayoutContext);
 
   return (
