@@ -27,7 +27,7 @@ export const Drawer = (props: RootNavigatorScreenProps) => {
       drawerContent={() => <DrawerContent {...props} />}
       screenOptions={{
         headerTintColor:
-          Platform.OS === 'android' ? theme.colors.onSurface : undefined,
+          Platform.OS === 'android' ? theme.colors.surfaceText : undefined,
       }}>
       <DrawerNavigation.Screen
         name="BottomTabs"

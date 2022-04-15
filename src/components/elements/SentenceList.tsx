@@ -63,7 +63,7 @@ export const SentenceList = (props: {
                   styles.sentenceItemWordText,
                   {
                     color: isDisabled
-                      ? theme.colors.disabled
+                      ? theme.colors.disabledText
                       : theme.colors.primary,
                   },
                 ]}>
@@ -74,8 +74,8 @@ export const SentenceList = (props: {
                   styles.sentenceItemText,
                   {
                     color: isDisabled
-                      ? theme.colors.disabled
-                      : theme.colors.onSurface,
+                      ? theme.colors.disabledText
+                      : theme.colors.surfaceText,
                   },
                 ]}>
                 {item.sentence}
@@ -84,7 +84,10 @@ export const SentenceList = (props: {
                 {item.tags.map((tag, index) => (
                   <Text
                     key={index}
-                    style={[styles.tagsText, {color: theme.colors.disabled}]}>
+                    style={[
+                      styles.tagsText,
+                      {color: theme.colors.disabledText},
+                    ]}>
                     {tag}
                   </Text>
                 ))}

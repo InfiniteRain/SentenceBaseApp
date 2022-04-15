@@ -37,7 +37,7 @@ export const LabeledTextInput = (props: LabeledTextInputProps) => {
         <Text
           style={[
             styles.label,
-            {color: theme.colors.placeholder},
+            {color: theme.colors.placeholderText},
             props.labelStyle,
           ]}>
           {props.label}
@@ -47,12 +47,12 @@ export const LabeledTextInput = (props: LabeledTextInputProps) => {
           style={[
             styles.input,
             {
-              color: theme.colors.onSurface,
+              color: theme.colors.surfaceText,
             },
           ]}
           autoCapitalize="none"
           autoCorrect={false}
-          placeholderTextColor={theme.colors.placeholder}
+          placeholderTextColor={theme.colors.placeholderText}
           disabled={props.disabled}
           {...props}
         />

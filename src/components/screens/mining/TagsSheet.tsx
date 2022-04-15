@@ -77,7 +77,7 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             label="Tag"
             containerStyle={styles.tagInput}
             onChangeText={text => setTag(text.trim())}
-            placeholderTextColor={theme.colors.placeholder}
+            placeholderTextColor={theme.colors.placeholderText}
           />
           <Button
             title="Add Tag"
@@ -117,7 +117,10 @@ export const TagsSheet = forwardRef<BottomSheetModal, TagsSheetProps>(
             />
           ) : (
             <Text
-              style={[styles.emptyHistoryText, {color: theme.colors.disabled}]}>
+              style={[
+                styles.emptyHistoryText,
+                {color: theme.colors.disabledText},
+              ]}>
               {tagHistory.length > 0
                 ? `Tag containing "${tag}" wasn't found in the history.`
                 : 'Tag history is empty.'}

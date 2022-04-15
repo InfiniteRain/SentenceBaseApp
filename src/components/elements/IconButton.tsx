@@ -21,7 +21,7 @@ export const IconButton = (props: {
       disabled={props.disabled}>
       <MaterialCommunityIcon
         name={props.icon}
-        color={props.disabled ? theme.colors.disabled : props.color}
+        color={props.disabled ? theme.colors.disabledText : props.color}
         size={props.size}
       />
     </TouchableOpacity>

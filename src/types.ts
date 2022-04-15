@@ -1,12 +1,21 @@
 import type {Theme as NavigationTheme} from '@react-navigation/native';
-import type {Theme as PaperTheme} from 'react-native-paper/lib/typescript/types';
 import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
-export type CombinedTheme = PaperTheme & NavigationTheme;
+export type AppTheme = NavigationTheme & {
+  colors: {
+    surface: string;
+    surfaceText: string;
+    dangerText: string;
+    placeholderText: string;
+    disabledText: string;
+    disabledButton: string;
+    disabledButtonText: string;
+  };
+};
 
 export type RootNavigatorParamList = {
   Drawer: undefined;

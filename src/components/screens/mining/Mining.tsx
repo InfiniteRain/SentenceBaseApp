@@ -134,8 +134,8 @@ export const Mining = () => {
     () => ({
       color:
         selectedMorpheme === null
-          ? theme.colors.disabled
-          : theme.colors.onSurface,
+          ? theme.colors.disabledText
+          : theme.colors.surfaceText,
     }),
     [selectedMorpheme, theme],
   );

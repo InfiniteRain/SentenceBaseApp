@@ -35,21 +35,19 @@ export const Button = (props: ButtonProps) => {
   const {theme} = useContext(LayoutContext);
 
   let backgroundColor = theme.colors.surface;
-  let textColor = theme.colors.onSurface;
+  let textColor = theme.colors.surfaceText;
 
   switch (true) {
     case disabled:
-      backgroundColor = `rgba(${
-        theme.dark ? '255, 255, 255' : '0, 0, 0'
-      }, 0.12)`;
-      textColor = `rgba(${theme.dark ? '255, 255, 255' : '0, 0, 0'}, 0.32)`;
+      backgroundColor = theme.colors.disabledButton;
+      textColor = theme.colors.disabledButtonText;
       break;
     case type === 'primary':
       backgroundColor = theme.colors.primary;
       textColor = '#fff';
       break;
     case type === 'danger':
-      backgroundColor = 'rgba(255, 45, 85, 1)';
+      backgroundColor = theme.colors.dangerText;
       textColor = '#fff';
       break;
   }

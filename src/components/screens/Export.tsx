@@ -139,15 +139,16 @@ export const Export = () => {
         contentContainerStyle={styles.scrollableView}>
         <View style={styles.noticeView}>
           {batchData === null ? (
-            <Text style={[styles.notice, {color: theme.colors.error}]}>
+            <Text style={[styles.notice, {color: theme.colors.dangerText}]}>
               You haven't created any batches yet!
             </Text>
           ) : (
             <>
-              <Text style={{color: theme.colors.onSurface}}>
+              <Text style={{color: theme.colors.surfaceText}}>
                 Your most recent batch was created on:
               </Text>
-              <Text style={[styles.boldFont, {color: theme.colors.onSurface}]}>
+              <Text
+                style={[styles.boldFont, {color: theme.colors.surfaceText}]}>
                 {dateCreated.toLocaleString()}
               </Text>
             </>

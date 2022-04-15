@@ -70,7 +70,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         <FontAwesomeIcon
           name="user-circle-o"
           size={64}
-          style={[styles.icon, {color: theme.colors.onSurface}]}
+          style={[styles.icon, {color: theme.colors.surfaceText}]}
         />
         <Caption style={styles.caption}>{email}</Caption>
       </View>

@@ -1,9 +1,9 @@
 import {createContext} from 'react';
-import {CombinedTheme} from '../types';
+import {AppTheme} from '../types';
 
 type LayoutContext = {
-  theme: CombinedTheme;
-  setTheme: (theme: React.SetStateAction<CombinedTheme>) => void;
+  theme: AppTheme;
+  setTheme: (theme: React.SetStateAction<AppTheme>) => void;
   isLoading: boolean;
   setLoading: (loading: React.SetStateAction<boolean>) => void;
   progress: number;

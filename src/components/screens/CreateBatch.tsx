@@ -95,13 +95,15 @@ export const CreateBatch = () => {
           styles.dividerView,
           {
             backgroundColor: theme.colors.surface,
-            borderColor: theme.colors.disabled,
+            borderColor: theme.colors.disabledText,
           },
         ]}>
         <FontAwesomeIcon
           name="caret-up"
           color={
-            !isLimitReached ? theme.colors.onSurface : theme.colors.disabled
+            !isLimitReached
+              ? theme.colors.surfaceText
+              : theme.colors.disabledText
           }
           size={48}
           style={styles.leftCaret}
@@ -110,8 +112,8 @@ export const CreateBatch = () => {
           name="caret-down"
           color={
             selectedSentencesIds.length > 0
-              ? theme.colors.onSurface
-              : theme.colors.disabled
+              ? theme.colors.surfaceText
+              : theme.colors.disabledText
           }
           size={48}
         />

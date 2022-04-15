@@ -72,7 +72,7 @@ export const PropertySheet = forwardRef<
           <View
             style={[
               styles.closeLine,
-              {backgroundColor: theme.colors.onSurface},
+              {backgroundColor: theme.colors.surfaceText},
             ]}
           />
         </View>

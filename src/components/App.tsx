@@ -11,7 +11,7 @@ import {
 } from 'react-native-paper';
 import {RootNavigator} from './navigation/RootNavigator';
 import {LayoutContext} from '../contexts/layout-context';
-import {CombinedTheme} from '../types';
+import {AppTheme} from '../types';
 import {
   ActivityIndicator,
   StatusBar,
@@ -28,21 +28,35 @@ import Toast from 'react-native-toast-message';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Bar as ProgressBar} from 'react-native-progress';
 
-const DefaultTheme: CombinedTheme = {
+const LightTheme: AppTheme = {
   ...PaperDefaultTheme,
   ...NavigationDefaultTheme,
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
+    surface: '#ffffff',
+    surfaceText: '#000000',
+    dangerText: '#ff2d55',
+    placeholderText: 'rgba(0, 0, 0, 0.54)',
+    disabledText: 'rgba(0, 0, 0, 0.26)',
+    disabledButton: 'rgba(0, 0, 0, 0.12)',
+    disabledButtonText: 'rgba(0, 0, 0, 0.32)',
   },
 };
 
-const DarkTheme: CombinedTheme = {
+const DarkTheme: AppTheme = {
   ...PaperDarkTheme,
   ...NavigationDarkTheme,
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
+    surface: '#121212',
+    surfaceText: '#FFFFFF',
+    dangerText: '#ff2d55',
+    placeholderText: 'rgba(255, 255, 255, 0.54)',
+    disabledText: 'rgba(255, 255, 255, 0.38)',
+    disabledButton: 'rgba(255, 255, 255, 0.12)',
+    disabledButtonText: 'rgba(255, 255, 255, 0.32)',
   },
 };
 
@@ -50,7 +64,7 @@ const queryClient = new QueryClient();
 
 export const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [theme, setTheme] = useState<CombinedTheme>(DefaultTheme);
+  const [theme, setTheme] = useState<AppTheme>(LightTheme);
   const [isLoading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressText, setProgressText] = useState('');
@@ -59,9 +73,9 @@ export const App = () => {
   );
 
   useEffect(() => {
-    setTheme(isDarkMode ? DarkTheme : DefaultTheme);
+    setTheme(isDarkMode ? DarkTheme : LightTheme);
     changeNavigationBarColor(
-      isDarkMode ? DarkTheme.colors.surface : DefaultTheme.colors.surface,
+      isDarkMode ? DarkTheme.colors.surface : LightTheme.colors.surface,
       !isDarkMode,
       false,
     );
@@ -107,7 +121,8 @@ export const App = () => {
             progressText,
             setProgressText,
           }}>
-          <PaperProvider theme={theme}>
+          {/* todo: remove */}
+          <PaperProvider theme={theme as any}>
             <SafeAreaProvider>
               {!currentUser ? (
                 <View style={styles.loggedOutView}>
@@ -128,7 +143,7 @@ export const App = () => {
                   <Text
                     style={[
                       styles.progressText,
-                      {color: theme.colors.onSurface},
+                      {color: theme.colors.surfaceText},
                     ]}>
                     {progressText}
                   </Text>
@@ -137,7 +152,7 @@ export const App = () => {
                     width={300}
                     height={10}
                     color={theme.colors.primary}
-                    borderColor={theme.colors.onSurface}
+                    borderColor={theme.colors.surfaceText}
                   />
                   <ActivityIndicator
                     style={styles.activityIndicator}
