@@ -73,7 +73,7 @@ export const exportBatch = async (
 
     const parameters = new Map<string, string>();
     const upsertField = (key: string, value: string) => {
-      if (key === '') {
+      if (key === '' || value === '') {
         return;
       }
 
@@ -88,6 +88,10 @@ export const exportBatch = async (
       parameters.set(key, field + encodeURIComponent(`<br>${value}`));
     };
     const insertParam = (key: string, value: string) => {
+      if (value === '') {
+        return;
+      }
+
       parameters.set(encodeURIComponent(key), encodeURIComponent(value));
     };
 
@@ -129,8 +133,11 @@ export const exportBatch = async (
     const ankiLink = `${ankiLinkBase}${paramString}`;
 
     try {
+      // Timer is necessary to prevent the process from crashing.
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await Linking.openURL(ankiLink);
-    } catch {
+    } catch (error) {
+      console.error(error);
       events?.onSettled?.();
       events?.onError?.(
         new Error(
