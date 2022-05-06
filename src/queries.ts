@@ -8,6 +8,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {Buffer} from 'buffer';
+import {uploadMedia} from './helpers';
 
 type KotuResponse = {
   accentPhrases: {
@@ -82,6 +83,7 @@ export const jishoQuery = async (keyword: string) => {
 
 export const forvoQuery = async (
   dictionaryForm: string,
+  isAndroid: boolean = false,
 ): Promise<string | null> => {
   const url = `${forvoUrl}/${dictionaryForm}/`;
   const headers = new Headers({
@@ -111,7 +113,7 @@ export const forvoQuery = async (
   const filenameDecoded = Buffer.from(filenameBase64, 'base64').toString();
   const audioUrl = `${protocol}://${audioHost}/mp3/${filenameDecoded}`;
 
-  return audioUrl;
+  return isAndroid ? uploadMedia(audioUrl, 'audio') : audioUrl;
 };
 
 const sentenceBaseApiRequest = async <T = null>(

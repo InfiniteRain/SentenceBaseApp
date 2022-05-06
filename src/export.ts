@@ -1,9 +1,20 @@
-import {Linking} from 'react-native';
+import {Linking, Platform} from 'react-native';
 import {generateExtendedFormat} from './format-generation';
 import {wordFrequency} from './helpers';
 import {forvoQuery, jishoQuery} from './queries';
 import {ExportSettings, SbBatch} from './types';
+import AnkiDroid from 'react-native-ankidroid';
+import {
+  NewDeckProperties,
+  NewModelProperties,
+} from 'react-native-ankidroid/dist/types';
 
+type ExportEvents = {
+  onProgress?: (index: number, lastIndex: number) => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
+  onSettled?: () => void;
+};
 const frequencyRanges = [
   [0, 1500],
   [1500, 5000],
@@ -61,13 +72,27 @@ const generateDefinitionString = async (
 export const exportBatch = async (
   batch: SbBatch,
   exportSettings: ExportSettings,
-  events?: {
-    onProgress?: (index: number, lastIndex: number) => void;
-    onError?: (error: Error) => void;
-    onSuccess?: () => void;
-    onSettled?: () => void;
-  },
+  events?: ExportEvents,
 ) => {
+  if (Platform.OS === 'ios') {
+    exportIos(batch, exportSettings, events);
+    return;
+  }
+
+  exportAndroid(batch, exportSettings, events);
+};
+
+const exportIos = async (
+  batch: SbBatch,
+  exportSettings: ExportSettings,
+  events?: ExportEvents,
+) => {
+  const wrapError = (error: Error) => {
+    console.log(error);
+    events?.onSettled?.();
+    events?.onError?.(error);
+  };
+
   for (const [index, sentence] of batch.sentences.entries()) {
     events?.onProgress?.(index, batch.sentences.length - 1);
 
@@ -111,8 +136,7 @@ export const exportBatch = async (
       );
       audioFieldValue = (await forvoQuery(sentence.wordDictionaryForm)) ?? '';
     } catch {
-      events?.onSettled?.();
-      events?.onError?.(new Error('Failed to fetch word information.'));
+      wrapError(new Error('Failed to fetch word information.'));
       return;
     }
 
@@ -137,13 +161,152 @@ export const exportBatch = async (
       await new Promise(resolve => setTimeout(resolve, 1000));
       await Linking.openURL(ankiLink);
     } catch (error) {
-      console.error(error);
-      events?.onSettled?.();
-      events?.onError?.(
+      wrapError(
         new Error(
           'Failed to export cards. Make sure you have AnkiMobile installed.',
         ),
       );
+      return;
+    }
+  }
+
+  events?.onSettled?.();
+  events?.onSuccess?.();
+};
+
+const exportAndroid = async (
+  batch: SbBatch,
+  exportSettings: ExportSettings,
+  events?: ExportEvents,
+) => {
+  const wrapError = (error: Error) => {
+    console.log(error);
+    events?.onSettled?.();
+    events?.onError?.(error);
+  };
+
+  const [permissionRequestError, permissionRequest] =
+    await AnkiDroid.requestPermission();
+
+  if (permissionRequestError || permissionRequest !== 'granted') {
+    wrapError(
+      permissionRequestError
+        ? permissionRequestError
+        : new Error('Insufficient permissions.'),
+    );
+    return;
+  }
+
+  const [modelsError, modelsArray] = await AnkiDroid.getModelList();
+
+  if (modelsError) {
+    wrapError(modelsError);
+    return;
+  }
+
+  const modelId = modelsArray?.filter(
+    model => model.name === exportSettings.noteType,
+  )[0]?.id;
+
+  if (!modelId) {
+    wrapError(
+      new Error(`Invalid note type provided: ${exportSettings.noteType}`),
+    );
+    return;
+  }
+
+  const [decksError, decksArray] = await AnkiDroid.getDeckList();
+
+  if (decksError) {
+    wrapError(decksError);
+    return;
+  }
+
+  const deckId = decksArray?.filter(
+    deck => deck.name === exportSettings.deck,
+  )[0]?.id;
+
+  if (!deckId) {
+    wrapError(new Error(`Invalid deck provided: ${exportSettings.deck}`));
+    return;
+  }
+
+  const [fieldListError, fieldList] = await AnkiDroid.getFieldList(
+    undefined,
+    modelId,
+  );
+
+  if (fieldListError) {
+    wrapError(fieldListError);
+    return;
+  }
+
+  const fieldIndexes: Record<string, number> = {};
+  const {wordField, sentenceField, audioField, definitionField} =
+    exportSettings;
+
+  for (const field of [wordField, sentenceField, audioField, definitionField]) {
+    if (field === '') {
+      continue;
+    }
+
+    if (!fieldList?.includes(field)) {
+      wrapError(new Error(`Invalid field provided: ${field}`));
+      return;
+    }
+
+    fieldIndexes[field] = fieldList.indexOf(field);
+  }
+
+  for (const [index, sentence] of batch.sentences.entries()) {
+    events?.onProgress?.(index, batch.sentences.length - 1);
+
+    const ankiDeck = new AnkiDroid({
+      modelId: modelId,
+      modelProperties: {
+        tags: sentence.tags,
+      } as NewModelProperties,
+      deckId: deckId,
+      deckProperties: {} as NewDeckProperties,
+    });
+    const valueFields = Array(fieldList!.length).fill('');
+    const setValueField = (key: number | undefined, content: string) => {
+      if (key === undefined) {
+        return;
+      }
+      valueFields[key] += `${valueFields[key] ? '<br>' : ''}${content}`;
+    };
+
+    let wordFieldValue: string;
+    let sentenceFieldValue: string;
+    let definitionFieldValue: string;
+    let audioFieldValue: string;
+
+    try {
+      wordFieldValue = await generateExtendedFormat(
+        sentence.wordDictionaryForm,
+      );
+      sentenceFieldValue = await generateExtendedFormat(sentence.sentence);
+      definitionFieldValue = await generateDefinitionString(
+        sentence.wordDictionaryForm,
+        sentence.wordReading,
+      );
+      audioFieldValue =
+        (await forvoQuery(sentence.wordDictionaryForm, true)) ?? '';
+    } catch {
+      wrapError(new Error('Failed to fetch word information.'));
+      return;
+    }
+
+    setValueField(fieldIndexes[wordField], wordFieldValue);
+    setValueField(fieldIndexes[sentenceField], sentenceFieldValue);
+    setValueField(fieldIndexes[definitionField], definitionFieldValue);
+    setValueField(fieldIndexes[audioField], audioFieldValue);
+
+    try {
+      await ankiDeck.addNote(valueFields, fieldList!);
+    } catch (error) {
+      wrapError(error as Error);
       return;
     }
   }

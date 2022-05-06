@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, Platform, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from 'react-query';
 import {LayoutContext} from '../../contexts/layout-context';
@@ -115,7 +115,7 @@ export const Export = () => {
 
     return (
       // All required input have to be filled.
-      profile === '' ||
+      (Platform.OS === 'ios' && profile === '') ||
       noteType === '' ||
       deck === '' ||
       // At least one field input has to be filled.
@@ -153,14 +153,16 @@ export const Export = () => {
           )}
         </View>
         <View style={styles.inputView}>
-          <LabeledTextInput
-            containerStyle={styles.input}
-            label="Profile (required)"
-            placeholder="User 1"
-            defaultValue={exportSettings.profile}
-            onChangeText={value => updateExportSetting('profile', value)}
-            disabled={areInputsDisabled}
-          />
+          {Platform.OS !== 'android' && (
+            <LabeledTextInput
+              containerStyle={styles.input}
+              label="Profile (required)"
+              placeholder="User 1"
+              defaultValue={exportSettings.profile}
+              onChangeText={value => updateExportSetting('profile', value)}
+              disabled={areInputsDisabled}
+            />
+          )}
           <LabeledTextInput
             containerStyle={styles.input}
             label="Note Type (required)"
