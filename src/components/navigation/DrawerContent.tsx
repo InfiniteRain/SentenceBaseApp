@@ -49,7 +49,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
       .onSnapshot(snap => {
         const data = snap.data();
         const pendingSentencesCount = data?.pendingSentences ?? 0;
-        const minedBatchesCount = data?.counters.batches ?? 0;
+        const minedBatchesCount = data?.counters?.batches ?? 0;
 
         setPendingSentences(pendingSentencesCount);
         setMinedBatches(minedBatchesCount);
