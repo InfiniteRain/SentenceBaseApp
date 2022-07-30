@@ -10,18 +10,18 @@ index 6475e6d..4d4b916 100644
 +declare const BottomSheetModal: React.MemoExoticComponent<React.ForwardRefExoticComponent<BottomSheetModalProps & React.RefAttributes<BottomSheetModalMethods> & {containerHeight?: number}>>;
  export default BottomSheetModal;
 diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
-index 6724e26..f392f25 100644
+index 4198cf5..0eb75da 100644
 --- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
 +++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheetModal/BottomSheetModal.tsx
-@@ -24,6 +24,7 @@ type BottomSheetModal = BottomSheetModalMethods;
+@@ -32,6 +32,7 @@ const INITIAL_STATE: {
  const BottomSheetModalComponent = forwardRef<
    BottomSheetModal,
-   BottomSheetModalProps 
+   BottomSheetModalProps
 +    & { containerHeight?: number }
  >(function BottomSheetModal(props, ref) {
    const {
      // modal props
-@@ -50,13 +51,18 @@ const BottomSheetModalComponent = forwardRef<
+@@ -59,13 +60,18 @@ const BottomSheetModalComponent = forwardRef<
    //#endregion
  
    //#region hooks

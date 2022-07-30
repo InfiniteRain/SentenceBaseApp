@@ -35,7 +35,6 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     }, [props]);
 
     const onEditButtonPressed = useCallback(() => {
-      Keyboard.dismiss();
       castedRef.current?.close();
       props.onEdit(props.sentenceId, sentence.trim(), [...new Set(tags)]);
     }, [castedRef, props, sentence, tags]);

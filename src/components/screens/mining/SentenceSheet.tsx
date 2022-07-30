@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {Keyboard, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
 import {PropertySheet} from '../../elements/PropertySheet';
@@ -37,7 +37,6 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
 
     const onConfirm = useCallback(() => {
       props.onEdit(sentence, dictionaryForm, reading);
-      Keyboard.dismiss();
       castedRef.current?.close();
     }, [props, castedRef, sentence, dictionaryForm, reading]);
 
