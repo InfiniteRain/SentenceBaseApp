@@ -1,7 +1,7 @@
 import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {Alert, Platform, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useQuery} from 'react-query';
+import {useQuery} from '@tanstack/react-query';
 import {LayoutContext} from '../../contexts/layout-context';
 import {getMostRecentBatch} from '../../queries';
 import {LabeledTextInput} from '../elements/LabeledTextInput';
@@ -36,7 +36,7 @@ export const Export = () => {
       definitionField: '',
     });
 
-  const {data: batchData, status: batchStatus} = useQuery('batch', () =>
+  const {data: batchData, status: batchStatus} = useQuery(['batch'], () =>
     getMostRecentBatch(),
   );
   const updateExportSetting = (
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   exportBatchButtonView: {
-    margin: 30,
+    marginBottom: 30,
+    marginHorizontal: 30,
   },
 });

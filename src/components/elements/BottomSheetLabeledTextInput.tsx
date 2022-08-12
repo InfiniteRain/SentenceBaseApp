@@ -1,21 +1,22 @@
 import {useBottomSheetInternal} from '@gorhom/bottom-sheet';
 import React, {useCallback} from 'react';
+import {NativeSyntheticEvent, TextInputFocusEventData} from 'react-native';
 import {LabeledTextInput, LabeledTextInputProps} from './LabeledTextInput';
 
 export const BottomSheetLabeledTextInput = (props: LabeledTextInputProps) => {
   const {shouldHandleKeyboardEvents} = useBottomSheetInternal();
 
   const onFocus = useCallback(
-    args => {
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
       shouldHandleKeyboardEvents.value = true;
-      props.onFocus?.(args);
+      props.onFocus?.(e);
     },
     [props, shouldHandleKeyboardEvents],
   );
   const onBlur = useCallback(
-    args => {
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
       shouldHandleKeyboardEvents.value = false;
-      props.onBlur?.(args);
+      props.onBlur?.(e);
     },
     [props, shouldHandleKeyboardEvents],
   );

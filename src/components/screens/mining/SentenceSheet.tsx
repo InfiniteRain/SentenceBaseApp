@@ -1,11 +1,5 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {forwardRef, useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
@@ -27,8 +21,6 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
     const [dictionaryForm, setDictionaryForm] = useState('');
     const [reading, setReading] = useState('');
 
-    const snapPoints = useMemo(() => ['35%'], []);
-
     useEffect(() => {
       setSentence(props.sentence);
       setDictionaryForm(props.dictionaryForm);
@@ -41,10 +33,7 @@ export const SentenceSheet = forwardRef<BottomSheetModal, SentenceSheetProps>(
     }, [props, castedRef, sentence, dictionaryForm, reading]);
 
     return (
-      <PropertySheet
-        ref={ref}
-        snapPoints={snapPoints}
-        onChange={props.onChangeIndex}>
+      <PropertySheet ref={ref} onChange={props.onChangeIndex}>
         <View style={styles.mainView}>
           <BottomSheetLabeledTextInput
             label="Sentence"

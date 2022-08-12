@@ -158,7 +158,7 @@ const exportIos = async (
 
     try {
       // Timer is necessary to prevent the process from crashing.
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise<void>(resolve => setTimeout(resolve, 1000));
       await Linking.openURL(ankiLink);
     } catch (error) {
       wrapError(

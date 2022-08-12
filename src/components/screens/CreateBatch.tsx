@@ -6,7 +6,7 @@ import {SentenceList} from '../elements/SentenceList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {Caption} from '../elements/Caption';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useMutation} from 'react-query';
+import {useMutation} from '@tanstack/react-query';
 import {RootNavigationProps, SbSentence} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 import {createBatch} from '../../queries';
@@ -45,7 +45,7 @@ export const CreateBatch = () => {
     refetchSentences();
   }, [refetchSentences]);
   const onSentencePressed = useCallback(
-    sentenceId => {
+    (sentenceId: string) => {
       if (selectedSentencesIds.includes(sentenceId)) {
         setSelectedSentenceIds(list => list.filter(id => id !== sentenceId));
         return;

@@ -14,7 +14,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {QueryClient, QueryClientProvider} from 'react-query';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import AuthUI from 'react-native-firebaseui-auth';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
@@ -22,6 +22,7 @@ import Toast from 'react-native-toast-message';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Bar as ProgressBar} from 'react-native-progress';
 import {Text} from './elements/Text';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const LightTheme: AppTheme = {
   ...NavigationDefaultTheme,
@@ -99,7 +100,7 @@ export const App = () => {
   );
 
   return (
-    <>
+    <GestureHandlerRootView style={styles.gestureHandlerRootView}>
       <StatusBar
         backgroundColor={theme.colors.surface}
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
@@ -150,11 +151,14 @@ export const App = () => {
           </SafeAreaProvider>
         </LayoutContext.Provider>
       </QueryClientProvider>
-    </>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
+  gestureHandlerRootView: {
+    flex: 1,
+  },
   loggedOutView: {
     flex: 1,
     alignItems: 'center',
