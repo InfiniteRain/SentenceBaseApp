@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:890176304594:android:550f5a714490fce2cfc40b",
         "android_client_info": {
-          "package_name": "com.sentencebaseapp"
+          "package_name": "io.infiniterain.sentencebaseapp"
         }
       },
       "oauth_client": [

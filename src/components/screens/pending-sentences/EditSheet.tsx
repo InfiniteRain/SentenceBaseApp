@@ -1,11 +1,5 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {forwardRef, useCallback, useEffect, useState} from 'react';
 import {Alert, Keyboard, StyleSheet, View} from 'react-native';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
@@ -26,8 +20,6 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
 
     const [sentence, setSentence] = useState('');
     const [tags, setTags] = useState<string[]>([]);
-
-    const snapPoints = useMemo(() => ['43%'], []);
 
     useEffect(() => {
       setSentence(props.sentence);
@@ -56,10 +48,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     }, [castedRef, props]);
 
     return (
-      <PropertySheet
-        ref={ref}
-        snapPoints={snapPoints}
-        onChange={props.onChangeIndex}>
+      <PropertySheet ref={ref} onChange={props.onChangeIndex}>
         <View style={styles.mainContainer}>
           <BottomSheetLabeledTextInput
             label="Sentence"

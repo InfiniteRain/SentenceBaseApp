@@ -10,7 +10,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Chip} from '../../elements/Chip';
 import {LayoutContext} from '../../../contexts/layout-context';
-import {useMutation, useQuery} from 'react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {addSentence, kotuQuery} from '../../../queries';
 import {Morpheme} from '../../../types';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -127,8 +127,8 @@ export const Mining = () => {
     setEditDisabled(morphemes.length === 0);
   }, [morphemes, setClearDisabled, setEditDisabled]);
   useEffect(() => {
-    setPasteDisabled(kotuStatus === 'loading');
-  }, [kotuStatus, setPasteDisabled]);
+    setPasteDisabled(kotuStatus === 'loading' && kotuString !== '');
+  }, [kotuStatus, setPasteDisabled, kotuString]);
   useEffect(() => {
     setClipboardEnabled(tagsSheetIndex === -1 && sentenceSheetIndex === -1);
   }, [tagsSheetIndex, sentenceSheetIndex]);

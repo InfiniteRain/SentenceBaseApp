@@ -1,6 +1,6 @@
 import {useIsFocused} from '@react-navigation/native';
 import {useContext} from 'react';
-import {useQuery} from 'react-query';
+import {useQuery} from '@tanstack/react-query';
 import {SentenceCacheContext} from '../contexts/sentence-cache-context';
 import {wordFrequency} from '../helpers';
 import {getPendingSentences} from '../queries';

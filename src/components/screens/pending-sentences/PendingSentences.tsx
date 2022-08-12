@@ -12,7 +12,7 @@ import React, {
 import {RefreshControl, ScrollView, StyleSheet, View} from 'react-native';
 import {Caption} from '../../elements/Caption';
 import Toast from 'react-native-toast-message';
-import {useMutation} from 'react-query';
+import {useMutation} from '@tanstack/react-query';
 import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
 import {usePendingSentences} from '../../../hooks/use-pending-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
