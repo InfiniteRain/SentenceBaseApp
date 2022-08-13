@@ -5,10 +5,9 @@ import {
   SbApiSentence,
   SbBatch,
 } from './types';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import {Buffer} from 'buffer';
 import {uploadMedia} from './helpers';
+import firebase from '@react-native-firebase/app';
 
 type KotuResponse = {
   accentPhrases: {
@@ -40,6 +39,9 @@ type JishoResponse = {
     }[];
   }[];
 };
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 const sentenceBaseApiUrl =
   'https://us-central1-sentence-base.cloudfunctions.net/api/v1';
@@ -128,7 +130,7 @@ const sentenceBaseApiRequest = async <T = null>(
     ...(body ? {body: JSON.stringify(body)} : {}),
     headers: new Headers({
       ...(body ? {'Content-Type': 'application/json'} : {}),
-      Authorization: `Bearer ${await auth().currentUser?.getIdToken()}`,
+      Authorization: `Bearer ${await auth.currentUser?.getIdToken()}`,
     }),
   });
   const json = (await response.json()) as SbApiResponse<T>;
@@ -182,9 +184,9 @@ export const createBatch = async (sentenceIds: string[]) =>
   });
 
 export const getMostRecentBatch = async (): Promise<SbBatch | null> => {
-  const snapshot = await firestore()
+  const snapshot = await firestore
     .collection('batches')
-    .where('userUid', '==', auth().currentUser?.uid)
+    .where('userUid', '==', auth.currentUser?.uid)
     .orderBy('createdAt', 'desc')
     .limit(1)
     .get();
