@@ -71,10 +71,6 @@ export type SbSentence = SbApiSentence & {
   dictionaryFrequency: number;
 };
 
-export type SbApiGetPendingSentencesResponse = {
-  sentences: SbApiSentence[];
-};
-
 export type SbBatch = {
   createdAt: FirebaseFirestoreTypes.Timestamp;
   sentences: {
