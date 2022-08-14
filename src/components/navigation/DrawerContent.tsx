@@ -11,12 +11,14 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {LayoutContext} from '../../contexts/layout-context';
 import {RootNavigatorScreenProps} from '../../types';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 import {Caption} from '../elements/Caption';
 import {Text} from '../elements/Text';
 import {Divider} from '../elements/Divider';
+import firebase from '@react-native-firebase/app';
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
@@ -33,17 +35,17 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   >(null);
 
   const email = useMemo<string>(() => {
-    return auth().currentUser?.email ?? '';
+    return auth.currentUser?.email ?? '';
   }, []);
 
   useEffect(() => {
-    const userUid = auth().currentUser?.uid;
+    const userUid = auth.currentUser?.uid;
 
     if (!userUid) {
       return;
     }
 
-    return firestore()
+    return firestore
       .collection('users')
       .doc(userUid)
       .onSnapshot(snap => {
@@ -81,7 +83,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   ]);
 
   const logout = useCallback(async () => {
-    await auth().signOut();
+    await auth.signOut();
   }, []);
 
   return (

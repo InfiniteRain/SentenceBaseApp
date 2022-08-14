@@ -15,7 +15,6 @@ import {
   View,
 } from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import AuthUI from 'react-native-firebaseui-auth';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import Toast from 'react-native-toast-message';
@@ -23,6 +22,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Bar as ProgressBar} from 'react-native-progress';
 import {Text} from './elements/Text';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/app';
+import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+
+const auth = firebase.auth();
 
 const LightTheme: AppTheme = {
   ...NavigationDefaultTheme,
@@ -78,7 +83,7 @@ export const App = () => {
   }, [isDarkMode]);
   useEffect(
     () =>
-      auth().onAuthStateChanged(async user => {
+      auth.onAuthStateChanged(async user => {
         setCurrentUser(user);
 
         let isLoggedIn = user !== null;

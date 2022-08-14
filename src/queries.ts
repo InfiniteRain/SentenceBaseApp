@@ -1,14 +1,11 @@
-import {
-  Morpheme,
-  SbApiGetPendingSentencesResponse,
-  SbApiResponse,
-  SbApiSentence,
-  SbBatch,
-} from './types';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import {Morpheme, SbApiResponse, SbApiSentence, SbBatch} from './types';
 import {Buffer} from 'buffer';
 import {uploadMedia} from './helpers';
+import firebase from '@react-native-firebase/app';
+import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+
+type QueryDocumentSnapshot =
+  FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>;
 
 type KotuResponse = {
   accentPhrases: {
@@ -40,6 +37,9 @@ type JishoResponse = {
     }[];
   }[];
 };
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 const sentenceBaseApiUrl =
   'https://us-central1-sentence-base.cloudfunctions.net/api/v1';
@@ -128,7 +128,7 @@ const sentenceBaseApiRequest = async <T = null>(
     ...(body ? {body: JSON.stringify(body)} : {}),
     headers: new Headers({
       ...(body ? {'Content-Type': 'application/json'} : {}),
-      Authorization: `Bearer ${await auth().currentUser?.getIdToken()}`,
+      Authorization: `Bearer ${await auth.currentUser?.getIdToken()}`,
     }),
   });
   const json = (await response.json()) as SbApiResponse<T>;
@@ -155,13 +155,79 @@ export const addSentence = async (
     tags,
   });
 
-export const getPendingSentences = async (): Promise<SbApiSentence[]> =>
-  (
-    await sentenceBaseApiRequest<SbApiGetPendingSentencesResponse>(
-      'get',
-      'sentences',
-    )
-  ).sentences;
+const getPendingSentencesPage = async (
+  startAfter?: QueryDocumentSnapshot,
+): Promise<[SbApiSentence[], QueryDocumentSnapshot?]> => {
+  let sentenceQuery = firestore
+    .collection('sentences')
+    .where('userUid', '==', auth.currentUser?.uid)
+    .where('isPending', '==', true)
+    .orderBy('createdAt', 'desc')
+    .limit(50);
+
+  if (startAfter) {
+    sentenceQuery = sentenceQuery.startAfter(startAfter);
+  }
+
+  const sentenceSnapshot = await sentenceQuery.get();
+
+  if (sentenceSnapshot.docs.length === 0) {
+    return [[]];
+  }
+
+  const wordMap = new Map();
+  const wordIds = [
+    ...new Set(sentenceSnapshot.docs.map(doc => doc.data().wordId)),
+  ];
+  const words = await Promise.all(
+    wordIds.map(wordId =>
+      firestore
+        .collection('words')
+        .where(firebase.firestore.FieldPath.documentId(), '==', wordId)
+        .limit(1)
+        .get(),
+    ),
+  );
+
+  for (const snap of words) {
+    wordMap.set(snap.docs[0].id, snap.docs[0].data());
+  }
+
+  const sentences = sentenceSnapshot.docs.map(sentenceDoc => {
+    const sentenceData = sentenceDoc.data();
+    const wordData = wordMap.get(sentenceData.wordId);
+
+    return {
+      sentenceId: sentenceDoc.id,
+      wordId: sentenceData.wordId,
+      dictionaryForm: wordData?.dictionaryForm ?? 'unknown',
+      reading: wordData?.reading ?? 'unknown',
+      sentence: sentenceData.sentence,
+      frequency: wordData?.frequency ?? 0,
+      tags: sentenceData.tags,
+    };
+  });
+
+  return [
+    sentences,
+    sentenceSnapshot.docs.length > 0
+      ? sentenceSnapshot.docs[sentenceSnapshot.docs.length - 1]
+      : undefined,
+  ];
+};
+
+export const getPendingSentences = async (): Promise<SbApiSentence[]> => {
+  let [currentPage, startAfter] = await getPendingSentencesPage();
+  let sentences: SbApiSentence[] = [...currentPage];
+
+  while (startAfter) {
+    const result = await getPendingSentencesPage(startAfter);
+    sentences = [...sentences, ...result[0]];
+    startAfter = result[1];
+  }
+
+  return sentences;
+};
 
 export const deleteSentence = async (sentenceId: string) =>
   await sentenceBaseApiRequest('delete', `sentences/${sentenceId}`);
@@ -182,9 +248,9 @@ export const createBatch = async (sentenceIds: string[]) =>
   });
 
 export const getMostRecentBatch = async (): Promise<SbBatch | null> => {
-  const snapshot = await firestore()
+  const snapshot = await firestore
     .collection('batches')
-    .where('userUid', '==', auth().currentUser?.uid)
+    .where('userUid', '==', auth.currentUser?.uid)
     .orderBy('createdAt', 'desc')
     .limit(1)
     .get();

@@ -3,7 +3,7 @@ import type {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
+import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
 export type AppTheme = NavigationTheme & {
   colors: {
@@ -69,10 +69,6 @@ export type SbApiSentence = {
 
 export type SbSentence = SbApiSentence & {
   dictionaryFrequency: number;
-};
-
-export type SbApiGetPendingSentencesResponse = {
-  sentences: SbApiSentence[];
 };
 
 export type SbBatch = {
