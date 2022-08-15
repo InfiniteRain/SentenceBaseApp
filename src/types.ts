@@ -22,6 +22,7 @@ export type AppTheme = NavigationTheme & {
 export type RootNavigatorParamList = {
   Drawer: undefined;
   CreateBatch: undefined;
+  MinedBatches: undefined;
   Export: undefined;
 };
 

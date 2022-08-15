@@ -8,6 +8,7 @@ import {HeaderButtonContext} from '../../contexts/header-button-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 import {SbSentence} from '../../types';
+import {MinedBatches} from '../screens/MinedBatches';
 
 const StackNavigation = createNativeStackNavigator();
 
@@ -79,6 +80,11 @@ export const RootNavigator = () => {
               name="CreateBatch"
               component={CreateBatch}
               options={{title: 'Create New Batch'}}
+            />
+            <StackNavigation.Screen
+              name="MinedBatches"
+              component={MinedBatches}
+              options={{title: 'Mined Batches'}}
             />
             <StackNavigation.Screen
               name="Export"

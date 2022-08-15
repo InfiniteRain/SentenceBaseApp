@@ -116,11 +116,11 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         <Divider />
         <DrawerItem
           icon={({color, size}) => (
-            <MaterialCommunityIcon name="export" color={color} size={size} />
+            <MaterialCommunityIcon name="table" color={color} size={size} />
           )}
-          label="Export Batch"
+          label="Mined Batches"
           onPress={() => {
-            navigation.push('Export');
+            navigation.push('MinedBatches');
           }}
         />
         <DrawerItem
