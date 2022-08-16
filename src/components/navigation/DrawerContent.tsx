@@ -22,11 +22,15 @@ const firestore = firebase.firestore();
 
 export function DrawerContent({navigation}: RootNavigatorScreenProps) {
   const {theme} = useContext(LayoutContext);
-  const {setDoSentencesQuery, ignoreNextUpdate, setIgnoreNextUpdate} =
-    useContext(SentenceCacheContext);
+  const {
+    setDoSentencesQuery,
+    ignoreNextUpdate,
+    setIgnoreNextUpdate,
+    batchesCount,
+    setBatchesCount,
+  } = useContext(SentenceCacheContext);
 
   const [pendingSentences, setPendingSentences] = useState(0);
-  const [minedBatches, setMinedBatches] = useState(0);
   const [lastPendingSentencesCount, setLastPendingSentencesCount] = useState<
     number | null
   >(null);
@@ -54,7 +58,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         const minedBatchesCount = data?.counters?.batches ?? 0;
 
         setPendingSentences(pendingSentencesCount);
-        setMinedBatches(minedBatchesCount);
+        setBatchesCount(minedBatchesCount);
 
         const countsChanged =
           lastPendingSentencesCount !== pendingSentencesCount ||
@@ -80,6 +84,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
     setIgnoreNextUpdate,
     lastPendingSentencesCount,
     lastMinedBatchesCount,
+    setBatchesCount,
   ]);
 
   const logout = useCallback(async () => {
@@ -106,7 +111,7 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
           </View>
           <View style={styles.section}>
             <Text style={[styles.paragraph, styles.caption]}>
-              {minedBatches}
+              {batchesCount}
             </Text>
             <Caption style={styles.caption}>Batches mined</Caption>
           </View>
@@ -116,11 +121,11 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         <Divider />
         <DrawerItem
           icon={({color, size}) => (
-            <MaterialCommunityIcon name="export" color={color} size={size} />
+            <MaterialCommunityIcon name="table" color={color} size={size} />
           )}
-          label="Export Batch"
+          label="Mined Batches"
           onPress={() => {
-            navigation.push('Export');
+            navigation.push('MinedBatches');
           }}
         />
         <DrawerItem

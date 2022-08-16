@@ -5,6 +5,9 @@ import type {
 } from '@react-navigation/native-stack';
 import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
+export type QueryDocumentSnapshot =
+  FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>;
+
 export type AppTheme = NavigationTheme & {
   colors: {
     surface: string;
@@ -22,7 +25,11 @@ export type AppTheme = NavigationTheme & {
 export type RootNavigatorParamList = {
   Drawer: undefined;
   CreateBatch: undefined;
-  Export: undefined;
+  MinedBatches: undefined;
+  Export: {
+    batchId: string;
+    index: number;
+  };
 };
 
 export type RootNavigatorScreenProps = NativeStackScreenProps<
@@ -72,6 +79,7 @@ export type SbSentence = SbApiSentence & {
 };
 
 export type SbBatch = {
+  id: string;
   createdAt: FirebaseFirestoreTypes.Timestamp;
   sentences: {
     sentenceId: string;

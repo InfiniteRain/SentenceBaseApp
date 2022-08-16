@@ -152,7 +152,7 @@ export const PendingSentences = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {sentenceList.length > 0 || isFetchingSentences ? (
+      {sentenceList.length > 0 ? (
         <SentenceList
           sentenceList={sentenceList ?? []}
           disabled={isDisabled}

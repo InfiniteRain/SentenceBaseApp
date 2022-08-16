@@ -1,11 +1,13 @@
-import {Morpheme, SbApiResponse, SbApiSentence, SbBatch} from './types';
+import {
+  Morpheme,
+  QueryDocumentSnapshot,
+  SbApiResponse,
+  SbApiSentence,
+  SbBatch,
+} from './types';
 import {Buffer} from 'buffer';
 import {uploadMedia} from './helpers';
 import firebase from '@react-native-firebase/app';
-import type {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
-
-type QueryDocumentSnapshot =
-  FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>;
 
 type KotuResponse = {
   accentPhrases: {
@@ -243,21 +245,46 @@ export const editSentence = async (
   });
 
 export const createBatch = async (sentenceIds: string[]) =>
-  await sentenceBaseApiRequest('post', 'batches', {
+  await sentenceBaseApiRequest<{batchId: string}>('post', 'batches', {
     sentences: sentenceIds,
   });
 
-export const getMostRecentBatch = async (): Promise<SbBatch | null> => {
+export const getSentenceBatchById = async (id: string): Promise<SbBatch> => {
   const snapshot = await firestore
     .collection('batches')
     .where('userUid', '==', auth.currentUser?.uid)
-    .orderBy('createdAt', 'desc')
+    .where(firebase.firestore.FieldPath.documentId(), '==', id)
     .limit(1)
     .get();
 
-  if (snapshot.docs.length === 0) {
-    return null;
+  return {
+    id: snapshot.docs[0].id,
+    ...snapshot.docs[0].data(),
+  } as SbBatch;
+};
+
+export const getSentenceBatchesPage = async (
+  startAfter?: QueryDocumentSnapshot,
+): Promise<[SbBatch[], QueryDocumentSnapshot?]> => {
+  let query = firestore
+    .collection('batches')
+    .where('userUid', '==', auth.currentUser?.uid)
+    .orderBy('createdAt', 'desc')
+    .limit(20);
+
+  if (startAfter) {
+    query = query.startAfter(startAfter);
   }
 
-  return snapshot.docs[0].data() as SbBatch;
+  const snapshot = await query.get();
+
+  return [
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as SbBatch[],
+    snapshot.docs.length > 0
+      ? snapshot.docs[snapshot.docs.length - 1]
+      : undefined,
+  ];
 };

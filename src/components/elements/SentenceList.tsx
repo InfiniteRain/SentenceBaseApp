@@ -106,7 +106,7 @@ export const SentenceList = (props: SentenceListProps) => {
 
 const styles = StyleSheet.create({
   sentenceItemContainer: {
-    padding: 5,
+    padding: 10,
   },
   sentenceItemWordText: {
     fontSize: 20,

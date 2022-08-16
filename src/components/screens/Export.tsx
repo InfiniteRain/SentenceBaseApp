@@ -3,12 +3,15 @@ import {Alert, Platform, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {LayoutContext} from '../../contexts/layout-context';
-import {getMostRecentBatch} from '../../queries';
 import {LabeledTextInput} from '../elements/LabeledTextInput';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useAsyncStorage} from '../../hooks/use-async-storage';
 import {exportBatch} from '../../export';
-import {ExportSettings, RootNavigationProps} from '../../types';
+import {
+  ExportSettings,
+  RootNavigationProps,
+  RootNavigatorParamList,
+} from '../../types';
 import {
   CommonActions,
   DrawerActions,
@@ -16,8 +19,12 @@ import {
 } from '@react-navigation/native';
 import {Button} from '../elements/Button';
 import {Text} from '../elements/Text';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {getSentenceBatchById} from '../../queries';
 
-export const Export = () => {
+type Props = NativeStackScreenProps<RootNavigatorParamList, 'Export'>;
+
+export const Export: React.FC<Props> = ({route}) => {
   const {theme, setLoading, setProgress, setProgressText} =
     useContext(LayoutContext);
 
@@ -37,7 +44,7 @@ export const Export = () => {
     });
 
   const {data: batchData, status: batchStatus} = useQuery(['batch'], () =>
-    getMostRecentBatch(),
+    getSentenceBatchById(route.params.batchId),
   );
   const updateExportSetting = (
     setting: keyof ExportSettings,
@@ -139,17 +146,19 @@ export const Export = () => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.scrollableView}>
         <View style={styles.noticeView}>
-          {batchData === null ? (
+          {batchStatus === 'error' ? (
             <Text style={[styles.notice, {color: theme.colors.dangerText}]}>
-              You haven't created any batches yet!
+              Unexpected error occcurred.
             </Text>
-          ) : (
+          ) : batchStatus === 'success' ? (
             <>
-              <Text>Your most recent batch was created on:</Text>
+              <Text>Batch #{route.params.index} was created on:</Text>
               <Text style={styles.boldFont}>
                 {dateCreated.toLocaleString()}
               </Text>
             </>
+          ) : (
+            <Text>Loading...</Text>
           )}
         </View>
         <View style={styles.inputView}>
@@ -219,12 +228,7 @@ export const Export = () => {
         <Button
           title="Export Most Recent Batch"
           type="primary"
-          disabled={
-            isBadInput ||
-            batchStatus === 'loading' ||
-            batchData === null ||
-            isExporting
-          }
+          disabled={isBadInput || batchStatus !== 'success' || isExporting}
           onPress={onExportBatch}
         />
       </View>
