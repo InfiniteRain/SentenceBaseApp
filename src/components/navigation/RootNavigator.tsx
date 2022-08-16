@@ -25,6 +25,7 @@ export const RootNavigator = () => {
   const [doSentencesQuery, setDoSentencesQuery] = useState(true);
   const [ignoreNextUpdate, setIgnoreNextUpdate] = useState(false);
   const [sentenceList, setSentenceList] = useState<SbSentence[]>([]);
+  const [batchesCount, setBatchesCount] = useState<number>(0);
 
   useEffect(
     () =>
@@ -68,6 +69,8 @@ export const RootNavigator = () => {
           setSentenceList,
           ignoreNextUpdate,
           setIgnoreNextUpdate,
+          batchesCount,
+          setBatchesCount,
         }}>
         <BottomSheetModalProvider>
           <StackNavigation.Navigator>

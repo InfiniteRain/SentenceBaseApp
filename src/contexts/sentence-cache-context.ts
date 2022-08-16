@@ -8,6 +8,8 @@ type SentenceCacheContext = {
   setIgnoreNextUpdate: (value: React.SetStateAction<boolean>) => void;
   sentenceList: SbSentence[];
   setSentenceList: (value: React.SetStateAction<SbSentence[]>) => void;
+  batchesCount: number;
+  setBatchesCount: (value: React.SetStateAction<number>) => void;
 };
 
 export const SentenceCacheContext = createContext<SentenceCacheContext>(

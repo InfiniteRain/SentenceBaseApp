@@ -11,11 +11,13 @@ import {RootNavigationProps, SbSentence} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 import {createBatch} from '../../queries';
 import {Button} from '../elements/Button';
+import {SentenceCacheContext} from '../../contexts/sentence-cache-context';
 
 const sentneceLimit = 10;
 
 export const CreateBatch = () => {
   const {theme} = useContext(LayoutContext);
+  const {batchesCount} = useContext(SentenceCacheContext);
 
   const navigation = useNavigation<RootNavigationProps>();
 
@@ -33,9 +35,13 @@ export const CreateBatch = () => {
   const {mutate: createBatchMutation, status: createBatchStatus} = useMutation(
     (props: {sentenceIds: string[]}) => createBatch(props.sentenceIds),
     {
-      onSuccess() {
+      onSuccess({batchId}) {
         navigation.popToTop();
-        navigation.navigate('Export');
+        navigation.navigate('Export', {
+          batchId,
+          index: batchesCount + 1,
+          // todo: potential race?
+        });
       },
     },
   );
