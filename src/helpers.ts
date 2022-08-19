@@ -1,6 +1,7 @@
 import RNFS from 'react-native-fs';
 import AnkiDroid from 'react-native-ankidroid';
 import uuid from 'react-native-uuid';
+import {SbSentence} from './types';
 
 const fileDirectoryNAme = 'media';
 
@@ -101,3 +102,14 @@ export const uploadMedia = async (
 
   return formattedString;
 };
+
+export const getDummySbSentence = (): SbSentence => ({
+  sentenceId: '',
+  wordId: '',
+  dictionaryForm: '',
+  reading: '',
+  sentence: '',
+  frequency: 0,
+  tags: [],
+  dictionaryFrequency: 0,
+});

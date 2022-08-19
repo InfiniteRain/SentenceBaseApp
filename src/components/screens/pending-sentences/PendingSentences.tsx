@@ -14,27 +14,26 @@ import {Caption} from '../../elements/Caption';
 import Toast from 'react-native-toast-message';
 import {useMutation} from '@tanstack/react-query';
 import {SentenceCacheContext} from '../../../contexts/sentence-cache-context';
-import {usePendingSentences} from '../../../hooks/use-pending-sentences';
+import {useSentences} from '../../../hooks/use-sentences';
 import {deleteSentence, editSentence} from '../../../queries';
-import {RootNavigatorParamList} from '../../../types';
+import {RootNavigatorParamList, SbSentence} from '../../../types';
 import {SentenceList} from '../../elements/SentenceList';
 import {EditSheet} from './EditSheet';
 import {Button} from '../../elements/Button';
+import {getDummySbSentence} from '../../../helpers';
 
 export const PendingSentences = () => {
   const {setSentenceList, setIgnoreNextUpdate} =
     useContext(SentenceCacheContext);
 
   const [isRefreshing, setRefreshing] = useState(false);
-  const [sentenceIdToEdit, setSentenceIdToEdit] = useState('');
-  const [sentenceToEdit, setSentenceToEdit] = useState('');
-  const [tagsToEdit, setTagsToEdit] = useState<string[]>([]);
+  const [sentenceToEdit, setSentenceToEdit] = useState(getDummySbSentence());
 
   const {
     sentenceList,
     isFetching: isFetchingSentences,
     refetch: refetchSentences,
-  } = usePendingSentences(() => {
+  } = useSentences('pending', () => {
     setRefreshing(false);
   });
 
@@ -65,15 +64,10 @@ export const PendingSentences = () => {
     setRefreshing(true);
     refetchSentences();
   }, [refetchSentences]);
-  const onSentencePressed = useCallback(
-    (sentenceId: string, sentence: string, tags: string[]) => {
-      setSentenceIdToEdit(sentenceId);
-      setSentenceToEdit(sentence);
-      setTagsToEdit(tags);
-      editSheetRef.current?.present();
-    },
-    [],
-  );
+  const onSentencePressed = useCallback((sentence: SbSentence) => {
+    setSentenceToEdit(sentence);
+    editSheetRef.current?.present();
+  }, []);
   const onSentenceDelete = useCallback(
     (sentenceId: string) => {
       setIgnoreNextUpdate(true);
@@ -173,13 +167,15 @@ export const PendingSentences = () => {
         type="primary"
         disabled={isDisabled || sentenceList.length === 0}
         style={styles.addNewBatch}
-        onPress={() => navigation.navigate('CreateBatch')}
+        onPress={() =>
+          navigation.navigate('CreateBatch', {
+            mode: 'pending',
+          })
+        }
       />
       <EditSheet
         ref={editSheetRef}
-        sentenceId={sentenceIdToEdit}
         sentence={sentenceToEdit}
-        tags={tagsToEdit}
         onDelete={onSentenceDelete}
         onEdit={onSentenceEdit}
       />

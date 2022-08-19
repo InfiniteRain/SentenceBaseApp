@@ -135,8 +135,8 @@ export const Export: React.FC<Props> = ({route}) => {
         audioField !== '')
     );
   }, [exportSettings]);
-  const areInputsDisabled = useMemo(
-    () => isExporting || batchStatus === 'loading',
+  const areInputsEditable = useMemo(
+    () => !isExporting && batchStatus !== 'loading',
     [isExporting, batchStatus],
   );
 
@@ -169,7 +169,7 @@ export const Export: React.FC<Props> = ({route}) => {
               placeholder="User 1"
               defaultValue={exportSettings.profile}
               onChangeText={value => updateExportSetting('profile', value)}
-              disabled={areInputsDisabled}
+              editable={areInputsEditable}
             />
           )}
           <LabeledTextInput
@@ -178,7 +178,7 @@ export const Export: React.FC<Props> = ({route}) => {
             placeholder="Basic"
             defaultValue={exportSettings.noteType}
             onChangeText={value => updateExportSetting('noteType', value)}
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -186,7 +186,7 @@ export const Export: React.FC<Props> = ({route}) => {
             placeholder="Default"
             defaultValue={exportSettings.deck}
             onChangeText={value => updateExportSetting('deck', value)}
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -194,7 +194,7 @@ export const Export: React.FC<Props> = ({route}) => {
             placeholder="Front"
             defaultValue={exportSettings.wordField}
             onChangeText={value => updateExportSetting('wordField', value)}
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -202,7 +202,7 @@ export const Export: React.FC<Props> = ({route}) => {
             placeholder="Front"
             defaultValue={exportSettings.sentenceField}
             onChangeText={value => updateExportSetting('sentenceField', value)}
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -210,7 +210,7 @@ export const Export: React.FC<Props> = ({route}) => {
             placeholder="Back"
             defaultValue={exportSettings.audioField}
             onChangeText={value => updateExportSetting('audioField', value)}
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
           <LabeledTextInput
             containerStyle={styles.input}
@@ -220,7 +220,7 @@ export const Export: React.FC<Props> = ({route}) => {
             onChangeText={value =>
               updateExportSetting('definitionField', value)
             }
-            disabled={areInputsDisabled}
+            editable={areInputsEditable}
           />
         </View>
       </KeyboardAwareScrollView>

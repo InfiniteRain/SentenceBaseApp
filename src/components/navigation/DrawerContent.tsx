@@ -130,6 +130,17 @@ export function DrawerContent({navigation}: RootNavigatorScreenProps) {
         />
         <DrawerItem
           icon={({color, size}) => (
+            <MaterialCommunityIcon name="pickaxe" color={color} size={size} />
+          )}
+          label="Mine Backlog Batch"
+          onPress={() => {
+            navigation.push('CreateBatch', {
+              mode: 'backlog',
+            });
+          }}
+        />
+        <DrawerItem
+          icon={({color, size}) => (
             <MaterialCommunityIcon name="tune" color={color} size={size} />
           )}
           label="Preferences"

@@ -1,17 +1,16 @@
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import React, {forwardRef, useCallback, useEffect, useState} from 'react';
 import {Alert, Keyboard, StyleSheet, View} from 'react-native';
+import {SbSentence} from '../../../types';
 import {BottomSheetLabeledTextInput} from '../../elements/BottomSheetLabeledTextInput';
 import {Button} from '../../elements/Button';
 import {PropertySheet} from '../../elements/PropertySheet';
 
 type EditSheetProps = {
-  sentenceId: string;
-  sentence: string;
-  tags: string[];
-  onDelete: (sentenceId: string) => void;
+  sentence: SbSentence;
+  onDelete: (sentence: string) => void;
   onEdit: (sentenceId: string, sentence: string, tags: string[]) => void;
-  onChangeIndex?: (index: number) => void;
+  // todo: sentence: SbSentence?
 };
 
 export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
@@ -22,13 +21,15 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     const [tags, setTags] = useState<string[]>([]);
 
     useEffect(() => {
-      setSentence(props.sentence);
-      setTags(props.tags);
+      setSentence(props.sentence.sentence);
+      setTags(props.sentence.tags);
     }, [props]);
 
     const onEditButtonPressed = useCallback(() => {
       castedRef.current?.close();
-      props.onEdit(props.sentenceId, sentence.trim(), [...new Set(tags)]);
+      props.onEdit(props.sentence.sentenceId, sentence.trim(), [
+        ...new Set(tags),
+      ]);
     }, [castedRef, props, sentence, tags]);
     const onDeleteButtonPressed = useCallback(() => {
       Alert.alert('Delete this sentence?', 'This action cannot be reversed.', [
@@ -37,7 +38,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
           onPress() {
             Keyboard.dismiss();
             castedRef.current?.close();
-            props.onDelete(props.sentenceId);
+            props.onDelete(props.sentence.sentenceId);
           },
           style: 'destructive',
         },
@@ -48,7 +49,7 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
     }, [castedRef, props]);
 
     return (
-      <PropertySheet ref={ref} onChange={props.onChangeIndex}>
+      <PropertySheet ref={ref}>
         <View style={styles.mainContainer}>
           <BottomSheetLabeledTextInput
             label="Sentence"
@@ -57,13 +58,13 @@ export const EditSheet = forwardRef<BottomSheetModal, EditSheetProps>(
             numberOfLines={2}
             onChangeText={setSentence}
             blurOnSubmit
-            defaultValue={props.sentence}
+            defaultValue={props.sentence.sentence}
           />
           <BottomSheetLabeledTextInput
             label="Tags (separated by space)"
             containerStyle={styles.tagsInput}
             onChangeText={value => setTags(value.split(/\s+/))}
-            defaultValue={props.tags.join(' ')}
+            defaultValue={props.sentence.tags.join(' ')}
           />
           <Button
             title="Edit"

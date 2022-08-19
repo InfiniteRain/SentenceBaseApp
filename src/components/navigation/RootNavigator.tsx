@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {CreateBatch} from '../screens/CreateBatch';
+import {CreateBatch} from '../screens/create-batch/CreateBatch';
 import {Export} from '../screens/Export';
 import {Drawer} from './Drawer';
 import {useNavigation} from '@react-navigation/native';

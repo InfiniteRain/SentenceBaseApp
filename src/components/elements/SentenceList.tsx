@@ -10,19 +10,19 @@ import {LayoutContext} from '../../contexts/layout-context';
 import {SbSentence} from '../../types';
 import {Divider} from './Divider';
 import {Text} from './Text';
+import color from 'color';
 
 export type SentenceListProps = {
   sentenceList: (SbSentence | ReactNode)[];
   disabled: boolean | ((sentence: SbSentence) => boolean);
-  onSentencePressed?: (
-    sentenceId: string,
-    sentence: string,
-    tags: string[],
-  ) => void;
+  onSentencePressed?: (sentence: SbSentence) => void;
+  onSentenceLongPressed?: (sentence: SbSentence) => void;
   refreshControl?: React.ReactElement<
     RefreshControlProps,
     string | React.JSXElementConstructor<any>
   >;
+  wordsToMarkAsMined?: string[];
+  wordsToPushToTheEnd?: string[];
 };
 
 function isSbSentence(value: unknown): value is SbSentence {
@@ -48,17 +48,23 @@ export const SentenceList = (props: SentenceListProps) => {
             ? props.disabled
             : props.disabled(item);
 
+        const backgroundColor = props.wordsToMarkAsMined?.includes(item.wordId)
+          ? color(theme.colors.dangerText).alpha(0.2).rgb().string()
+          : props.wordsToPushToTheEnd?.includes(item.wordId)
+          ? color(theme.colors.primary).alpha(0.2).rgb().string()
+          : 'rgba(0, 0, 0, 0)';
+
         return (
           <View>
             <TouchableOpacity
-              style={styles.sentenceItemContainer}
-              onPress={() =>
-                props.onSentencePressed?.(
-                  item.sentenceId,
-                  item.sentence,
-                  item.tags,
-                )
-              }
+              style={[
+                styles.sentenceItemContainer,
+                {
+                  backgroundColor,
+                },
+              ]}
+              onPress={() => props.onSentencePressed?.(item)}
+              onLongPress={() => props.onSentenceLongPressed?.(item)}
               disabled={isDisabled}>
               <Text
                 style={[

@@ -24,7 +24,9 @@ export type AppTheme = NavigationTheme & {
 
 export type RootNavigatorParamList = {
   Drawer: undefined;
-  CreateBatch: undefined;
+  CreateBatch: {
+    mode: 'pending' | 'backlog';
+  };
   MinedBatches: undefined;
   Export: {
     batchId: string;
@@ -67,6 +69,7 @@ export type SbApiResponse<T = null> =
 
 export type SbApiSentence = {
   sentenceId: string;
+  wordId: string;
   dictionaryForm: string;
   reading: string;
   sentence: string;
