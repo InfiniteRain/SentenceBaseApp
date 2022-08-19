@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  mlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
   package="io.infiniterain.sentencebaseapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
