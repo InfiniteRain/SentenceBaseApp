@@ -15,9 +15,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const timeAgo = new TimeAgo('en-US');
 
-const isLessThan24HoursAgo = (date: Date): boolean =>
-  date > new Date(Date.now() - 24 * 60 * 60 * 1000);
-
 const fetchBatches = ({
   pageParam = undefined,
 }: {
@@ -72,13 +69,9 @@ export const MinedBatches = () => {
           data={batchesList}
           renderItem={({item, index}) => {
             const createdAt = new Date(item.createdAt.seconds * 1000);
-            const formattedCreatedAt = timeAgo.format(createdAt, 'twitter');
+            const formattedCreatedAt = timeAgo.format(createdAt);
             const batchIndex = batchesCount - index;
-            const batchLabel = `#${batchIndex}: Mined ${
-              isLessThan24HoursAgo(createdAt)
-                ? `${formattedCreatedAt} ago`
-                : `on ${formattedCreatedAt}`
-            }`;
+            const batchLabel = `#${batchIndex}: Mined ${formattedCreatedAt}`;
 
             return (
               <TouchableOpacity
