@@ -26,6 +26,7 @@ import '@react-native-firebase/auth';
 import '@react-native-firebase/firestore';
 import firebase from '@react-native-firebase/app';
 import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import '../helpers';
 
 const auth = firebase.auth();
 
