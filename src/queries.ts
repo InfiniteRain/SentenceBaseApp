@@ -137,7 +137,9 @@ const sentenceBaseApiRequest = async <T = null>(
 
   if (!json.success) {
     throw new Error(
-      `Request ${method.toUpperCase()} -> ${endpoint} responded with { "success": false }`,
+      `Request ${method.toUpperCase()} -> ${endpoint} responded with ${JSON.stringify(
+        json,
+      )}`,
     );
   }
 
@@ -231,6 +233,81 @@ export const getPendingSentences = async (): Promise<SbApiSentence[]> => {
   return sentences;
 };
 
+export const getBacklogSentencesPage = async (
+  startAfter?: QueryDocumentSnapshot,
+): Promise<[SbApiSentence[], QueryDocumentSnapshot?]> => {
+  let wordsQuery = firestore
+    .collection('words')
+    .where('userUid', '==', auth.currentUser?.uid)
+    .where('isMined', '==', false)
+    .orderBy('buryLevel', 'asc')
+    .orderBy('frequency', 'desc')
+    .orderBy('updatedAt', 'desc')
+    .limit(50);
+
+  if (startAfter) {
+    wordsQuery = wordsQuery.startAfter(startAfter);
+  }
+
+  const wordsSnapshot = await wordsQuery.get();
+  const wordMap = new Map(
+    wordsSnapshot.docs.map(snap => [snap.id, snap.data()]),
+  );
+
+  const sentenceSnapshots = (
+    await Promise.all(
+      wordsSnapshot.docs
+        .filter(snap => snap.data().frequency > 0)
+        .map(snap =>
+          firestore
+            .collection('sentences')
+            .where('userUid', '==', auth.currentUser?.uid)
+            .where('wordId', '==', snap.id)
+            .where('isPending', '==', false)
+            .where('isMined', '==', false)
+            .orderBy('createdAt', 'desc')
+            .limit(1)
+            .get(),
+        ),
+    )
+  )
+    .filter(snap => !snap.empty)
+    .map(snap => snap.docs[0]);
+
+  return [
+    sentenceSnapshots.map(snap => {
+      const sentenceData = snap.data();
+      const wordData = wordMap.get(sentenceData.wordId);
+
+      return {
+        sentenceId: snap.id,
+        wordId: sentenceData.wordId,
+        dictionaryForm: wordData?.dictionaryForm ?? 'unknown',
+        reading: wordData?.reading ?? 'unknown',
+        sentence: sentenceData.sentence,
+        frequency: wordData?.frequency ?? 0,
+        tags: sentenceData.tags,
+      };
+    }),
+    wordsSnapshot.docs.length > 0
+      ? wordsSnapshot.docs[wordsSnapshot.docs.length - 1]
+      : undefined,
+  ];
+};
+
+export const getBacklogSentences = async (): Promise<SbApiSentence[]> => {
+  let [currentPage, startAfter] = await getBacklogSentencesPage();
+  let sentences = [...currentPage];
+
+  while (startAfter && sentences.length < 50) {
+    const result = await getBacklogSentencesPage(startAfter);
+    sentences = [...sentences, ...result[0].slice(0, 50 - sentences.length)];
+    startAfter = result[1];
+  }
+
+  return sentences;
+};
+
 export const deleteSentence = async (sentenceId: string) =>
   await sentenceBaseApiRequest('delete', `sentences/${sentenceId}`);
 
@@ -247,6 +324,17 @@ export const editSentence = async (
 export const createBatch = async (sentenceIds: string[]) =>
   await sentenceBaseApiRequest<{batchId: string}>('post', 'batches', {
     sentences: sentenceIds,
+  });
+
+export const createBatchFromBacklog = async (
+  sentenceIds: string[],
+  markAsMined: string[],
+  pushToTheEnd: string[],
+) =>
+  await sentenceBaseApiRequest<{batchId: string}>('post', 'batches/backlog', {
+    sentences: sentenceIds,
+    markAsMined,
+    pushToTheEnd,
   });
 
 export const getSentenceBatchById = async (id: string): Promise<SbBatch> => {

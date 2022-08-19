@@ -10,7 +10,7 @@ import {Text} from './Text';
 
 export type LabeledTextInputProps = TextInputProps & {
   label: string;
-  disabled?: boolean;
+  editable?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   inpitStyle?: StyleProp<TextStyle>;
@@ -47,7 +47,7 @@ export const LabeledTextInput = (props: LabeledTextInputProps) => {
           autoCapitalize="none"
           autoCorrect={false}
           placeholderTextColor={theme.colors.placeholderText}
-          disabled={props.disabled}
+          editable={props.editable}
           {...props}
         />
       </View>
